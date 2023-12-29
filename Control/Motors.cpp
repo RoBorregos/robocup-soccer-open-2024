@@ -136,6 +136,14 @@ void Motors::moveMotors(int degree, int speed)
             analogWrite(MotorRightF1, 0);
             analogWrite(MotorRightF2, -speedB);
         }
+        if (m3 >= 0){
+            analogWrite(MotorRightB1, speedC);
+            analogWrite(MotorRightB2, 0);
+        }
+        else {
+            analogWrite(MotorRightB1, 0);
+            analogWrite(MotorRightB2, -speedC);
+        }
         if (m4 >= 0){
             analogWrite(MotorLeftB1, speedD);
             analogWrite(MotorLeftB2, 0);
