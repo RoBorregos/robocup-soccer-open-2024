@@ -1,4 +1,101 @@
 #include "Motors.h"
+#include "Arduino.h"
+
+Motors::Motors(int speed1, int in1_1, int in2_1, int speed2, int in1_2, int in2_2, int speed3, int in1_3, int in2_3, int speed4, int in1_4, int in2_4) {
+    motor1.set(speed1, in1_1, in2_1);
+    motor2.set(speed2, in1_2, in2_2);
+    motor3.set(speed3, in1_3, in2_3);
+    motor4.set(speed4, in1_4, in2_4);
+};
+
+void Motors::InitializeMotors() {
+    motor1.InitializeMotor();
+    motor2.InitializeMotor();
+    motor3.InitializeMotor();
+    motor4.InitializeMotor();
+};
+
+void Motors::stopMotors() {
+    motor1.stopMotor();
+    motor2.stopMotor();
+    motor3.stopMotor();
+    motor4.stopMotor();
+};
+
+void Motors::moveForward() {
+    stopMotors();
+    motor2.moveBackward();
+    motor3.moveForward();
+};
+
+void Motors::moveBackward() {
+    stopMotors();
+    motor2.moveForward();
+    motor3.moveBackward();
+};
+
+void Motors::moveMotor1() {
+    motor1.moveForward();
+};
+
+void Motors::moveMotor2() {
+    motor2.moveForward();
+};
+
+void Motors::moveMotor3() {
+    motor3.moveForward();
+};
+
+void Motors::moveMotor4() {
+    motor4.moveForward();
+};
+
+void Motors::moveMotors(int degree, int speed){
+    float m1 = -cos(((45-degree) * M_PI / 180));
+    float m2 = -cos(((135-degree) * M_PI / 180));
+    float m3 = -cos(((225-degree) * M_PI / 180));
+    float m4 = -cos(((315-degree) * M_PI / 180));
+    int speedA = int(m1*speed);
+    int speedB = int(m2*speed);
+    int speedC = int(m3*speed);
+    int speedD = int(m4*speed);
+
+    if (m1 >= 0){
+        motor1.set(speedA, motor1.getIn1(), motor1.getIn2());
+        motor1.moveForward();
+    }
+    else {
+        motor1.set(-1*speedA, motor1.getIn1(), motor1.getIn2());
+        motor1.moveBackward();
+    }
+    if (m2 >= 0){
+        motor2.set(speedB, motor2.getIn1(), motor2.getIn2());
+        motor2.moveForward();
+    }
+    else {
+        motor2.set(-1*speedB, motor2.getIn1(), motor2.getIn2());
+        motor2.moveBackward();
+    }
+    if (m3 >= 0){
+        motor3.set(speedC, motor3.getIn1(), motor3.getIn2());
+        motor3.moveForward();
+    }
+    else {
+        motor3.set(-1*speedC, motor3.getIn1(), motor3.getIn2());
+        motor3.moveBackward();
+    }
+    if (m4 >= 0){
+        motor4.set(speedD, motor4.getIn1(), motor4.getIn2());
+        motor4.moveForward();
+    }
+    else {
+        motor4.set(-1*speedD, motor4.getIn1(), motor4.getIn2());
+        motor4.moveBackward();
+    }
+
+}
+
+/*#include "Motors.h"
 
 
 Motors::Motors(int A1, int A2, int A3, int A4, int B1, int B2, int B3, int B4, int C1, int C2, int C3, int C4, int D1, int D2, int D3, int D4)
@@ -154,3 +251,4 @@ void Motors::moveMotors(int degree, int speed)
         }
     }
 }
+*/;

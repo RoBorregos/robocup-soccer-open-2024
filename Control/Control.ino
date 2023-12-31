@@ -1,5 +1,12 @@
 #include "Motors.h"
 
+
+
+
+
+
+/*#include "Motors.h"
+
 // Define motor pins based on your hardware setup
 const int motorA1 = 10;
 const int motorA2 = 9;
@@ -20,7 +27,7 @@ const int motorD4 = 41;
 
 
 // Create an instance of the Motors class
-Motors myMotors(motorA1, motorA2, motorA3, motorA4, motorB1, motorB2, motorB3, motorB4, motorC1, motorC2, motorC3, motorC4, motorD1, motorD2, motorD3, m otorD4);
+Motors myMotors(motorA1, motorA2, motorA3, motorA4, motorB1, motorB2, motorB3, motorB4, motorC1, motorC2, motorC3, motorC4, motorD1, motorD2, motorD3, motorD4);
 
 void setup() {
   // Initialize motors
@@ -30,21 +37,10 @@ void setup() {
 }
 
 void loop() {
-  // Move forward at speed 150 for 2 seconds
- 
 
-  // Turn left at speed 100 for 1 second
-
-  myMotors.moveMotors(180, 150);
-  delay(2000);
-  
- 
-
-  // Turn right at speed 100 for 1 second
-  /*myMotors.turnRight(128);
-  delay(1000);*/
 
   // Stop motors for 1 second
   myMotors.stopMotors();
   delay(1000);
 }
+*/
