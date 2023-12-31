@@ -126,7 +126,7 @@ void Motors::moveMotors(int degree, int speed)
         }
         else {
             analogWrite(MotorLeftF1, 0);
-            analogWrite(MotorLeftF2, -speedA);
+            analogWrite(MotorLeftF2, -1*speedA);
         }
         if (m2 >= 0){
             analogWrite(MotorRightF1, speedB);
@@ -134,7 +134,7 @@ void Motors::moveMotors(int degree, int speed)
         }
         else {
             analogWrite(MotorRightF1, 0);
-            analogWrite(MotorRightF2, -speedB);
+            analogWrite(MotorRightF2, -1*speedB);
         }
         if (m3 >= 0){
             analogWrite(MotorRightB1, speedC);
@@ -142,7 +142,7 @@ void Motors::moveMotors(int degree, int speed)
         }
         else {
             analogWrite(MotorRightB1, 0);
-            analogWrite(MotorRightB2, -speedC);
+            analogWrite(MotorRightB2, -1*speedC);
         }
         if (m4 >= 0){
             analogWrite(MotorLeftB1, speedD);
@@ -150,7 +150,7 @@ void Motors::moveMotors(int degree, int speed)
         }
         else {
             analogWrite(MotorLeftB1, 0);
-            analogWrite(MotorLeftB2, -speedD);
+            analogWrite(MotorLeftB2, -1*speedD);
         }
     }
 }

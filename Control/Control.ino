@@ -13,14 +13,14 @@ const int motorC1 = 26;
 const int motorC2 = 24;
 const int motorC3 = 7;
 const int motorC4 = 22;
-const int motorD1 = 43;
-const int motorD2 = 41;
+const int motorD1 = 45;
+const int motorD2 = 43;
 const int motorD3 = 12;
-const int motorD4 = 45;
+const int motorD4 = 41;
 
 
 // Create an instance of the Motors class
-Motors myMotors(motorA1, motorA2, motorA3, motorA4, motorB1, motorB2, motorB3, motorB4, motorC1, motorC2, motorC3, motorC4, motorD1, motorD2, motorD3, motorD4);
+Motors myMotors(motorA1, motorA2, motorA3, motorA4, motorB1, motorB2, motorB3, motorB4, motorC1, motorC2, motorC3, motorC4, motorD1, motorD2, motorD3, m otorD4);
 
 void setup() {
   // Initialize motors
@@ -34,9 +34,8 @@ void loop() {
  
 
   // Turn left at speed 100 for 1 second
- myMotors.turnLeft(150);
-  delay(1000);
- myMotors.moveMotors(0, 150);
+
+  myMotors.moveMotors(180, 150);
   delay(2000);
   
  
