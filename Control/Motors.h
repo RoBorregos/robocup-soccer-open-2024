@@ -24,6 +24,7 @@ class Motors{
         void moveMotor3();
         void moveMotor4();
         void moveMotors(int degree, int speed);
+        void individualMotor(int motor, int speed);
         
 };
 

@@ -31,6 +31,7 @@ void setup()
       motor3PWM, motor3In1, motor3In2, motor3STBY,
       motor4PWM, motor4In1, motor4In2, motor4STBY);
 
+
   myMotors.InitializeMotors();
   myMotors.InitializeDriver();
   myMotors.setSpeed(motorPWM, 128);
@@ -39,6 +40,22 @@ void setup()
   myMotors.setSpeed(motor4PWM, 128);
 
   myMotors.moveForward();
+  delay(1000);
+  myMotors.stopMotors();
+  delay(1000);
+  myMotors.moveBackward();
+  delay(1000);
+  myMotors.stopMotors();
+  delay(1000);
+  myMotors.moveMotors(90, 128);
+  delay(1000);
+  myMotors.stopMotors();
+  delay(1000);
+  myMotors.moveMotors(195, 128);
+  delay(1000);
+  myMotors.stopMotors();
+  delay(1000);
+  myMotors.moveMotors(270, 128);
 }
 
 void loop()
