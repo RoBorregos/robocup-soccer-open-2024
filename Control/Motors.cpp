@@ -74,36 +74,33 @@ void Motors::moveMotors(int degree, int speed) {
     int speedC = int(m3*speed);
     int speedD = int(m4*speed);
 
+    analogWrite(motor1.getSpeed(), abs(speedA));
+    analogWrite(motor2.getSpeed(), abs(speedB));
+    analogWrite(motor3.getSpeed(), abs(speedC));
+    analogWrite(motor4.getSpeed(), abs(speedD));
+
     if (m1 >= 0){
-        motor1.setSpeed(motor1.getSpeed(), speedA);
         motor1.moveForward();
     }
     else {
-        motor1.setSpeed(motor1.getSpeed(), -1*speedA);
         motor1.moveBackward();
     }
     if (m2 >= 0){
-        motor2.setSpeed(motor2.getSpeed(), speedB);
         motor2.moveForward();
     }
     else {
-        motor2.setSpeed(motor2.getSpeed(), -1*speedB);
         motor2.moveBackward();
     }
     if (m3 >= 0){
-        motor3.setSpeed(motor3.getSpeed(), speedC);
         motor3.moveForward();
     }
     else {
-        motor3.setSpeed(motor3.getSpeed(), -1*speedC);
         motor3.moveBackward();
     }
     if (m4 >= 0){
-        motor4.setSpeed(motor4.getSpeed(), speedD);
         motor4.moveForward();
     }
     else {
-        motor4.setSpeed(motor4.getSpeed(), -1*speedD);
         motor4.moveBackward();
     }
 };
