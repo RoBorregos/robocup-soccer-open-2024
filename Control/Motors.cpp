@@ -29,6 +29,17 @@ void Motors::setSpeed(int pwm, int speed) {
     motor4.setSpeed(pwm, speed);
 };
 
+void Motors::getAllSpeeds() {
+    Serial.print("Motor 1: ");
+    Serial.println(motor1.getSpeed());
+    Serial.print("Motor 2: ");
+    Serial.println(motor2.getSpeed());
+    Serial.print("Motor 3: ");
+    Serial.println(motor3.getSpeed());
+    Serial.print("Motor 4: ");
+    Serial.println(motor4.getSpeed());
+};
+
 void Motors::stopMotors() {
     motor1.stopMotor();
     motor2.stopMotor();
@@ -37,15 +48,26 @@ void Motors::stopMotors() {
 };
 
 void Motors::moveForward() {
+    motor1.moveForward();
+    motor1.stopMotor();
+    motor2.moveForward();
+    motor2.stopMotor();
+    motor3.moveForward();
+    motor3.stopMotor();
+    motor4.moveForward();
+    motor4.stopMotor();
+};
+
+/*void Motors::moveForward() {
     stopMotors();
     motor2.moveForward();
-    motor3.moveForward();
-};
+    motor3.moveBackward();
+};*/
 
 void Motors::moveBackward() {
     stopMotors();
     motor2.moveBackward();
-    motor3.moveBackward();
+    motor3.moveForward();
 };
 
 void Motors::moveMotor1() {
@@ -65,19 +87,19 @@ void Motors::moveMotor4() {
 };
 
 void Motors::moveMotors(int degree, int speed) {
-    float m1 = -cos(((45-degree) * M_PI / 180));
-    float m2 = -cos(((135-degree) * M_PI / 180));
-    float m3 = -cos(((225-degree) * M_PI / 180));
-    float m4 = -cos(((315-degree) * M_PI / 180));
-    int speedA = int(m1*speed);
-    int speedB = int(m2*speed);
-    int speedC = int(m3*speed);
-    int speedD = int(m4*speed);
+    float m1 = cos(((45+degree) * PI / 180));
+    float m2 = cos(((135+degree) * PI / 180));
+    float m3 = cos(((225+degree) * PI / 180));
+    float m4 = cos(((315+degree) * PI / 180));
+    int speedA = abs(int(m1*speed));
+    int speedB = abs(int(m2*speed));
+    int speedC = abs(int(m3*speed));
+    int speedD = abs(int(m4*speed));
 
-    analogWrite(motor1.getSpeed(), abs(speedA));
-    analogWrite(motor2.getSpeed(), abs(speedB));
-    analogWrite(motor3.getSpeed(), abs(speedC));
-    analogWrite(motor4.getSpeed(), abs(speedD));
+    analogWrite(motor1.getSpeed(), speedA);
+    analogWrite(motor2.getSpeed(), speedB);
+    analogWrite(motor3.getSpeed(), speedC);
+    analogWrite(motor4.getSpeed(), speedD);
 
     if (m1 >= 0){
         motor1.moveForward();

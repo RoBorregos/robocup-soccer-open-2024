@@ -41,6 +41,7 @@ void Motor::stopMotor() {
     digitalWrite(_in2, LOW);
 };
 
+
 int Motor::getSpeed() {
     return _speed;
 };

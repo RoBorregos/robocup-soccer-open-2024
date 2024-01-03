@@ -1,24 +1,28 @@
-#include "Motors.h"
+/*#include "Motors.h"
 
-const int motorIn1 = 9;
-const int motorIn2 = 10;
-const int motorPWM = 5;
-const int motorSTBY = 11;
 
-const int motor2In1 = 3;   
-const int motor2In2 = 50;  
-const int motor2PWM = 4;   
-const int motor2STBY = 52; 
+//polaridad correcta
+const int motor4In1 = 9;
+const int motor4In2 = 10;
+const int motor4PWM = 5;
+const int motor4STBY = 11;
 
-const int motor3In1 = 24;  
-const int motor3In2 = 26;  
-const int motor3PWM = 7;   
-const int motor3STBY = 22; 
+//polaridad correcta
+const int motor3In1 = 3;   
+const int motor3In2 = 50;  
+const int motor3PWM = 4;   
+const int motor3STBY = 52; 
 
-const int motor4In1 = 45; 
-const int motor4In2 = 43; 
-const int motor4PWM = 12;  
-const int motor4STBY = 41;
+//
+const int motorIn1 = 24;  
+const int motorIn2 = 26;  
+const int motorPWM = 7;   
+const int motorSTBY = 22; 
+
+const int motor2In1 = 45; 
+const int motor2In2 = 43; 
+const int motor2PWM = 12;  
+const int motor2STBY = 41;
 
 void setup()
 {
@@ -39,26 +43,11 @@ void setup()
   myMotors.setSpeed(motor3PWM, 128);
   myMotors.setSpeed(motor4PWM, 128);
 
-  myMotors.moveForward();
-  delay(1000);
-  myMotors.stopMotors();
-  delay(1000);
-  myMotors.moveBackward();
-  delay(1000);
-  myMotors.stopMotors();
-  delay(1000);
-  myMotors.moveMotors(90, 128);
-  delay(1000);
-  myMotors.stopMotors();
-  delay(1000);
-  myMotors.moveMotors(195, 128);
-  delay(1000);
-  myMotors.stopMotors();
-  delay(1000);
-  myMotors.moveMotors(270, 128);
+  myMotors.moveMotors(0, 200);
+
 }
 
 void loop()
 {
 }
-
+*/

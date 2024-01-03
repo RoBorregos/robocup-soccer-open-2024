@@ -1,26 +1,34 @@
 // Define motor control pins
 
-/*#include <Arduino.h>
+#include <Arduino.h>
 
+
+//el 1 es el 4
 const int motorIn1 = 9; 
 const int motorIn2 = 10;
 const int motorPWM = 5; 
 const int motorSTBY = 11; 
 
-const int motor2In1 = 3;  // 
-const int motor2In2 =50;  // 
+
+//el 2 es el 3
+const int motor2In1 = 50;  // 
+const int motor2In2 = 3;  // 
 const int motor2PWM = 4;  // 
 const int motor2STBY =52; // 
 
-const int motor3In1 = 24;  // 
-const int motor3In2 = 26;  // 
+
+//el 3 es el 1
+const int motor3In1 = 26;  // 
+const int motor3In2 = 24;  // 
 const int motor3PWM = 7;  // 
 const int motor3STBY = 22; // 
 
-const int motor4In1 = 41;  // 43
+
+//el 4 es el 2
+const int motor4In1 = 45;  // 43
 const int motor4In2 = 43;  // 41
 const int motor4PWM = 12;  // 
-const int motor4STBY = 45; // 
+const int motor4STBY = 41; // 
 
 void setup() {
   // Set motor control pins as outputs
@@ -29,11 +37,13 @@ void setup() {
   pinMode(motorPWM, OUTPUT);
   pinMode(motorSTBY, OUTPUT);
 
-  //
+  // el 2 es el 3
   pinMode(motor2In1, OUTPUT);
   pinMode(motor2In2, OUTPUT);
   pinMode(motor2PWM, OUTPUT);
   pinMode(motor2STBY, OUTPUT);
+
+
   //
   pinMode(motor3In1, OUTPUT);
   pinMode(motor3In2, OUTPUT);
@@ -60,36 +70,21 @@ void setup() {
 
 void loop() {
   // Spin motor forward
-  digitalWrite(motorIn1, HIGH);
-  digitalWrite(motorIn2, LOW);
-  digitalWrite(motor2In1, HIGH);
-  digitalWrite(motor2In2, LOW);
   digitalWrite(motor3In1, HIGH);
   digitalWrite(motor3In2, LOW);
-  digitalWrite(motor4In1, HIGH);
-  digitalWrite(motor4In2, LOW);
-  delay(2000);
 
-  // Spin motor in reverse
-  digitalWrite(motorIn1, LOW);
-  digitalWrite(motorIn2, HIGH);
-  digitalWrite(motor2In1, LOW);
-  digitalWrite(motor2In2, HIGH);
-  digitalWrite(motor3In1, LOW);
-  digitalWrite(motor3In2, HIGH);
-  digitalWrite(motor4In1, LOW);
-  digitalWrite(motor4In2, HIGH);
-  delay(2000);
-
-  // Stop motor
-  digitalWrite(motorIn1, LOW);
-  digitalWrite(motorIn2, LOW);
-  digitalWrite(motor2In1, LOW);
+  digitalWrite(motor2In1, HIGH);
   digitalWrite(motor2In2, LOW);
-  digitalWrite(motor3In1, LOW);
-  digitalWrite(motor3In2, LOW);
-  digitalWrite(motor4In1, LOW);
+
+   digitalWrite(motorIn1, HIGH);
+  digitalWrite(motor2In2, LOW);
+
+   digitalWrite(motor4In1, HIGH);
   digitalWrite(motor4In2, LOW);
-  delay(1000);
+
+  
+  
+  delay(2000);
+
+
 }
-*/
