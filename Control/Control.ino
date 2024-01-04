@@ -1,13 +1,12 @@
-/*#include "Motors.h"
+#include "Motors.h"
 
-
-//polaridad correcta
+//check motor polarity individually for IN1 and IN2 when robot movement is set to 0 degrees. If not correct, swap IN1 and IN2
 const int motor4In1 = 9;
 const int motor4In2 = 10;
 const int motor4PWM = 5;
 const int motor4STBY = 11;
 
-//polaridad correcta
+//
 const int motor3In1 = 3;   
 const int motor3In2 = 50;  
 const int motor3PWM = 4;   
@@ -43,11 +42,10 @@ void setup()
   myMotors.setSpeed(motor3PWM, 128);
   myMotors.setSpeed(motor4PWM, 128);
 
-  myMotors.moveMotors(0, 200);
+  myMotors.moveMotors(0, 128);
 
 }
 
 void loop()
 {
 }
-*/

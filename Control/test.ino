@@ -1,6 +1,6 @@
 // Define motor control pins
 
-#include <Arduino.h>
+/*#include <Arduino.h>
 
 
 //el 1 es el 4
@@ -88,3 +88,4 @@ void loop() {
 
 
 }
+*/
