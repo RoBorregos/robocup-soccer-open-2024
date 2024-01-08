@@ -86,6 +86,7 @@ void Motors::moveMotor4() {
     motor4.moveForward();
 };
 
+// kinematic equations for robot movement
 void Motors::moveMotors(int degree, int speed) {
     float m1 = cos(((45+degree) * PI / 180));
     float m2 = cos(((135+degree) * PI / 180));
