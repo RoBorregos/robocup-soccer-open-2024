@@ -12,7 +12,8 @@
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/cores/arduino",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/system/libsam",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/system/CMSIS/Device/ATMEL",
-                "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/variants/arduino_due_x"
+                "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/variants/arduino_due_x",
+                "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/libraries/Wire/src",
             ],
             "forcedInclude": [],
             "cStandard": "",
