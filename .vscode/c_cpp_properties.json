@@ -9,11 +9,19 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Control",
+                "${workspaceFolder}/Sensors",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/cores/arduino",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/system/libsam",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/system/CMSIS/Device/ATMEL",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/variants/arduino_due_x",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/libraries/Wire/src",
+                "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/libraries/SPI/src",
+                "C:/Users/jvela/Downloads/Adafruit_BNO055-master/Adafruit_BNO055-master/utility",
+                "C:/Users/jvela/Downloads/Adafruit_BNO055-master/Adafruit_BNO055-master",
+                "C:/Users/jvela/Downloads/Adafruit_BusIO-master/Adafruit_BusIO-master",
+                "C:/Users/jvela/Downloads/Adafruit_Sensor-master/Adafruit_Sensor-master"
+             
+
             ],
             "forcedInclude": [],
             "cStandard": "",

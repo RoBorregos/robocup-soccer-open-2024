@@ -7,13 +7,13 @@
 #include "Wire.h"
 #include "Adafruit_Sensor.h"
 
-class bno {
+class BNO055 {
     private:
     double yaw;
     Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
     public:
-    bno();
+    BNO055();
     void InitializeBNO();
     void getBNOData();
     double getYaw();
