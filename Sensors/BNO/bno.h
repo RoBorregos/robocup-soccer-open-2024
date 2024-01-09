@@ -9,14 +9,14 @@
 
 class BNO055 {
     private:
-    double yaw;
-    Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
+        double yaw;
+        Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
     public:
-    BNO055();
-    void InitializeBNO();
-    void getBNOData();
-    double getYaw();
+        BNO055();
+        void InitializeBNO();
+        void getBNOData();
+        double getYaw();
 };
 
 #endif
