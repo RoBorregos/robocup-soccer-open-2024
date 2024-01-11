@@ -1,6 +1,5 @@
 #include "Arduino.h"
-#include "BNO055.h"
-
+#include "Bno.h"
 
 //https://www.allaboutcircuits.com/projects/bosch-absolute-orientation-sensor-bno055/
 
@@ -9,6 +8,7 @@ BNO055::BNO055() {
 }
 
 void BNO055::InitializeBNO() {
+    
     Serial.println("Initializing BNO055...");
     if(!bno.begin()) {
         Serial.println("BNO055 not detected. Check wiring or I2C ADDR!");
