@@ -27,3 +27,30 @@ void BNO055::getBNOData() {
 double BNO055::getYaw() {
     return yaw;
 }
+
+void BNO055::setYaw(double y) {
+    yaw = y;
+}
+
+void BNO055::moveWithBNO(double targetAngle, double speed) {
+    double currentAngle = getYaw();
+    double angleDifference = targetAngle - currentAngle;
+    if (angleDifference > 180) {
+        angleDifference -= 360;
+    }
+    else if (angleDifference < -180) {
+        angleDifference += 360;
+    }
+    if (angleDifference > 0) {
+        //turn right
+        Serial.println("Turning right");
+    }
+    else if (angleDifference < 0) {
+        //turn left
+        Serial.println("Turning left");
+    }
+    else {
+        //do nothing
+        Serial.println("Not turning");
+    }
+}

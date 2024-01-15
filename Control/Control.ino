@@ -77,13 +77,9 @@ void setup(){
     BNO055 myBNO;
     myBNO.InitializeBNO();
     myBNO.getBNOData();
-    Serial.println(myBNO.getYaw());
-
-    
-
-    // if bno is equal to a double type value then move motor
-       
+    Serial.println(myBNO.getYaw());     
 }
+
 
 void loop(){
 }
