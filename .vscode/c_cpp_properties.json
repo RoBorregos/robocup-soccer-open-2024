@@ -19,7 +19,9 @@
                 "C:/Users/jvela/Downloads/Adafruit_BNO055-master/Adafruit_BNO055-master/utility",
                 "C:/Users/jvela/Downloads/Adafruit_BNO055-master/Adafruit_BNO055-master",
                 "C:/Users/jvela/Downloads/Adafruit_BusIO-master/Adafruit_BusIO-master",
-                "C:/Users/jvela/Downloads/Adafruit_Sensor-master/Adafruit_Sensor-master"
+                "C:/Users/jvela/Downloads/Adafruit_Sensor-master/Adafruit_Sensor-master",
+                "C:/Users/jvela/Downloads/SparkFun_ICM-20948_ArduinoLibrary-main/SparkFun_ICM-20948_ArduinoLibrary-main/src",
+
             ],
             "forcedInclude": [],
             "cStandard": "",

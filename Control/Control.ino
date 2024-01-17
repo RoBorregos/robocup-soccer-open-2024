@@ -1,4 +1,4 @@
-/*#include "Motors.h"
+#include "Motors.h"
 
 //check motor polarity individually for IN1 and IN2 when robot movement is set to 0 degrees. If not correct, swap IN1 and IN2
 
@@ -64,25 +64,9 @@ void setup()
 void loop()
 {
 }
-*/
-
-#include "Bno.h"
-#include "Arduino.h"
-#include "Motors.h"
-#include <typeinfo> 
 
 
-void setup(){
-    Serial.begin(9600);
-    BNO055 myBNO;
-    myBNO.InitializeBNO();
-    myBNO.getBNOData();
-    Serial.println(myBNO.getYaw());     
-}
 
-
-void loop(){
-}
 
 
 
