@@ -6,6 +6,7 @@
 
 
 #define WIRE_PORT Wire
+#define SERIAL_PORT Serial
 #define AD0_VAL 9
 
 class Imu{
