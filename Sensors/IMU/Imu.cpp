@@ -54,43 +54,65 @@ void Imu::InitializeImu()
     }
 }
 
-void Imu::getImuData(){
+// Convert the quaternions to Euler angles (roll, pitch, yaw)
+// https://en.wikipedia.org/w/index.php?title=Conversion_between_quaternions_and_Euler_angles&section=8#Source_code_2
+void Imu::getImuData()
+{
     icm_20948_DMP_data_t data;
     imu.readDMPdataFromFIFO(&data);
 
-    if((imu.status == ICM_20948_Stat_Ok) || (imu.status == ICM_20948_Stat_FIFOMoreDataAvail)){
-        if(data.header & DMP_header_bitmap_Quat6){
-            double q1 = (double)data.Quat6.Data.Q1 / (double)(1 << 30);
-            double q2 = (double)data.Quat6.Data.Q2 / (double)(1 << 30);
-            double q3 = (double)data.Quat6.Data.Q3 / (double)(1 << 30);
+    if ((imu.status == ICM_20948_Stat_Ok) || (imu.status == ICM_20948_Stat_FIFOMoreDataAvail))
+    {
+        if (data.header & DMP_header_bitmap_Quat6)
+        {
+            double q1 = ((double)data.Quat6.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
+            double q2 = ((double)data.Quat6.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
+            double q3 = ((double)data.Quat6.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
 
-            double q0 = sqrt(1 - q1*q1 - q2*q2 - q3*q3);
-            double qTo2 = q2*q2;
+            double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
 
-            yaw = atan2(2*(q1*q2 + q0*q3), q0*q0 + q1*q1 - qTo2 - q3*q3);
-            pitch = -asin(2*(q1*q3 - q0*q2));
-            roll = atan2(2*(q2*q3 + q0*q1), q0*q0 - q1*q1 - qTo2 + q3*q3);
+            double q2sqr = q2 * q2;
+
+            // roll (x-axis rotation)
+            double t0 = +2.0 * (q0 * q1 + q2 * q3);
+            double t1 = +1.0 - 2.0 * (q1 * q1 + q2sqr);
+            double roll = atan2(t0, t1) * 180.0 / PI;
+
+            // pitch (y-axis rotation)
+            double t2 = +2.0 * (q0 * q2 - q3 * q1);
+            t2 = t2 > 1.0 ? 1.0 : t2;
+            t2 = t2 < -1.0 ? -1.0 : t2;
+            double pitch = asin(t2) * 180.0 / PI;
+
+            // yaw (z-axis rotation)
+            double t3 = +2.0 * (q0 * q3 + q1 * q2);
+            double t4 = +1.0 - 2.0 * (q2sqr + q3 * q3);
+            double yaw = atan2(t3, t4) * 180.0 / PI;
         }
     }
 }
 
-double Imu::getYaw(){
+double Imu::getYaw()
+{
     return yaw;
 }
 
-void Imu::setYaw(double y){
+void Imu::setYaw(double y)
+{
     yaw = y;
 }
 
-double Imu::getPitch(){
+double Imu::getPitch()
+{
     return pitch;
 }
 
-double Imu::getRoll(){
+double Imu::getRoll()
+{
     return roll;
 }
 
-void Imu::setYawOffset(double y){
+void Imu::setYawOffset(double y)
+{
     yawOffset = y;
 }
-
