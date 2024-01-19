@@ -1,10 +1,12 @@
 #ifndef Imu_h
 #define Imu_h
+#pragma once
 
 #include "ICM_20948.h"
 
+
 #define WIRE_PORT Wire
-#define AD0_VAL 0
+#define AD0_VAL 9
 
 class Imu{
     private:
@@ -15,6 +17,7 @@ class Imu{
         double roll;
 
     public: 
+        Imu();
         void InitializeImu();
         void getImuData();
         double getYaw();

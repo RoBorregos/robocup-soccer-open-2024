@@ -23,6 +23,7 @@ void Imu::InitializeImu()
     {
         imu.begin(WIRE_PORT, AD0_VAL);
         initialized = (imu.status == ICM_20948_Stat_Ok);
+        printf("IMU initialization: %s\n", imu.statusString());
     }
 
     bool success = true; // Use success to show if the DMP configuration was successful
@@ -91,6 +92,9 @@ void Imu::getImuData()
         }
     }
 }
+
+//move with imu using robot movement from move robot
+
 
 double Imu::getYaw()
 {
