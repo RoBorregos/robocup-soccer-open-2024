@@ -127,3 +127,44 @@ void Motors::moveMotors(int degree, int speed) {
         motor4.moveBackward();
     }
 };
+
+void Motors::moveMotorsImu(double degree, double speed) {
+    float m1 = cos(((45+degree) * PI / 180));
+    float m2 = cos(((135+degree) * PI / 180));
+    float m3 = cos(((225+degree) * PI / 180));
+    float m4 = cos(((315+degree) * PI / 180));
+    int speedA = abs(int(m1*speed));
+    int speedB = abs(int(m2*speed));
+    int speedC = abs(int(m3*speed));
+    int speedD = abs(int(m4*speed));
+
+    analogWrite(motor1.getSpeed(), speedA);
+    analogWrite(motor2.getSpeed(), speedB);
+    analogWrite(motor3.getSpeed(), speedC);
+    analogWrite(motor4.getSpeed(), speedD);
+
+    if (m1 >= 0){
+        motor1.moveForward();
+    }
+    else {
+        motor1.moveBackward();
+    }
+    if (m2 >= 0){
+        motor2.moveForward();
+    }
+    else {
+        motor2.moveBackward();
+    }
+    if (m3 >= 0){
+        motor3.moveForward();
+    }
+    else {
+        motor3.moveBackward();
+    }
+    if (m4 >= 0){
+        motor4.moveForward();
+    }
+    else {
+        motor4.moveBackward();
+    }
+};

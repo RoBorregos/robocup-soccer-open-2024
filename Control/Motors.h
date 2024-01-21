@@ -27,6 +27,7 @@ class Motors{
         void individualMotor(int motor, int speed);
         void getAllSpeeds();
         void moveOneMotor(int motor, int speed);
+        void moveMotorsImu(double targetAngle, double speed);
         
 };
 
