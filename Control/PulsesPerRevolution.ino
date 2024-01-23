@@ -1,5 +1,7 @@
 //there are 56 pulses per revolution
 
+//measuring we get 24 pulses per revolution
+
 /*#include <Arduino.h>
 // Encoder output to Arduino Interrupt pin. Tracks the pulse count.
 #define ENC_IN_RIGHT_A 2
