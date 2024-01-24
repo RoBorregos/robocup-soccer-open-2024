@@ -1,5 +1,7 @@
-/*#include <Arduino.h>
+#include <Arduino.h>
 
+
+// 24 pulses per revolution
 // Motor encoder output pulses per 360 degree revolution (measured manually)
 #define ENC_COUNT_REV 620
 
@@ -71,17 +73,17 @@ void right_wheel_pulse() {
   // Increment the pulse count
   right_wheel_pulse_count++;
 }
-*/
+
 
 //there are 56 pulses per revolution
-
+/*
 #include <Arduino.h>
 
 // Motor control pin
-#define MOTOR_PWM_PIN_A 24 // Change this to the actual pin connected to your motor driver
-#define MOTOR_PWM_PIN_B 26 // Change this to the actual pin connected to your motor driver
-#define MOTOR_PWM 7 // Change this to the actual pin connected to your motor driver
-#define MOTOR_STBY 22 // Change this to the actual pin connected to your motor driver
+#define MOTOR_PWM_PIN_A 24 
+#define MOTOR_PWM_PIN_B 26 
+#define MOTOR_PWM 7 
+#define MOTOR_STBY 22 
 
 // Encoder output to Arduino Interrupt pin. Tracks the pulse count.
 #define ENC_IN_RIGHT_A 2
@@ -123,4 +125,4 @@ void loop() {
 // Increment the number of pulses by 1
 void right_wheel_pulse() {
   right_wheel_pulse_count++;
-}
+}*/
