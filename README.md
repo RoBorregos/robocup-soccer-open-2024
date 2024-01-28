@@ -1,7 +1,7 @@
 
 # Robocup Soccer Open 2024
 
-A brief description of what this project does and who it's for
+Code for Robocup Soccer Open 2024 participating with Roborregos Team
 
 
 ## Author
@@ -11,7 +11,7 @@ A brief description of what this project does and who it's for
 
 ## Features
 
-- Light/dark mode toggle
+- Implementation of personalized Arduino libraries for easy usage
 - Live previews
 - Fullscreen mode
 - Cross platform
