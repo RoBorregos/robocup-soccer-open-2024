@@ -3,7 +3,7 @@
 
 // 24 pulses per revolution
 // Motor encoder output pulses per 360 degree revolution (measured manually)
-#define ENC_COUNT_REV 620
+#define ENC_COUNT_REV 63
 
 // Encoder output to Arduino Interrupt pin. Tracks the pulse count.
 #define ENC_IN_RIGHT_A 2
@@ -12,7 +12,7 @@
 boolean Direction_right = true;
 
 // Keep track of the number of right wheel pulses
-volatile long right_wheel_pulse_count = 0;
+volatile float right_wheel_pulse_count = 0;
 
 // One-second interval for measurements
 int interval = 1000;
@@ -64,7 +64,11 @@ void loop() {
     Serial.println(" rad/s");
     Serial.println();
 
-    right_wheel_pulse_count = 0;
+    
+    
+    float degree = (right_wheel_pulse_count / ENC_COUNT_REV) *360;
+    Serial.print("Degree: ");
+    Serial.println(degree);
   }
 }
 
