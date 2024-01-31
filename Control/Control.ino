@@ -1,132 +1,71 @@
 #include <Arduino.h>
 
+// Define motor control pins
 
-// 24 pulses per revolution
-// Motor encoder output pulses per 360 degree revolution (measured manually)
-#define ENC_COUNT_REV 63
+const int motorIn1 = 45;  // 43
+const int motorIn2 = 43;  // 41
+const int motorPWM = 12;  // 
+const int motorSTBY = 41; //
+const int encoder = 2; 
 
-// Encoder output to Arduino Interrupt pin. Tracks the pulse count.
-#define ENC_IN_RIGHT_A 2
+// Variables del controlador PID
+double Kp = 2;  // Constante proporcional
+double Setpoint = 100;  // Valor deseado
 
-// True = Forward; False = Reverse
-boolean Direction_right = true;
-
-// Keep track of the number of right wheel pulses
-volatile float right_wheel_pulse_count = 0;
-
-// One-second interval for measurements
-int interval = 1000;
-
-// Counters for milliseconds during interval
-long previousMillis = 0;
-long currentMillis = 0;
-
-// Variables for RPM and angular velocity measurement
-float rpm_right = 0;
-float ang_velocity_right = 0;
+// Variables internas del controlador PID
+unsigned long currentTime, previousTime;
+double elapsedTime;
+double error, lastError;
+double Output;
 
 void setup() {
-
-  // Open the serial port at 9600 bps
-  Serial.begin(9600);
-
-  // Set pin state of the encoder
-  pinMode(ENC_IN_RIGHT_A, INPUT_PULLUP);
-
-  // Every time the pin goes high, this is a pulse
-  attachInterrupt(digitalPinToInterrupt(ENC_IN_RIGHT_A), right_wheel_pulse, RISING);
-
-}
-
-void loop() {
-
-  // Record the time
-  currentMillis = millis();
-
-  // If one second has passed, print the number of pulses and calculate RPM and angular velocity
-  if (currentMillis - previousMillis > interval) {
-
-    previousMillis = currentMillis;
-
-    // Calculate revolutions per minute
-    rpm_right = (float)(right_wheel_pulse_count * 60 / ENC_COUNT_REV);
-
-    // Calculate angular velocity in radians per second
-    ang_velocity_right = (rpm_right * 2 * PI) / 60;
-
-    Serial.print(" Pulses: ");
-    Serial.println(right_wheel_pulse_count);
-    Serial.print(" Speed: ");
-    Serial.print(rpm_right);
-    Serial.println(" RPM");
-    Serial.print(" Angular Velocity: ");
-    Serial.print(ang_velocity_right);
-    Serial.println(" rad/s");
-    Serial.println();
-
-    
-    
-    float degree = (right_wheel_pulse_count / ENC_COUNT_REV) *360;
-    Serial.print("Degree: ");
-    Serial.println(degree);
-  }
-}
-
-// Increment the number of pulses by 1
-void right_wheel_pulse() {
-  // Increment the pulse count
-  right_wheel_pulse_count++;
-}
-
-
-//there are 56 pulses per revolution
-/*
-#include <Arduino.h>
-
-// Motor control pin
-#define MOTOR_PWM_PIN_A 24 
-#define MOTOR_PWM_PIN_B 26 
-#define MOTOR_PWM 7 
-#define MOTOR_STBY 22 
-
-// Encoder output to Arduino Interrupt pin. Tracks the pulse count.
-#define ENC_IN_RIGHT_A 2
-
-// Keep track of the number of right wheel pulses
-volatile long right_wheel_pulse_count = 0;
-
-void setup() {
-  // Open the serial port at 9600 bps
-  Serial.begin(9600);
-  pinMode(MOTOR_PWM_PIN_A, OUTPUT);
-  pinMode(MOTOR_PWM_PIN_B, OUTPUT);
-  pinMode(MOTOR_PWM, OUTPUT);
-  pinMode(MOTOR_STBY, OUTPUT);
+  // Set motor control pins as outputs
+  pinMode(motorIn1, OUTPUT);
+  pinMode(motorIn2, OUTPUT);
+  pinMode(motorPWM, OUTPUT);
+  pinMode(motorSTBY, OUTPUT);
 
   // Enable the motor driver
-  digitalWrite(MOTOR_STBY, HIGH);
+  digitalWrite(motorSTBY, HIGH);
 
-  //PWM
-  analogWrite(MOTOR_PWM, 128); // Set speed (0 to 255)
+  // Inicializar el controlador PID
+  currentTime = millis();
+  previousTime = currentTime;
 
-  
-
-  // Set pin states of the encoder
-  pinMode(ENC_IN_RIGHT_A, INPUT_PULLUP);
-
-
-  // Every time the pin goes high, this is a pulse
-  attachInterrupt(digitalPinToInterrupt(ENC_IN_RIGHT_A), right_wheel_pulse, RISING);
+  // Establecer la velocidad inicial de los motores
+  analogWrite(motorPWM, 128);  // Establecer velocidad (0 a 255)
 }
 
 void loop() {
-  digitalWrite(MOTOR_PWM_PIN_A, HIGH);
-  digitalWrite(MOTOR_PWM_PIN_B, LOW);
-  Serial.print(" Pulses: ");
-  Serial.println(right_wheel_pulse_count);
+  // Leer la entrada del sensor (por ejemplo, un potenciómetro)
+
+  // Calcular la salida del controlador PID
+  Output = computeP(encoder);
+
+  // Aplicar la salida del controlador PID al motor
+  if (Output > 0) {
+    digitalWrite(motorIn1, HIGH);
+    digitalWrite(motorIn2, LOW);
+  } else {
+    digitalWrite(motorIn1, LOW);
+    digitalWrite(motorIn2, HIGH);
+  }
+
+  // Ajustar la velocidad del motor según la salida del controlador PID
+  analogWrite(motorPWM, abs(Output));
+
+  delay(100);  // Ajusta este valor según sea necesario
 }
 
-// Increment the number of pulses by 1
-void right_wheel_pulse() {
-  right_wheel_pulse_count++;
-}*/
+double computeP(double inp) {
+  currentTime = millis();
+  elapsedTime = (double)(currentTime - previousTime);
+
+  error = Setpoint - inp;
+  double output = Kp * error;
+
+  lastError = error;
+  previousTime = currentTime;
+
+  return output;
+}

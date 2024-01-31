@@ -1,11 +1,11 @@
-#include "Motors.h"
+/*#include "Motors.h"
 #include "Arduino.h"
 
-Motors::Motors(int speed1, int in1_1, int in2_1, int stby1, int speed2, int in1_2, int in2_2, int stby2, int speed3, int in1_3, int in2_3, int stby3, int speed4, int in1_4, int in2_4, int stby4) {
-    motor1.set(speed1, in1_1, in2_1, stby1);
-    motor2.set(speed2, in1_2, in2_2, stby2);
-    motor3.set(speed3, in1_3, in2_3, stby3);
-    motor4.set(speed4, in1_4, in2_4, stby4);
+Motors::Motors(int speed1, int in1_1, int in2_1, int stby1, int encoder1, int speed2, int in1_2, int in2_2, int stby2, int encoder2, int speed3, int in1_3, int in2_3, int stby3, int encoder3, int speed4, int in1_4, int in2_4, int stby4, int encoder4) {
+    motor1.set(encoder1, speed1, in1_1, in2_1, stby1);
+    motor2.set(encoder2, speed2, in1_2, in2_2, stby2);
+    motor3.set(encoder3, speed3, in1_3, in2_3, stby3);
+    motor4.set(encoder4, speed4, in1_4, in2_4, stby4);
 };
 
 void Motors::InitializeMotors() {
@@ -58,11 +58,11 @@ void Motors::moveForward() {
     motor4.stopMotor();
 };
 
-/*void Motors::moveForward() {
+void Motors::moveForward() {
     stopMotors();
     motor2.moveForward();
     motor3.moveBackward();
-};*/
+};
 
 void Motors::moveBackward() {
     stopMotors();
@@ -168,3 +168,4 @@ void Motors::moveMotorsImu(double degree, double speed) {
         motor4.moveBackward();
     }
 };
+*/

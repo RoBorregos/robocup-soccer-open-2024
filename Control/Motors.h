@@ -12,7 +12,7 @@ class Motors{
         Motor motor3;
         Motor motor4;
 
-        Motors(int speed1, int in1_1, int in2_1, int stby1, int speed2, int in1_2, int in2_2, int stby2, int speed3, int in1_3, int in2_3, int stby3, int speed4, int in1_4, int in2_4, int stby4);
+        Motors(int speed1, int in1_1, int in2_1, int stby1, int encoder1, int speed2, int in1_2, int in2_2, int stby2, int encoder2, int speed3, int in1_3, int in2_3, int stby3, int encoder3, int speed4, int in1_4, int in2_4, int stby4, int encoder4);
         void InitializeMotors();
         void InitializeDriver();
         void setSpeed(int pwm, int speed);
@@ -32,5 +32,4 @@ class Motors{
 };
 
 #endif
-
 

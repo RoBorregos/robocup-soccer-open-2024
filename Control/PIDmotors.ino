@@ -1,10 +1,12 @@
-#include <Arduino.h>
+/*#include <Arduino.h>
 
 // Define motor control pins
-const int motorIn1 = 9;
-const int motorIn2 = 10;
-const int motorPWM = 5;
-const int motorSTBY = 11;
+
+const int motorIn1 = 45;  // 43
+const int motorIn2 = 43;  // 41
+const int motorPWM = 12;  // 
+const int motorSTBY = 41; //
+const int encoder = 2; 
 
 // Variables del controlador PID
 double Kp = 2;  // Constante proporcional
@@ -36,10 +38,9 @@ void setup() {
 
 void loop() {
   // Leer la entrada del sensor (por ejemplo, un potenciómetro)
-  double sensorValue = analogRead(A0);
 
   // Calcular la salida del controlador PID
-  Output = computeP(sensorValue);
+  Output = computeP(encoder);
 
   // Aplicar la salida del controlador PID al motor
   if (Output > 0) {
@@ -68,3 +69,4 @@ double computeP(double inp) {
 
   return output;
 }
+*/

@@ -76,10 +76,10 @@ void loop() {
   digitalWrite(motor2In1, HIGH);
   digitalWrite(motor2In2, LOW);
 
-   digitalWrite(motorIn1, HIGH);
+  digitalWrite(motorIn1, HIGH);
   digitalWrite(motor2In2, LOW);
 
-   digitalWrite(motor4In1, HIGH);
+  digitalWrite(motor4In1, HIGH);
   digitalWrite(motor4In2, LOW);
 
   

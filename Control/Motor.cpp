@@ -1,10 +1,10 @@
 #include "Arduino.h"
 #include "Motor.h"
+#include "Encoder.h"
 
-Motor::Motor() {
-};
 
-void Motor::set(int speed, int in1, int in2, int stby) {
+void Motor::set(int encoderPin, int speed, int in1, int in2, int stby) {
+    _encoder = Encoder(encoderPin);
     _speed = speed;
     _in1 = in1;
     _in2 = in2;
@@ -16,6 +16,7 @@ void Motor::InitializeMotor() {
     pinMode(_in2, OUTPUT);
     pinMode(_speed, OUTPUT);
     pinMode(_stby, OUTPUT);
+    _encoder.initialize();
 };
 
 void Motor::InitializeDriver() {
@@ -53,3 +54,19 @@ int Motor::getIn1() {
 int Motor::getIn2() {
     return _in2;
 };
+
+float Motor::getRPM() {
+    _encoder.update();
+    return _encoder.getRPM();
+}
+
+float Motor::getAngularVelocity() {
+    _encoder.update();
+    return _encoder.getAngularVelocity();
+}
+
+float Motor::getDegree() {
+    _encoder.update();
+    return _encoder.getDegree();
+}
+
