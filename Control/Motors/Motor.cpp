@@ -3,7 +3,7 @@
 #include "Encoder.h"
 
 
-void Motor::set(int encoderPin, int speed, int in1, int in2, int stby) {
+void Motor::set(uint8_t encoderPin, uint8_t speed, uint8_t in1, uint8_t in2, uint8_t stby) {
     _encoder = Encoder(encoderPin);
     _speed = speed;
     _in1 = in1;
@@ -23,7 +23,7 @@ void Motor::InitializeDriver() {
     digitalWrite(_stby, HIGH);
 };
 
-void Motor::setSpeed(int pwm, int speed) {
+void Motor::setSpeed(uint8_t pwm, uint8_t speed) {
     analogWrite(pwm, speed);
 };
 
@@ -43,7 +43,7 @@ void Motor::stopMotor() {
 };
 
 
-int Motor::getSpeed() {
+uint8_t Motor::getSpeed() {
     return _speed;
 };
 
