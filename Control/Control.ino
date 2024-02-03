@@ -1,7 +1,6 @@
 #include <Arduino.h>
 
 // Define motor control pins
-
 const int motorIn1 = 45;  // 43
 const int motorIn2 = 43;  // 41
 const int motorPWM = 12;  // 

@@ -13,20 +13,20 @@ class Encoder {
     void initialize();
     void update();
     void reset();
+    float getPulses();
+    static void _wheel_pulse();
+    float getDegree();
     float getRPM();
     float getAngularVelocity();
-    float getDegree();
-    float getPulses();
-    static void right_wheel_pulse();
 
   private:
     int _pin;
-    volatile static float _right_wheel_pulse_count;
+    volatile static float _wheel_pulse_count;
     long _previousMillis;
     long _currentMillis;
     int _interval;
-    float _rpm_right;
-    float _ang_velocity_right;
+    float _rpm;
+    float _ang_velocity;
 };
 
 #endif

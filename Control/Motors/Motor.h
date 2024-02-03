@@ -7,7 +7,6 @@
 
 class Motor {
     public:
-        Motor(int encoderPin);
         void set(int encoderPin, int speed, int in1, int in2, int stby);
         void InitializeMotor();
         void moveForward();
@@ -16,8 +15,8 @@ class Motor {
         void InitializeDriver();
         void setSpeed(int pwm, int speed);
         int getSpeed();
-        int getIn1();
-        int getIn2();
+        uint8_t getIn1();
+        uint8_t getIn2();
         void moveMotor1();
         void moveMotor2();
         void moveMotor3();
@@ -28,6 +27,7 @@ class Motor {
 
 
     private:
+        int _encoder;
         int _speed;
         int _in1;
         int _in2;

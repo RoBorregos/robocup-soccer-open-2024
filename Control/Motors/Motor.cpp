@@ -48,11 +48,11 @@ int Motor::getSpeed() {
 };
 
 
-int Motor::getIn1() {
+uint8_t Motor::getIn1() {
     return _in1;
 };
 
-int Motor::getIn2() {
+uint8_t Motor::getIn2() {
     return _in2;
 };
 
