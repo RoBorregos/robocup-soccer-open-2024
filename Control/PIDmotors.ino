@@ -1,4 +1,4 @@
-/*#include <Arduino.h>
+#include <Arduino.h>
 
 // Define motor control pins
 
@@ -28,10 +28,6 @@ void setup() {
   // Enable the motor driver
   digitalWrite(motorSTBY, HIGH);
 
-  // Inicializar el controlador PID
-  currentTime = millis();
-  previousTime = currentTime;
-
   // Establecer la velocidad inicial de los motores
   analogWrite(motorPWM, 128);  // Establecer velocidad (0 a 255)
 }
@@ -58,9 +54,6 @@ void loop() {
 }
 
 double computeP(double inp) {
-  currentTime = millis();
-  elapsedTime = (double)(currentTime - previousTime);
-
   error = Setpoint - inp;
   double output = Kp * error;
 
@@ -69,4 +62,3 @@ double computeP(double inp) {
 
   return output;
 }
-*/

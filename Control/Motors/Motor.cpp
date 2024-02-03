@@ -47,6 +47,7 @@ int Motor::getSpeed() {
     return _speed;
 };
 
+
 int Motor::getIn1() {
     return _in1;
 };
