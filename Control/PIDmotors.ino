@@ -13,8 +13,6 @@ double Kp = 2;  // Constante proporcional
 double Setpoint = 100;  // Valor deseado
 
 // Variables internas del controlador PID
-unsigned long currentTime, previousTime;
-double elapsedTime;
 double error, lastError;
 double Output;
 
@@ -56,9 +54,6 @@ void loop() {
 double computeP(double inp) {
   error = Setpoint - inp;
   double output = Kp * error;
-
   lastError = error;
-  previousTime = currentTime;
-
   return output;
 }
