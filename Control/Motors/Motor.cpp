@@ -3,13 +3,12 @@
 #include "Encoder.h"
 
 
-void Motor::set(uint8_t encoderPin, uint8_t speed, uint8_t in1, uint8_t in2, uint8_t stby) {
-    _encoder = Encoder(encoderPin);
+Motor::Motor(uint8_t encoderPin, uint8_t speed, uint8_t in1, uint8_t in2, uint8_t stby) : _encoder(encoderPin) {
     _speed = speed;
     _in1 = in1;
     _in2 = in2;
     _stby = stby;
-};
+}
 
 void Motor::InitializeMotor() {
     pinMode(_in1, OUTPUT);

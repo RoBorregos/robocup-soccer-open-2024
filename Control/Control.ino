@@ -1,70 +1,28 @@
 #include <Arduino.h>
 
-// Define motor control pins
-const int motorIn1 = 45;  // 43
-const int motorIn2 = 43;  // 41
-const int motorPWM = 12;  // 
-const int motorSTBY = 41; //
-const int encoder = 2; 
+#include "Motor.h"
+#include "PID.h"
 
-// Variables del controlador PID
-double Kp = 2;  // Constante proporcional
-double Setpoint = 100;  // Valor deseado
+int encoderPin = 3;
+int speedPin = 4;
+int in1 = 5;
+int in2 = 6;
+int stby = 7;
 
-// Variables internas del controlador PID
-unsigned long currentTime, previousTime;
-double elapsedTime;
-double error, lastError;
-double Output;
+
+Motor motor1(encoderPin, speedPin, in1, in2, stby);
+PID pid1(1.0); 
 
 void setup() {
-  // Set motor control pins as outputs
-  pinMode(motorIn1, OUTPUT);
-  pinMode(motorIn2, OUTPUT);
-  pinMode(motorPWM, OUTPUT);
-  pinMode(motorSTBY, OUTPUT);
-
-  // Enable the motor driver
-  digitalWrite(motorSTBY, HIGH);
-
-  // Inicializar el controlador PID
-  currentTime = millis();
-  previousTime = currentTime;
-
-  // Establecer la velocidad inicial de los motores
-  analogWrite(motorPWM, 128);  // Establecer velocidad (0 a 255)
+  Serial.begin(9600);
+  motor1.InitializeMotor();
+  motor1.InitializeDriver();
+  pid1.setSetpoint(100.0); 
+  pid1.setOutputLimits(0, 255); 
 }
 
 void loop() {
-  // Leer la entrada del sensor (por ejemplo, un potenciómetro)
-
-  // Calcular la salida del controlador PID
-  Output = computeP(encoder);
-
-  // Aplicar la salida del controlador PID al motor
-  if (Output > 0) {
-    digitalWrite(motorIn1, HIGH);
-    digitalWrite(motorIn2, LOW);
-  } else {
-    digitalWrite(motorIn1, LOW);
-    digitalWrite(motorIn2, HIGH);
-  }
-
-  // Ajustar la velocidad del motor según la salida del controlador PID
-  analogWrite(motorPWM, abs(Output));
-
-  delay(100);  // Ajusta este valor según sea necesario
-}
-
-double computeP(double inp) {
-  currentTime = millis();
-  elapsedTime = (double)(currentTime - previousTime);
-
-  error = Setpoint - inp;
-  double output = Kp * error;
-
-  lastError = error;
-  previousTime = currentTime;
-
-  return output;
+  float currentSpeed = motor1.getRPM();
+  float controlValue = pid1.computeP(currentSpeed);
+  analogWrite(speedPin, controlValue);
 }
