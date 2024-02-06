@@ -3,11 +3,11 @@
 #include "Motor.h"
 #include "PID.h"
 
-int encoderPin = 3;
-int speedPin = 4;
-int in1 = 5;
-int in2 = 6;
-int stby = 7;
+uint8_t encoderPin = 3;
+uint8_t speedPin = 4;
+uint8_t in1 = 5;
+uint8_t in2 = 6;
+uint8_t stby = 7;
 
 
 Motor motor1(encoderPin, speedPin, in1, in2, stby);

@@ -12,10 +12,10 @@ class Motors{
         Motor motor3;
         Motor motor4;
 
-        Motors(int speed1, int in1_1, int in2_1, int stby1, int encoder1, int speed2, int in1_2, int in2_2, int stby2, int encoder2, int speed3, int in1_3, int in2_3, int stby3, int encoder3, int speed4, int in1_4, int in2_4, int stby4, int encoder4);
+        Motors(uint8_t speed1, uint8_t in1_1, uint8_t in2_1, uint8_t stby1, uint8_t encoder1, uint8_t speed2, uint8_t in1_2, uint8_t in2_2, uint8_t stby2, uint8_t encoder2, uint8_t speed3, uint8_t in1_3, uint8_t in2_3, uint8_t stby3, uint8_t encoder3, uint8_t speed4, uint8_t in1_4, uint8_t in2_4, uint8_t stby4, uint8_t encoder4);
         void InitializeMotors();
         void InitializeDriver();
-        void setSpeed(int pwm, int speed);
+        void setSpeed(uint8_t pwm, uint8_t speed);
         void stopMotors();
         void moveForward();
         void moveBackward();
@@ -23,11 +23,11 @@ class Motors{
         void moveMotor2();
         void moveMotor3();
         void moveMotor4();
-        void moveMotors(int degree, int speed);
-        void individualMotor(int motor, int speed);
+        void moveMotors(int degree, uint8_t speed);
+        void individualMotor(uint8_t motor, uint8_t speed);
         void getAllSpeeds();
-        void moveOneMotor(int motor, int speed);
-        void moveMotorsImu(double targetAngle, double speed);
+        void moveOneMotor(uint8_t motor, uint8_t speed);
+        void moveMotorsImu(double targetAngle, uint8_t speed);
         
 };
 

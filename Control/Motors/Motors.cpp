@@ -1,7 +1,7 @@
 #include "Motors.h"
 #include "Arduino.h"
 
-Motors::Motors(int speed1, int in1_1, int in2_1, int stby1, int encoder1, int speed2, int in1_2, int in2_2, int stby2, int encoder2, int speed3, int in1_3, int in2_3, int stby3, int encoder3, int speed4, int in1_4, int in2_4, int stby4, int encoder4) 
+Motors::Motors(uint8_t speed1, uint8_t in1_1, uint8_t in2_1, uint8_t stby1, uint8_t encoder1, uint8_t speed2, uint8_t in1_2, uint8_t in2_2, uint8_t stby2, uint8_t encoder2, uint8_t speed3, uint8_t in1_3, uint8_t in2_3, uint8_t stby3, uint8_t encoder3, uint8_t speed4, uint8_t in1_4, uint8_t in2_4, uint8_t stby4, uint8_t encoder4) 
 : motor1(encoder1, speed1, in1_1, in2_1, stby1),
   motor2(encoder2, speed2, in1_2, in2_2, stby2),
   motor3(encoder3, speed3, in1_3, in2_3, stby3),
@@ -22,7 +22,7 @@ void Motors::InitializeDriver() {
     motor4.InitializeDriver();
 };
 
-void Motors::setSpeed(int pwm, int speed) {
+void Motors::setSpeed(uint8_t pwm, uint8_t speed) {
     motor1.setSpeed(pwm, speed);
     motor2.setSpeed(pwm, speed);
     motor3.setSpeed(pwm, speed);
@@ -87,7 +87,7 @@ void Motors::moveMotor4() {
 };
 
 // kinematic equations for robot movement
-void Motors::moveMotors(int degree, int speed) {
+void Motors::moveMotors(int degree, uint8_t speed) {
     float m1 = cos(((45+degree) * PI / 180));
     float m2 = cos(((135+degree) * PI / 180));
     float m3 = cos(((225+degree) * PI / 180));
@@ -128,7 +128,7 @@ void Motors::moveMotors(int degree, int speed) {
     }
 };
 
-void Motors::moveMotorsImu(double degree, double speed) {
+void Motors::moveMotorsImu(double degree, uint8_t speed) {
     float m1 = cos(((45+degree) * PI / 180));
     float m2 = cos(((135+degree) * PI / 180));
     float m3 = cos(((225+degree) * PI / 180));
