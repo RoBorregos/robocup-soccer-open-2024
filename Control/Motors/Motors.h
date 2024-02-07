@@ -28,8 +28,10 @@ class Motors{
         void getAllSpeeds();
         void moveOneMotor(uint8_t motor, uint8_t speed);
         void moveMotorsImu(double targetAngle, uint8_t speed);
+        void moveMotorsProportional(double targetAngle, uint8_t setpoint);
         
 };
 
 #endif
+
 

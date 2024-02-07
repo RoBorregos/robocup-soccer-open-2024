@@ -1,4 +1,5 @@
 #include "Motors.h"
+#include "PID.h"
 #include "Arduino.h"
 
 Motors::Motors(uint8_t speed1, uint8_t in1_1, uint8_t in2_1, uint8_t stby1, uint8_t encoder1, uint8_t speed2, uint8_t in1_2, uint8_t in2_2, uint8_t stby2, uint8_t encoder2, uint8_t speed3, uint8_t in1_3, uint8_t in2_3, uint8_t stby3, uint8_t encoder3, uint8_t speed4, uint8_t in1_4, uint8_t in2_4, uint8_t stby4, uint8_t encoder4) 
@@ -168,3 +169,56 @@ void Motors::moveMotorsImu(double degree, uint8_t speed) {
         motor4.moveBackward();
     }
 };
+
+double KP = 1.0;
+PID pid1(KP);
+PID pid2(KP);
+PID pid3(KP);
+PID pid4(KP);
+
+void Motors::moveMotorsProportional(double degree, uint8_t setpoint) {
+    float m1 = cos(((45+degree) * PI / 180));
+    float m2 = cos(((135+degree) * PI / 180));
+    float m3 = cos(((225+degree) * PI / 180));
+    float m4 = cos(((315+degree) * PI / 180));
+
+    pid1.setSetpoint(setpoint);
+    pid2.setSetpoint(setpoint);
+    pid3.setSetpoint(setpoint);
+    pid4.setSetpoint(setpoint);
+
+    int speedA = pid1.computeP(abs(int(m1*setpoint)));
+    int speedB = pid2.computeP(abs(int(m2*setpoint)));
+    int speedC = pid3.computeP(abs(int(m3*setpoint)));
+    int speedD = pid4.computeP(abs(int(m4*setpoint)));
+
+    analogWrite(motor1.getSpeed(), speedA);
+    analogWrite(motor2.getSpeed(), speedB);
+    analogWrite(motor3.getSpeed(), speedC);
+    analogWrite(motor4.getSpeed(), speedD);
+
+    if (m1 >= 0){
+        motor1.moveForward();
+    }
+    else {
+        motor1.moveBackward();
+    }
+    if (m2 >= 0){
+        motor2.moveForward();
+    }
+    else {
+        motor2.moveBackward();
+    }
+    if (m3 >= 0){
+        motor3.moveForward();
+    }
+    else {
+        motor3.moveBackward();
+    }
+    if (m4 >= 0){
+        motor4.moveForward();
+    }
+    else {
+        motor4.moveBackward();
+    }
+}
