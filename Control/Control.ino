@@ -1,6 +1,6 @@
 #include <Arduino.h>
-
 #include "Motor.h"
+#include "Motors.h"
 #include "PID.h"
 
 uint8_t encoderPin = 3;
@@ -9,8 +9,8 @@ uint8_t in1 = 5;
 uint8_t in2 = 6;
 uint8_t stby = 7;
 
-
 Motor motor1(encoderPin, speedPin, in1, in2, stby);
+
 PID pid1(1.0); 
 
 void setup() {

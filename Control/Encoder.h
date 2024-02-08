@@ -9,7 +9,7 @@
 
 class Encoder {
   public:
-    Encoder(int pin);
+    Encoder(uint8_t pin);
     void initialize();
     void update();
     void reset();

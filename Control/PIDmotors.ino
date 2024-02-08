@@ -1,4 +1,4 @@
-#include <Arduino.h>
+/*#include <Arduino.h>
 
 // Define motor control pins
 
@@ -57,3 +57,4 @@ double computeP(double inp) {
   lastError = error;
   return output;
 }
+*/

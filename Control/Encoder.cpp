@@ -2,7 +2,7 @@
 
 volatile float Encoder::_wheel_pulse_count = 0;
 
-Encoder::Encoder(int pin) {
+Encoder::Encoder(uint8_t pin) {
   _pin = pin;
   _previousMillis = 0;
   _currentMillis = 0;

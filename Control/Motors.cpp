@@ -59,11 +59,11 @@ void Motors::moveForward() {
     motor4.stopMotor();
 };
 
-void Motors::moveForward() {
+/*void Motors::moveForward() {
     stopMotors();
     motor2.moveForward();
     motor3.moveBackward();
-};
+};*/
 
 void Motors::moveBackward() {
     stopMotors();
@@ -170,7 +170,7 @@ void Motors::moveMotorsImu(double degree, uint8_t speed) {
     }
 };
 
-double KP = 1.0;
+/*double KP = 1.0;
 PID pid1(KP);
 PID pid2(KP);
 PID pid3(KP);
@@ -222,3 +222,4 @@ void Motors::moveMotorsProportional(double degree, uint8_t setpoint) {
         motor4.moveBackward();
     }
 }
+*/

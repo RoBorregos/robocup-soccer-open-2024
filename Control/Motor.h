@@ -27,12 +27,11 @@ class Motor {
 
 
     private:
-        uint8_t _encoder;
         uint8_t _speed;
         uint8_t _in1;
         uint8_t _in2;
         uint8_t _stby;
-        Encoder _encoder;
+        Encoder _encoder; 
     };
 
 #endif
