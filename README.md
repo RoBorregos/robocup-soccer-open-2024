@@ -12,16 +12,12 @@ Code for Robocup Soccer Open 2024 participating with Roborregos Team
 ## Features
 
 - Implementation of personalized Arduino libraries for easy usage
-- Live previews
-- Fullscreen mode
-- Cross platform
+-
 
 
 ## Roadmap
 
-- Additional browser support
-
-- Add more integrations
+- 
 
 
 ## Structure
@@ -34,17 +30,13 @@ Code for Robocup Soccer Open 2024 participating with Roborregos Team
 ## Usage/Examples
 
 ```javascript
-import Component from 'my-project'
-
-function App() {
-  return <Component />
-}
+example
 ```
 
 
 ## Optimizations
 
-What optimizations did you make in your code? E.g. refactors, performance improvements, accessibility
+optimizations
 
 
 ## License
