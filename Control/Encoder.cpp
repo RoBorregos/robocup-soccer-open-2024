@@ -15,12 +15,8 @@ void Encoder::initialize() {
 }
 
 void Encoder::update() {
-  _currentMillis = millis();
-  if (_currentMillis - _previousMillis > _interval) {
-    _previousMillis = _currentMillis;
     _rpm = (_wheel_pulse_count * 60 / ENC_COUNT_REV);
     _ang_velocity = (_rpm * 2 * PI) / 60;
-  }
 }
 
 float Encoder::getDegree() {
@@ -45,4 +41,5 @@ void Encoder::reset() {
 
 float Encoder::getPulses() {
   return _wheel_pulse_count;
+
 }

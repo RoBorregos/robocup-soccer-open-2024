@@ -15,7 +15,7 @@ void Motor::InitializeMotor() {
     pinMode(_in2, OUTPUT);
     pinMode(_speed, OUTPUT);
     pinMode(_stby, OUTPUT);
-    _encoder.initialize();
+    //_encoder.initialize();
 };
 
 void Motor::InitializeDriver() {
