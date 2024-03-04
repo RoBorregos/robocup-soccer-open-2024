@@ -12,9 +12,10 @@ uint8_t in2 = 10;
 uint8_t speedPin = 5; 
 uint8_t stby = 11;
 int _currentMillis = 0;
-int _interval = 1000;
+int _interval = 2000;
 int _previousMillis = 0;
 int rpm = 0;
+float _ang_velocity = 0;
 
 Motor motor1(ENC_IN_RIGHT_A, speedPin, in1, in2, stby);
  
@@ -46,7 +47,11 @@ void loop() {
   Serial.print(" RPM: ");
   motor1.moveForward();
   rpm = (right_wheel_pulse_count * 60 / 63);
+  _ang_velocity = (rpm * 2 * PI) / 60;
+  Serial.print(" RPM: ");
   Serial.println(rpm);
+  Serial.print(" Angular Velocity: ");
+  Serial.println(_ang_velocity);
 
 
   
