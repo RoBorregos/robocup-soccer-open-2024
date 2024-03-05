@@ -7,7 +7,7 @@
 
 class Motor {
     public:
-        Motor(uint8_t encoderPin, uint8_t speed, uint8_t in1, uint8_t in2, uint8_t stby);
+        Motor(uint8_t speed, uint8_t in1, uint8_t in2);
         void InitializeMotor();
         void moveForward();
         void moveBackward();
@@ -30,8 +30,6 @@ class Motor {
         uint8_t _speed;
         uint8_t _in1;
         uint8_t _in2;
-        uint8_t _stby;
-        Encoder _encoder; 
     };
 
 #endif

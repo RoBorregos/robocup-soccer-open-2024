@@ -1,117 +1,56 @@
-// Define motor control pins
-//there are 56 pulses per revolution
-
-//measuring we get 24 pulses per revolution
-
-#include <Arduino.h>
-#include "Motor.h"
-// Encoder output to Arduino Interrupt pin. Tracks the pulse count.
-#define ENC_IN_RIGHT_A 3
-uint8_t in1 = 9; 
-uint8_t in2 = 10;
-uint8_t speedPin = 5; 
-uint8_t stby = 11;
-int _currentMillis = 0;
-int _interval = 2000;
-int _previousMillis = 0;
-int rpm = 0;
-float _ang_velocity = 0;
-
-Motor motor1(ENC_IN_RIGHT_A, speedPin, in1, in2, stby);
- 
-// Keep track of the number of right wheel pulses
-volatile long right_wheel_pulse_count = 0;
- 
-void setup() {
- 
-  // Open the serial port at 9600 bps
-  Serial.begin(9600); 
- 
-  // Set pin states of the encoder
-  pinMode(ENC_IN_RIGHT_A , INPUT_PULLUP);
- 
-  // Every time the pin goes high, this is a pulse
-  attachInterrupt(digitalPinToInterrupt(ENC_IN_RIGHT_A), right_wheel_pulse, RISING);
-  motor1.InitializeMotor();
-  motor1.InitializeDriver();
-  motor1.setSpeed(speedPin, 255);
-}
- 
-void loop() {
-  _currentMillis = millis();
-  if(_currentMillis - _previousMillis > _interval){
-    _previousMillis = _currentMillis;
-     right_wheel_pulse_count = 0;
-     rpm = 0;
-  }
-  Serial.print(" RPM: ");
-  motor1.moveForward();
-  rpm = (right_wheel_pulse_count * 60 / 63);
-  _ang_velocity = (rpm * 2 * PI) / 60;
-  Serial.print(" RPM: ");
-  Serial.println(rpm);
-  Serial.print(" Angular Velocity: ");
-  Serial.println(_ang_velocity);
-
-
-  
-  
-}
- 
-// Increment the number of pulses by 1
-void right_wheel_pulse() {
-  right_wheel_pulse_count++;
-}
-/*#include <Arduino.h>
-#include "Motor.h"
 #include "Motors.h"
-#include "PID.h"
+#include <Arduino.h>
 
-uint8_t encoderPin = 2;
-uint8_t in1 = 9; 
-uint8_t in2 = 10;
-uint8_t speedPin = 5; 
-uint8_t stby = 11; 
-int currentMillis = 0;
-int interval = 1000; 
-int previousMillis = 0;
+// check motor polarity individually for IN1 and IN2 when robot movement is set to 0 degrees. If not correct, swap IN1 and IN2
 
+// encoders: 2, 3, 18, 19
+uint8_t motor4In1 = 25;
+uint8_t motor4In2 = 6;
+uint8_t motor4PWM = 20;
 
+uint8_t motor3In1 = 14;
+uint8_t motor3In2 = 11;
+uint8_t motor3PWM = 21;
 
-Motor motor1(encoderPin, speedPin, in1, in2, stby);
+uint8_t motorIn1 = 8;
+uint8_t motorIn2 = 9;
+uint8_t motorPWM = 10;
 
-PID pid1(1);
+uint8_t motor2In1 = 22;
+uint8_t motor2In2 = 23;
+uint8_t motor2PWM = 15;
 
-void setup() {
+void setup()
+{
+
   Serial.begin(9600);
-  motor1.InitializeMotor();
-  motor1.InitializeDriver();
-  motor1.setSpeed(speedPin, 255);
-  //setpoint cannot be a pwm
- // pid1.setSetpoint(100.0);
 
-  //pid1.setOutputLimits(100, 255);
+  Motors myMotors(
+      motorPWM, motorIn1, motorIn2,
+      motor2PWM, motor2In1, motor2In2,
+      motor3PWM, motor3In1, motor3In2,
+      motor4PWM, motor4In1, motor4In2);
+
+  myMotors.InitializeMotors();
+  myMotors.setSpeed(motorPWM, 160);
+  myMotors.setSpeed(motor2PWM, 160);
+  myMotors.setSpeed(motor3PWM, 160);
+  myMotors.setSpeed(motor4PWM, 160);
+
+  myMotors.moveMotors(45, 160);
+  delay(1000);
+  myMotors.stopMotors();
+  myMotors.moveMotors(135, 160);
+  delay(1000);
+  myMotors.stopMotors();
+  myMotors.moveMotors(225, 160);
+  delay(1000);
+  myMotors.stopMotors();
+  myMotors.moveMotors(315, 160);
+  delay(1000);
+  myMotors.stopMotors();
 }
 
-void loop() {
-currentMillis = millis();
-if(currentMillis - previousMillis > interval){
-  previousMillis = currentMillis;
-  motor1.moveForward(); 
-//if setpoint - rpm is 0, then there is no error and motor stops
-
-  float currentSpeed = motor1.getRPM();
-
-  //float controlValue = pid1.computeP(currentSpeed);
-
-  //motor1.setSpeed(speedPin, controlValue); // Set the speed of the motor
-    Serial.println(currentSpeed);
-  
+void loop()
+{
 }
-
-
-}
-*/
-
-
-

@@ -2,11 +2,11 @@
 #include "PID.h"
 #include "Arduino.h"
 
-Motors::Motors(uint8_t speed1, uint8_t in1_1, uint8_t in2_1, uint8_t stby1, uint8_t encoder1, uint8_t speed2, uint8_t in1_2, uint8_t in2_2, uint8_t stby2, uint8_t encoder2, uint8_t speed3, uint8_t in1_3, uint8_t in2_3, uint8_t stby3, uint8_t encoder3, uint8_t speed4, uint8_t in1_4, uint8_t in2_4, uint8_t stby4, uint8_t encoder4) 
-: motor1(encoder1, speed1, in1_1, in2_1, stby1),
-  motor2(encoder2, speed2, in1_2, in2_2, stby2),
-  motor3(encoder3, speed3, in1_3, in2_3, stby3),
-  motor4(encoder4, speed4, in1_4, in2_4, stby4)
+Motors::Motors(uint8_t speed1, uint8_t in1_1, uint8_t in2_1, uint8_t speed2, uint8_t in1_2, uint8_t in2_2, uint8_t speed3, uint8_t in1_3, uint8_t in2_3, uint8_t speed4, uint8_t in1_4, uint8_t in2_4) 
+: motor1(speed1, in1_1, in2_1),
+  motor2(speed2, in1_2, in2_2),
+  motor3(speed3, in1_3, in2_3),
+  motor4(speed4, in1_4, in2_4)
 {};
 
 void Motors::InitializeMotors() {

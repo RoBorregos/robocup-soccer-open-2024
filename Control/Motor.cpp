@@ -3,24 +3,22 @@
 #include "Encoder.h"
 
 
-Motor::Motor(uint8_t encoderPin, uint8_t speed, uint8_t in1, uint8_t in2, uint8_t stby) : _encoder(encoderPin) {
+Motor::Motor(uint8_t speed, uint8_t in1, uint8_t in2) {
     _speed = speed;
     _in1 = in1;
     _in2 = in2;
-    _stby = stby;
 }
 
 void Motor::InitializeMotor() {
     pinMode(_in1, OUTPUT);
     pinMode(_in2, OUTPUT);
     pinMode(_speed, OUTPUT);
-    pinMode(_stby, OUTPUT);
     //_encoder.initialize();
 };
 
-void Motor::InitializeDriver() {
+/*void Motor::InitializeDriver() {
     digitalWrite(_stby, HIGH);
-};
+};*/
 
 void Motor::setSpeed(uint8_t pwm, uint8_t speed) {
     analogWrite(pwm, speed);
@@ -55,18 +53,18 @@ uint8_t Motor::getIn2() {
     return _in2;
 };
 
-float Motor::getRPM() {
+/*float Motor::getRPM() {
     _encoder.update();
     return _encoder.getRPM();
-}
+}*/
 
-float Motor::getAngularVelocity() {
+/*float Motor::getAngularVelocity() {
     _encoder.update();
     return _encoder.getAngularVelocity();
-}
+}*/
 
-float Motor::getDegree() {
+/*float Motor::getDegree() {
     _encoder.update();
     return _encoder.getDegree();
-}
+}*/
 
