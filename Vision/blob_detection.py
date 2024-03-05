@@ -1,9 +1,11 @@
 
 
-import pyb # Import module for board related functions
-import sensor # Import the module for sensor related functions
-import image # Import module containing machine vision algorithms
-import time # Import module for tracking elapsed time
+# Import module for board related functions
+# Import the module for sensor related functions
+# Import module containing machine vision algorithms
+# Import module for tracking elapsed time
+import math, utime, time, image, sensor, pyb
+from pyb import UART
 
 sensor.reset() # Resets the sensor
 sensor.set_pixformat(sensor.RGB565) # Sets the sensor to RGB
