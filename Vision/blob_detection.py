@@ -11,14 +11,14 @@ from find_blob import find_blobs, draw_blobs
 from find_angle import calculate_angle
 
 uart = UART(3, 9600)
-thresholdsCube = (62, 79, 22, 127, 6, 127)
+threshold = (62, 79, 22, 127, 6, 127)
 sensor = initialize_sensor()
 clock = time.clock()
 
 while True:
     clock.tick()
     img = sensor.snapshot()
-    blobs = find_blobs(img, thresholdsCube)
+    blobs = find_blobs(img, threshold)
     draw_blobs(img, blobs)
 
     for blob in blobs:
