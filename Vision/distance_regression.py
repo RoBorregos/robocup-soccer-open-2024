@@ -57,8 +57,7 @@ while(True):
         #print(rcx, rcy)
         # Find distance using relative coordinates
         #mcx = rcx * 0.2375
-        mcy = rcy * 0.2375
-        #test
+        #mcy = rcy * 0.2375
 
         #print(mcx)
         cirle_radius=blob.enclosing_circle()[2]
