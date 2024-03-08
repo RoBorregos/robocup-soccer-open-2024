@@ -94,8 +94,8 @@ def main():
             print("Angle: ", angle, " degrees")
             uart.write(str(distance) + " " + str(angle) + "\n")
         else:
-            print("No blobs found")
-            uart.write("No blobs found\n")
+            print("No blob found")
+            uart.write("No blob found\n")
         pyb.delay(50)
 
 if __name__ == "__main__":
