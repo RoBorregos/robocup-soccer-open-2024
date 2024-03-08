@@ -72,9 +72,9 @@ def calculate_distance(blob):
     tangent_angle = math.degrees(math.atan(tangent))
     y = ((0.1+distance**2)*0.45)**(1/2)+CAMERA_HEIGHT
     center_angle = math.degrees(math.atan((y/distance)))
-    Y = 2*(180-90-(center_angle-tangent_angle))
-    X = (180-Y)/2
-    projection_angle = X-tangent_angle
+    off_angle = 2*(180-90-(center_angle-tangent_angle))
+    mirror_angle = (180-off_angle)/2
+    projection_angle = mirror_angle-tangent_angle
     total_distance = distance + \
         (FLOOR_HEIGHT/(math.tan(math.radians(projection_angle))))
     return total_distance
