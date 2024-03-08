@@ -1,99 +1,97 @@
-# Import module for board related functions
-# Import the module for sensor related functions
-# Import module containing machine vision algorithms
-# Import module for tracking elapsed time
-import math, utime, time, image, sensor, pyb
+"""
+This script makes a regression between pixels and real distance measures in cm and angles
+
+The script uses the camera to detect a colored object and calculate the distance from the camera to the object.
+The distance of the blob from the camera is calculated using an exponential regression model.
+
+Author: Jocelyn Velarde
+Version: March 7, 2024
+"""
+import math
+import time
+import utime
+import image
+import sensor
+import pyb
 from pyb import UART
 
-uart = UART(3, 9600) # Initiates the UART communication with a baudrate of 9600
+uart = UART(3, 9600)
+thresholds = (52, 85, 22, 97, 8, 61)
 
-# Define the min/max LAB values we're looking for
-thresholdsCube = (52, 85, 22, 97, 8, 61)
+FRAME_HEIGHT = 160
+FRAME_WIDTH = 120
+PIXEL_SIZE_HEIGHT = 0.2726875
+PIXEL_SIZE_WIDTH = 0.25
+CAMERA_HEIGHT = 5
+FLOOR_HEIGHT = 15
+CM_CONVERTION = 0.1
 
-sensor.reset() # Resets the sensor
-sensor.set_pixformat(sensor.RGB565) # Sets the sensor to RGB
-sensor.set_framesize(sensor.QVGA) # Sets the resolution to 320x240 px
-sensor.set_vflip(True) # Flips the image vertically
-sensor.set_hmirror(True) # Mirrors the image horizontally
-sensor.skip_frames(time = 2000) # Skip some frames to let the image stabilize
-#sensor.set_auto_gain(False) # must be turned off for color tracking
-#sensor.set_auto_whitebal(False) # must be turned off for color tracking
+def initialize_sensor():
+    """
+    Initializes the camera sensor with the required settings.
+    """
+    sensor.reset()
+    sensor.set_pixformat(sensor.RGB565)
+    sensor.set_framesize(sensor.QVGA)
+    sensor.set_vflip(True)
+    sensor.set_hmirror(True)
+    sensor.skip_frames(time=2000)
+    sensor.set_auto_gain(False)
+    sensor.set_auto_whitebal(False)
 
 
+def locate_blob(img):
+    """
+    Locates the blob in the image and returns the blob object.
+    """
+    blobs = img.find_blobs([thresholds, thresholds],
+                           area_threshold=1, merge=True)
+    img.draw_cross(FRAME_HEIGHT, FRAME_WIDTH, color=(30, 255, 10), size=200)
 
-#ledRed = pyb.LED(1) # Initiates the red led
-#ledGreen = pyb.LED(2) # Initiates the green led
-
-clock = time.clock() # Instantiates a clock object
-#sensor.set_brightness(2) # Sets the brightness of the image to 2
-
-while(True):
-    clock.tick() # Advances the clock
-    img = sensor.snapshot() # Takes a snapshot and saves it in memory
-
-    # Find blobs with a minimal area of 50x50 = 2500 px
-    # Overlapping blobs will be merged
-    blobs = img.find_blobs([thresholdsCube, thresholdsCube] , area_threshold=1, merge=True)
-    img.draw_cross(160, 120, color=(30,255,10), size = 200)
-
-    # Draw blobs
     for blob in blobs:
-        # Draw a rectangle where the blob was found
-        #img.draw_circle(blob.rect(), color=(0,255,0))
-        # Draw a cross in the middle of the blob
-        img.draw_cross(blob.cx(), blob.cy(), color=(0,255,0))
-        #uart.write("Blob found at x: " + str(blob.cx()) + " y: " + str(blob.cy()) + "\n") # Sends the x and y coordinates of the blob to the serial console
-        #(Find relative cx and cy
-        rcx = blob.cx() - 160 # 50 is camera res
-        rcy = blob.cy() - 120 # 100 is camera res
-        distance_pixel = math.sqrt(rcx**2 + rcy**2)
-        angulo = math.atan2(rcy, rcx)
-        degreess = math.degrees(angulo)
-        print(f"angulo{degreess}")
-        #print(blob.cx())
-        #print(distance_pixel)
-        #print(rcx)
-        #print(rcy)
-        #print(rcx, rcy)
-        # Find distance using relative coordinates
-        #mcx = rcx * 0.2375
-        #mcy = rcy * 0.2375
+        img.draw_rectangle(blob.rect(), color=(0, 255, 0))
+        img.draw_cross(blob.cx(), blob.cy(), color=(0, 255, 0))
+    return blobs
 
-        #print(mcx)
-        cirle_radius=blob.enclosing_circle()[2]
-        #distance = math.sqrt(mcx**2 + mcy**2)
-        #distance=distance-circleradius
-        '''distance *= 0.1
-        #print("dist:  ",distance)
-        #print(f"distance{distance}")
+def calculate_distance(blob):
+    """
+    Calculates the distance of the blob from the camera.
+    """
+    relative_cx = blob.cx() - FRAME_HEIGHT
+    relative_cy = blob.cy() - FRAME_WIDTH
+    magnitude_distance = math.sqrt(relative_cx**2 + relative_cy**2)
+    total_distance = 11.83*math.exp((0.0245)*magnitude_distance)
+    return total_distance
 
-        # Conversion distancia relativa a distancia real
-        #---------------------------------------------------------------#
-        hcam = 5
-        hfloor = 15
-        tangente = (1/2)*(0.9*distance)*(0.045+0.45*distance**2)**(-1/2)
-        anguloTan = math.degrees(math.atan(tangente))
-        y = ((0.1+distance**2)*0.45)**(1/2)+hcam
-        anguloCentro = math.degrees(math.atan((y/distance)))
-        Y=2*(180-90-(anguloCentro-anguloTan))
-        X=(180-Y)/2
-        anguloProject =X-anguloTan
-        distTotal = (distance+(hfloor/(math.tan(math.radians(anguloProject)))))
+def calculate_angle(blob):
+    """
+    Calculates the angle of the blob from the camera.
+    """
+    relative_cx = blob.cx() - FRAME_HEIGHT
+    relative_cy = blob.cy() - FRAME_WIDTH
+    angle = math.degrees(math.atan(relative_cy/relative_cx))
+    return angle
 
-        #print(distTotal)
+def main():
+    """
+    Main function of the script.
+    """
+    initialize_sensor()
+    clock = time.clock()
+    while True:
+        clock.tick()
+        img = sensor.snapshot()
+        blobs = locate_blob(img)
+        if blobs:
+            distance = calculate_distance(blobs[0])
+            angle = calculate_angle(blobs[0])
+            print("Distance: ", distance, " cm")
+            print("Angle: ", angle, " degrees")
+            uart.write(str(distance) + " " + str(angle) + "\n")
+        else:
+            print("No blobs found")
+            uart.write("No blobs found\n")
+        pyb.delay(50)
 
-
-
-
-        #----------------------------------------------------------------#
-
-
-    pyb.delay(50) # Pauses the execution for 50ms
-    #print(clock.fps()) # Prints the framerate to the serial console
-    #print(blob.cx(), blob.cy()) # Prints the x and y coordinates of the blob to the serial console
-    #print(blob.w()) # Prints the width of the blob to the serial console
-    #print(blob.h()) # Prints the height of the blob to the serial console
-    #uart.write(blob.w())'''
-        distTotal= 11.83*math.exp((0.0245)*distance_pixel)
-        #print(distTotal)
-    pyb.delay(50)
+if __name__ == "__main__":
+    main()
