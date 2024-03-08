@@ -1,8 +1,10 @@
 """
 This script makes a regression between pixels and real distance measures in cm and angles
 
-The script uses the camera to detect a colored object and calculate the distance from the camera to the object.
-The distance of the blob from the camera is calculated using an exponential regression model.
+The script uses the camera to detect a colored object and calculate the distance from the camera to 
+the object. The distance of the blob from the camera is calculated using an exponential regression 
+model. The model is based on the magnitude of the distance of the blob from the center of the image. 
+Angle is calculated using atan2 function.
 
 Author: Jocelyn Velarde
 Version: March 7, 2024
@@ -70,6 +72,9 @@ def calculate_angle(blob):
     relative_cx = blob.cx() - FRAME_HEIGHT
     relative_cy = blob.cy() - FRAME_WIDTH
     angle = math.degrees(math.atan(relative_cy/relative_cx))
+    if angle < 0:
+        angle += 180
+        return angle
     return angle
 
 def main():
