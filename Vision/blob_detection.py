@@ -29,7 +29,9 @@ CM_CONVERTION = 0.1
 
 
 def initialize_sensor():
-    """Initializes the camera sensor with the required settings."""
+    """
+    Initializes the camera sensor with the required settings.
+    """
     sensor.reset()
     sensor.set_pixformat(sensor.RGB565)
     sensor.set_framesize(sensor.QVGA)
@@ -41,7 +43,9 @@ def initialize_sensor():
 
 
 def locate_blob(img):
-    """Locates the blob in the image and returns the blob object."""
+    """
+    Locates the blob in the image and returns the blob object.
+    """
     blobs = img.find_blobs([thresholds, thresholds],
                            area_threshold=1, merge=True)
     img.draw_cross(FRAME_HEIGHT, FRAME_WIDTH, color=(30, 255, 10), size=200)
@@ -53,13 +57,15 @@ def locate_blob(img):
 
 
 def calculate_distance(blob):
-    """Calculates the distance of the blob from the camera."""
+    """
+    Calculates the distance of the blob from the camera.
+    """
     relative_cx = blob.cx() - FRAME_HEIGHT
     relative_cy = blob.cy() - FRAME_WIDTH
 
     cm_cx = relative_cx * PIXEL_SIZE_HEIGHT
     cm_cy = relative_cy * PIXEL_SIZE_WIDTH
-    distance = math.sqrt(cm_cx*2 + cm_cy*2)
+    distance = math.sqrt(cm_cx**2 + cm_cy**2)
     distance *= CM_CONVERTION
 
     tangent = (1/2)*(0.9*distance)*(0.045+0.45*distance**2)**(-1/2)
@@ -75,7 +81,9 @@ def calculate_distance(blob):
 
 
 def main():
-    """Main function to run the script."""
+    """
+    Main function to run the script.
+    """
     initialize_sensor()
     clock = time.clock()
     while True:
