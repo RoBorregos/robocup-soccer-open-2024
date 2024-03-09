@@ -38,6 +38,9 @@ def initialize_sensor():
     sensor.set_vflip(True)
     sensor.set_hmirror(True)
     sensor.skip_frames(time=2000)
+    sensor.set_brightness(-1)
+    sensor.set_contrast(-2)
+    sensor.set_saturation(1)
     sensor.set_auto_gain(False)
     sensor.set_auto_whitebal(False)
 
