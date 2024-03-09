@@ -17,7 +17,7 @@ import sensor
 import pyb
 from pyb import UART
 
-uart = UART(3, 9600)
+uart = UART(3, 9600, timeout_char=0)
 thresholds = (52, 85, 22, 97, 8, 61)
 
 FRAME_HEIGHT = 160
@@ -63,6 +63,7 @@ def calculate_distance(blob):
     relative_cy = blob.cy() - FRAME_WIDTH
     magnitude_distance = math.sqrt(relative_cx**2 + relative_cy**2)
     total_distance = 11.83*math.exp((0.0245)*magnitude_distance)
+    uart.write(str(total_distance) + "\n")
     return total_distance
 
 def calculate_angle(blob):

@@ -1,6 +1,7 @@
 {
-    "board": "arduino:avr:mega",
-    "port": "COM20",
+    "board": "Uelectronics:rp2040:DualMCU_RP2040",
+    "port": "COM8",
     "sketch": "Control\\Control.ino",
-    "programmer": "avrisp"
+    "programmer": "avrisp",
+    "configuration": "flash=2097152_0,freq=133,opt=Small,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipstack=ipv4only"
 }

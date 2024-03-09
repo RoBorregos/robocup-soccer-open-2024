@@ -1,8 +1,22 @@
-#include "Motors.h"
+#include <Arduino.h>
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.println("Hello");
+  if (Serial.available() > 0) {
+    String data = Serial.readString();
+    Serial.println(data);
+  }
+}
+
+/*#include "Motors.h"
 #include <Arduino.h>
 
 // check motor polarity individually for IN1 and IN2 when robot movement is set to 0 degrees. If not correct, swap IN1 and IN2
-
+//changed motor 1 for motor 4 (remember this)
 // encoders: 2, 3, 18, 19
 uint8_t motor4In1 = 25;
 uint8_t motor4In2 = 6;
@@ -54,3 +68,4 @@ void setup()
 void loop()
 {
 }
+*/
