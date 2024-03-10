@@ -66,7 +66,6 @@ def calculate_distance(blob):
     relative_cy = blob.cy() - FRAME_WIDTH
     magnitude_distance = math.sqrt(relative_cx**2 + relative_cy**2)
     total_distance = 11.83*math.exp((0.0245)*magnitude_distance)
-    uart.write(str(total_distance) + "\n")
     return total_distance
 
 def calculate_angle(blob):
@@ -96,7 +95,7 @@ def main():
             angle = calculate_angle(blobs[0])
             print("Distance: ", distance, " cm")
             print("Angle: ", angle, " degrees")
-            uart.write(str(distance) + " " + str(angle) + "\n")
+            uart.write("{:.2f} {:.2f}\n".format(distance, angle))
         else:
             print("No blob found")
             uart.write("No blob found\n")

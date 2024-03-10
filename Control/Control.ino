@@ -1,15 +1,33 @@
 #include <Arduino.h>
 
+String inputString = "";
+bool stringComplete = false;
+
 void setup() {
   Serial.begin(9600);
 }
 
 void loop() {
   Serial.println("Hello");
-  if (Serial.available() > 0) {
-    String data = Serial.readString();
-    Serial.println(data);
+   while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
   }
+
+  if (stringComplete) {
+    float distance, angle;
+    sscanf(inputString.c_str(), "%f %f", &distance, &angle);
+    Serial.print("Distance: ");
+    Serial.println(distance);
+    Serial.print("Angle: ");
+    Serial.println(angle);
+    inputString = "";
+    stringComplete = false;
+  }
+  
 }
 
 /*#include "Motors.h"
