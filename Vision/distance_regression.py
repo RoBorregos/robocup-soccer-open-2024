@@ -65,6 +65,7 @@ def calculate_distance(blob):
     relative_cx = blob.cx() - FRAME_HEIGHT
     relative_cy = blob.cy() - FRAME_WIDTH
     magnitude_distance = math.sqrt(relative_cx**2 + relative_cy**2)
+    # Exponential regression model calculated using real data points with pixel comparision
     total_distance = 11.83*math.exp((0.0245)*magnitude_distance)
     uart.write(str(total_distance) + "\n")
     return total_distance
@@ -76,10 +77,7 @@ def calculate_angle(blob):
     relative_cx = blob.cx() - FRAME_HEIGHT
     relative_cy = blob.cy() - FRAME_WIDTH
     angle = math.degrees(math.atan(relative_cy/relative_cx))
-    if angle < 0:
-        angle += 180
-        return angle
-    return angle
+    return angle + 180 if (angle < 0) else angle
 
 def main():
     """
