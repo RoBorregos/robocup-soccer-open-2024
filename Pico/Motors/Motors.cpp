@@ -65,6 +65,22 @@ void Motors::moveForward() {
     motor3.moveBackward();
 };*/
 
+void Motors::moveRight() {
+    stopMotors();
+    motor1.moveForward();
+    motor2.moveBackward();
+    motor3.moveBackward();
+    motor4.moveForward();
+};
+
+void Motors::moveLeft() {
+    stopMotors();
+    motor1.moveBackward();
+    motor2.moveForward();
+    motor3.moveForward();
+    motor4.moveBackward();
+};
+
 void Motors::moveBackward() {
     stopMotors();
     motor2.moveBackward();

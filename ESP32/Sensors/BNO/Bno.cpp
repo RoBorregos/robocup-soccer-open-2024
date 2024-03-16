@@ -28,6 +28,9 @@ void BNO055::getBNOData() {
     uart.update();
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
     yaw = euler.x();
+    if(yaw > 180){
+        yaw = -1 * (360 - yaw);
+    }
     difference_angle = yaw - uart.getAngle();
     target_angle = 2*M_PI - difference_angle;
 }

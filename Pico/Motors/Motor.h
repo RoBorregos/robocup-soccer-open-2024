@@ -2,7 +2,7 @@
 #define Motor_h
 
 #include <Arduino.h>
-#include "Encoder.h"
+#include "PID/Encoder.h"
 #pragma once
 
 class Motor {

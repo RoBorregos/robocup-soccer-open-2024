@@ -1,7 +1,7 @@
 {
     "board": "Uelectronics:rp2040:DualMCU_RP2040",
-    "port": "COM7",
-    "sketch": "Control\\Control.ino",
+    "port": "COM9",
+    "sketch": "Control\\mainRP.ino",
     "programmer": "avrisp",
     "configuration": "flash=2097152_0,freq=133,opt=Small,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipstack=ipv4only"
 }

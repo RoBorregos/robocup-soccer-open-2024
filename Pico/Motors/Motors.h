@@ -19,6 +19,8 @@ class Motors{
         void stopMotors();
         void moveForward();
         void moveBackward();
+        void moveRight();
+        void moveLeft();
         void moveMotor1();
         void moveMotor2();
         void moveMotor3();
