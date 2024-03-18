@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "Motor.h"
-#include "Encoder.h"
+//#include "Encoder.h"
 
 
 Motor::Motor(uint8_t speed, uint8_t in1, uint8_t in2) {

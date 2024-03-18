@@ -19,7 +19,7 @@ class BNO055 {
         void InitializeBNO();
         void getBNOData();
         double getYaw();
-        double getTargetAngle();
+        //double getTargetAngle();
         void setYaw(double y);
         void moveWithBNO(double targetAngle, double speed);
 };

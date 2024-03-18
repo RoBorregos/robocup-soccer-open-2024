@@ -1,5 +1,5 @@
-#include <Arduino.h>
-#include "Motors/Motors.h"
+/*#include <Arduino.h>
+#include "Motors.h"
 #include <typeinfo>
 
 #define PIN_SERIAL1_TX (0u)
@@ -28,9 +28,13 @@ Motors myMotors(
     motorPWM, motorIn1, motorIn2,
     motor2PWM, motor2In1, motor2In2,
     motor3PWM, motor3In1, motor3In2,
-    motor4PWM, motor4In1, motor4In2);
+    motor4PWM, motor4In1, motor4In2);*/
 
-void setup()
+//#include <Arduino.h>
+
+
+
+/*void setup()
 {
     myMotors.InitializeMotors();
     Serial.begin(9600);
@@ -94,4 +98,4 @@ void loop()
         myMotors.stopMotors();
         Serial.println("Stop");
     }
-}
+}*/

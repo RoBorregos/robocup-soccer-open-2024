@@ -10,6 +10,8 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Control",
                 "${workspaceFolder}/Sensors",
+                "${workspaceFolder}/ESP32",
+                "${workspaceFolder}/Pico",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/cores/arduino",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/system/libsam",
                 "C:/Users/jvela/OneDrive/Documentos/ArduinoData/packages/arduino/hardware/sam/1.6.12/system/CMSIS/Device/ATMEL",

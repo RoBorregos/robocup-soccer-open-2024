@@ -1,6 +1,5 @@
 #include "Arduino.h"
 #include "Bno.h"
-#include "Uart.h"
 #include "cmath"
 
 //https://www.allaboutcircuits.com/projects/bosch-absolute-orientation-sensor-bno055/
@@ -24,15 +23,15 @@ void BNO055::InitializeBNO() {
 }
 
 void BNO055::getBNOData() {
-    Uart uart;
-    uart.update();
+    //Uart uart;
+    //uart.update();
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
     yaw = euler.x();
     if(yaw > 180){
         yaw = -1 * (360 - yaw);
     }
-    difference_angle = yaw - uart.getAngle();
-    target_angle = 2*M_PI - difference_angle;
+    //difference_angle = yaw - uart.getAngle();
+    //target_angle = 2*M_PI - difference_angle;
 }
 
 double BNO055::getYaw() {
@@ -43,6 +42,6 @@ void BNO055::setYaw(double y) {
     yaw = y;
 }
 
-double BNO055::getTargetAngle() {
+/*double BNO055::getTargetAngle() {
     return target_angle;
-}
+}*/

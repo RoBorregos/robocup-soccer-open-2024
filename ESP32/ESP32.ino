@@ -1,9 +1,39 @@
 #include <Arduino.h>
-#include "Sensors/BNO/Bno.h"
+#include "Bno.h"
 #define RXD2 16
 #define TXD2 17
 
-BNO055 myBNO;
+String inputString = "";
+bool stringComplete = false;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  //Serial.println("Hello");
+   while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
+  }
+
+  if (stringComplete) {
+    float distance, angle;
+    sscanf(inputString.c_str(), "%f %f", &distance, &angle);
+    Serial.print("Distance: ");
+    Serial.println(distance);
+    Serial.print("Angle: ");
+    Serial.println(angle);
+    inputString = "";
+    stringComplete = false;
+  }
+  
+}
+
+/*BNO055 myBNO;
 
 float angle = 0;
 void setup()
@@ -39,4 +69,4 @@ void sendAngle()
         Serial2.write(tempArray, 4);
         Serial2.flush();
     }
-}
+}*/
