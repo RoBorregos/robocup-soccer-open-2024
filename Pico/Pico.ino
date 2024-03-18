@@ -1,11 +1,11 @@
-/*#include <Arduino.h>
+#include <Arduino.h>
 #include "Motors.h"
 #include <typeinfo>
 
 #define PIN_SERIAL1_TX (0u)
 #define PIN_SERIAL1_RX (1u)
 
-uint8_t motor4In1 = 25;
+/*uint8_t motor4In1 = 25;
 uint8_t motor4In2 = 6;
 uint8_t motor4PWM = 20;
 
@@ -28,13 +28,13 @@ Motors myMotors(
     motorPWM, motorIn1, motorIn2,
     motor2PWM, motor2In1, motor2In2,
     motor3PWM, motor3In1, motor3In2,
-    motor4PWM, motor4In1, motor4In2);*/
+    motor4PWM, motor4In1, motor4In2);
 
 //#include <Arduino.h>
 
 
 
-/*void setup()
+void setup()
 {
     myMotors.InitializeMotors();
     Serial.begin(9600);
@@ -99,3 +99,18 @@ void loop()
         Serial.println("Stop");
     }
 }*/
+
+void setup()
+{
+    Serial.begin(9600);
+    //Serial1.begin(9600, SERIAL_8N1);
+}
+
+void loop()
+{
+    if(Serial1.available())
+    {
+        char inChar = (char)Serial1.read();
+        Serial.print(inChar);
+    }
+}

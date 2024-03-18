@@ -8,6 +8,7 @@ bool stringComplete = false;
 
 void setup() {
   Serial.begin(9600);
+  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
 }
 
 void loop() {
@@ -21,12 +22,10 @@ void loop() {
   }
 
   if (stringComplete) {
-    float distance, angle;
+    int distance, angle;
     sscanf(inputString.c_str(), "%f %f", &distance, &angle);
-    Serial.print("Distance: ");
-    Serial.println(distance);
-    Serial.print("Angle: ");
-    Serial.println(angle);
+    Serial2.write(distance);
+    //Serial2.write(angle);
     inputString = "";
     stringComplete = false;
   }
