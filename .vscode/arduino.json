@@ -1,7 +1,7 @@
 {
-    "board": "Uelectronics:rp2040:DualMCU_RP2040",
-    "port": "COM9",
-    "sketch": "Pico\\Pico.ino",
+    "board": "esp32:esp32:esp32",
+    "port": "COM6",
+    "sketch": "ESP32\\ESP32.ino",
     "programmer": "avrisp",
-    "configuration": "flash=2097152_0,freq=133,opt=Small,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipstack=ipv4only"
+    "configuration": "JTAGAdapter=default,PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,LoopCore=1,EventsCore=1,DebugLevel=none,EraseFlash=none"
 }

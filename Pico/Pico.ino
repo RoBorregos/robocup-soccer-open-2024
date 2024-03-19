@@ -5,7 +5,7 @@
 #define PIN_SERIAL1_TX (0u)
 #define PIN_SERIAL1_RX (1u)
 
-/*uint8_t motor4In1 = 25;
+uint8_t motor4In1 = 25;
 uint8_t motor4In2 = 6;
 uint8_t motor4PWM = 20;
 
@@ -22,7 +22,11 @@ uint8_t motor2In2 = 23;
 uint8_t motor2PWM = 15;
 
 const uint8_t receive_data = 's';
-float angle = 0;
+const uint8_t distance_data = 's';
+const uint8_t angle_data = 'e';
+
+float angle; 
+float distance; 
 
 Motors myMotors(
     motorPWM, motorIn1, motorIn2,
@@ -32,8 +36,58 @@ Motors myMotors(
 
 //#include <Arduino.h>
 
+void setup()
+{
+    
+    Serial.begin( 9600);
+    Serial1.begin(9600);
+}
 
+void loop(){
+    
+    Serial1.write(angle_data);
+    while (!Serial1.available())
+    {
+        continue;
+    }
+    delay(10);
+    //float temp;
+    uint8_t tempArray[4];
+    union u_tag
+    {
+        byte b[4];
+        float angle;
+    } u;
+    u.b[0] = Serial1.read();
+    u.b[1] = Serial1.read();
+    u.b[2] = Serial1.read();
+    u.b[3] = Serial1.read();
+    angle = u.angle;
+    Serial.println(angle);
+    Serial1.flush();
 
+    Serial1.write(distance_data);
+    while (!Serial1.available())
+    {
+        continue;
+    }
+    delay(10);
+    union u_tag2
+    {
+        byte b[4];
+        float distance;
+    } u2;
+    u2.b[0] = Serial1.read();
+    u2.b[1] = Serial1.read();
+    u2.b[2] = Serial1.read();
+    u2.b[3] = Serial1.read();
+    distance = u2.distance;
+    Serial.println(distance);
+    Serial1.flush();
+
+}
+
+/*
 void setup()
 {
     myMotors.InitializeMotors();
@@ -99,11 +153,11 @@ void loop()
         Serial.println("Stop");
     }
 }*/
-
+/*
 void setup()
 {
     Serial.begin(9600);
-    //Serial1.begin(9600, SERIAL_8N1);
+    Serial1.begin(9600, SERIAL_8N1);
 }
 
 void loop()
@@ -113,4 +167,4 @@ void loop()
         char inChar = (char)Serial1.read();
         Serial.print(inChar);
     }
-}
+}*/
