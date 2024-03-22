@@ -45,19 +45,36 @@ void setup()
 
 void loop()
 {
+    static unsigned long prev_millis = 0;
+    unsigned long current_millis = millis();
+    double elapsed_time = current_millis - prev_millis;
+    prev_millis = current_millis;
     angle = receive(receive_bno);
     cam_angle = receive(receive_cam);
     Serial.print(angle);
     Serial.print(" ");
     Serial.println(cam_angle);
-   /*
+   
+   // Added PID control
     double kp = 4;
+    double ki = 0.1;
+    double kd = 0.01;
+
+    // For future instances target angle should be ball angle (cam_angle)
     double target_angle = 0;
     double error = target_angle - angle;
-    double speed = kp * error;
+
+    static double integral = 0;
+    static double prev_error = 0;
+    integral += error * elapsed_time;
+    double derivative = (error - prev_error) / elapsed_time;
+    prev_error = error;
     
-    speed = abs(speed);*/
-/*
+    
+    double speed = kp * error + ki * integral + kd * derivative;
+    
+    speed = abs(speed);
+
     if (speed > 0)
     {
         myMotors.setSpeed(motorPWM, speed);
@@ -84,7 +101,7 @@ void loop()
         myMotors.setSpeed(motor4PWM, speed);
         myMotors.stopMotors();
         Serial.println("Stop");
-    }*/
+    }
 }
 
 float receive (uint8_t signal){

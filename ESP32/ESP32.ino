@@ -7,6 +7,8 @@ BNO055 myBNO;
 
 float angle = 0;
 float camAngle = 10;
+float difference_angle = 0;
+float target_angle = 0;
 void setup()
 {
     Serial.begin(9600);
@@ -23,8 +25,14 @@ void loop()
     }
     myBNO.getBNOData();
     angle = myBNO.getYaw();
-    //Serial.println(angle);
     send();
+}
+
+/* This method calculates the angle to which the robot should turn to face the ball
+it needs the angle of the camera and the angle of the robot obtained from BNO */
+void calculateAngle(){
+    difference_angle = angle - camAngle;
+    target_angle = 2*M_PI - difference_angle;
 }
 
 void send()
