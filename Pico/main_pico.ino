@@ -25,19 +25,19 @@ const uint8_t receive_bno = 's';
 const uint8_t receive_cam = 'c';
 float angle = 0;
 float cam_angle = 0;
+
 Motors myMotors(
     motorPWM, motorIn1, motorIn2,
     motor2PWM, motor2In1, motor2In2,
     motor3PWM, motor3In1, motor3In2,
     motor4PWM, motor4In1, motor4In2);
 
-
-
 void setup()
 {
     myMotors.InitializeMotors();
     Serial.begin(115200);
-    while (!Serial && millis() < 10000UL);
+    while (!Serial && millis() < 10000UL)
+        ;
     Serial.println("started");
     Serial1.begin(9600);
     Serial.println("Hello World");
@@ -54,8 +54,8 @@ void loop()
     Serial.print(angle);
     Serial.print(" ");
     Serial.println(cam_angle);
-   
-   // Added PID control
+
+    // Added PID control
     double kp = 4;
     double ki = 0.1;
     double kd = 0.01;
@@ -69,43 +69,43 @@ void loop()
     integral += error * elapsed_time;
     double derivative = (error - prev_error) / elapsed_time;
     prev_error = error;
-    
-    
+
     double speed = kp * error + ki * integral + kd * derivative;
-    
+
     speed = abs(speed);
 
     if (speed > 0)
     {
-        myMotors.setSpeed(motorPWM, speed);
-        myMotors.setSpeed(motor2PWM, speed);
-        myMotors.setSpeed(motor3PWM, speed);
-        myMotors.setSpeed(motor4PWM, speed);
-        myMotors.moveRight();
+        myMotors.SetSpeed(motorPWM, speed);
+        myMotors.SetSpeed(motor2PWM, speed);
+        myMotors.SetSpeed(motor3PWM, speed);
+        myMotors.SetSpeed(motor4PWM, speed);
+        myMotors.MoveRight();
         Serial.println("Right");
     }
     else if (speed < 0)
     {
-        myMotors.setSpeed(motorPWM, speed);
-        myMotors.setSpeed(motor2PWM, speed);
-        myMotors.setSpeed(motor3PWM, speed);
-        myMotors.setSpeed(motor4PWM, speed);
-        myMotors.moveLeft();
+        myMotors.SetSpeed(motorPWM, speed);
+        myMotors.SetSpeed(motor2PWM, speed);
+        myMotors.SetSpeed(motor3PWM, speed);
+        myMotors.SetSpeed(motor4PWM, speed);
+        myMotors.MoveLeft();
         Serial.println("Left");
     }
     else
     {
-        myMotors.setSpeed(motorPWM, speed);
-        myMotors.setSpeed(motor2PWM, speed);
-        myMotors.setSpeed(motor3PWM, speed);
-        myMotors.setSpeed(motor4PWM, speed);
-        myMotors.stopMotors();
+        myMotors.SetSpeed(motorPWM, speed);
+        myMotors.SetSpeed(motor2PWM, speed);
+        myMotors.SetSpeed(motor3PWM, speed);
+        myMotors.SetSpeed(motor4PWM, speed);
+        myMotors.StopMotors();
         Serial.println("Stop");
     }
 }
 
-float receive (uint8_t signal){
-     Serial1.write(signal);
+float receive(uint8_t signal)
+{
+    Serial1.write(signal);
     while (!Serial1.available())
     {
         continue;
@@ -118,10 +118,10 @@ float receive (uint8_t signal){
         byte b[4];
         float angle;
     } u;
-    
+
     u.b[0] = Serial1.read();
     u.b[1] = Serial1.read();
     u.b[2] = Serial1.read();
     u.b[3] = Serial1.read();
     return u.angle;
-} 
+}
