@@ -9,19 +9,18 @@
 
 class BNO055 {
     private:
-        double yaw;
-        double target_angle;
-        double difference_angle;
-        Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
+        double yaw_;
+        double target_angle_;
+        double difference_angle_;
+        Adafruit_BNO055 bno_ = Adafruit_BNO055(55, 0x28, &Wire);
 
     public:
         BNO055();
         void InitializeBNO();
-        void getBNOData();
-        double getYaw();
-        //double getTargetAngle();
-        void setYaw(double y);
-        void moveWithBNO(double targetAngle, double speed);
+        void GetBNOData();
+        double GetYaw();
+        void SetYaw(double yaw);
+        void MoveWithBNO(double target_angle, double speed);
 };
 
 #endif
