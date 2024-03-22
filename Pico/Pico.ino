@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Motors.h"
+#include <Motors.h>
 #include <typeinfo>
 
 #define PIN_SERIAL1_TX (0u)
@@ -21,110 +21,43 @@ uint8_t motor2In1 = 22;
 uint8_t motor2In2 = 23;
 uint8_t motor2PWM = 15;
 
-const uint8_t receive_data = 's';
-const uint8_t distance_data = 's';
-const uint8_t angle_data = 'e';
-
-float angle; 
-float distance; 
-
+const uint8_t receive_bno = 's';
+const uint8_t receive_cam = 'c';
+float angle = 0;
+float cam_angle = 0;
 Motors myMotors(
     motorPWM, motorIn1, motorIn2,
     motor2PWM, motor2In1, motor2In2,
     motor3PWM, motor3In1, motor3In2,
     motor4PWM, motor4In1, motor4In2);
 
-//#include <Arduino.h>
 
-void setup()
-{
-    
-    Serial.begin( 9600);
-    Serial1.begin(9600);
-}
 
-void loop(){
-    
-    Serial1.write(angle_data);
-    while (!Serial1.available())
-    {
-        continue;
-    }
-    delay(10);
-    //float temp;
-    uint8_t tempArray[4];
-    union u_tag
-    {
-        byte b[4];
-        float angle;
-    } u;
-    u.b[0] = Serial1.read();
-    u.b[1] = Serial1.read();
-    u.b[2] = Serial1.read();
-    u.b[3] = Serial1.read();
-    angle = u.angle;
-    Serial.println(angle);
-    Serial1.flush();
-
-    Serial1.write(distance_data);
-    while (!Serial1.available())
-    {
-        continue;
-    }
-    delay(10);
-    union u_tag2
-    {
-        byte b[4];
-        float distance;
-    } u2;
-    u2.b[0] = Serial1.read();
-    u2.b[1] = Serial1.read();
-    u2.b[2] = Serial1.read();
-    u2.b[3] = Serial1.read();
-    distance = u2.distance;
-    Serial.println(distance);
-    Serial1.flush();
-
-}
-
-/*
 void setup()
 {
     myMotors.InitializeMotors();
-    Serial.begin(9600);
+    Serial.begin(115200);
+    while (!Serial && millis() < 10000UL);
+    Serial.println("started");
     Serial1.begin(9600);
+    Serial.println("Hello World");
 }
 
 void loop()
 {
-    Serial1.write(receive_data);
-    while (!Serial1.available())
-    {
-        continue;
-    }
-    delay(10);
-    float temp;
-    uint8_t tempArray[4];
-    union u_tag
-    {
-        byte b[4];
-        float angle;
-    } u;
-    
-    u.b[0] = Serial1.read();
-    u.b[1] = Serial1.read();
-    u.b[2] = Serial1.read();
-    u.b[3] = Serial1.read();
-
-    angle = u.angle;
-    Serial.println(angle);
+    angle = receive(receive_bno);
+    cam_angle = receive(receive_cam);
+    Serial.print(angle);
+    Serial.print(" ");
+    Serial.println(cam_angle);
+   /*
     double kp = 4;
     double target_angle = 0;
     double error = target_angle - angle;
     double speed = kp * error;
     
-    speed = abs(speed);
-
+    speed = abs(speed);*/
+/*
     if (speed > 0)
     {
         myMotors.setSpeed(motorPWM, speed);
@@ -151,20 +84,27 @@ void loop()
         myMotors.setSpeed(motor4PWM, speed);
         myMotors.stopMotors();
         Serial.println("Stop");
-    }
-}*/
-/*
-void setup()
-{
-    Serial.begin(9600);
-    Serial1.begin(9600, SERIAL_8N1);
+    }*/
 }
 
-void loop()
-{
-    if(Serial1.available())
+float receive (uint8_t signal){
+     Serial1.write(signal);
+    while (!Serial1.available())
     {
-        char inChar = (char)Serial1.read();
-        Serial.print(inChar);
+        continue;
     }
-}*/
+    delay(10);
+    float temp;
+    uint8_t tempArray[4];
+    union u_tag
+    {
+        byte b[4];
+        float angle;
+    } u;
+    
+    u.b[0] = Serial1.read();
+    u.b[1] = Serial1.read();
+    u.b[2] = Serial1.read();
+    u.b[3] = Serial1.read();
+    return u.angle;
+} 
