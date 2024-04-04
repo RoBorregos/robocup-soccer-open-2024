@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "motor.h"
+#include "constants.h"
 
 class Motors
 {
@@ -20,6 +21,7 @@ public:
     void InitializeMotors();
     void InitializeDriver();
     void SetSpeed(uint8_t pwm, uint8_t speed);
+    void SetAllSpeeds(uint8_t speed);
     void StopMotors();
     void MoveForward();
     void MoveBackward();

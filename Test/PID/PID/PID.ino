@@ -60,29 +60,20 @@ void loop()
 
     if (speed > 0)
     {
-        myMotors.SetSpeed(MOTOR1_PWM, speed);
-        myMotors.SetSpeed(MOTOR2_PWM, speed);
-        myMotors.SetSpeed(MOTOR3_PWM, speed);
-        myMotors.SetSpeed(MOTOR4_PWM, speed);
+        myMotors.SetAllSpeeds(speed);
         myMotors.MoveRight();
         Serial.println("Right");
     }
     else if (speed < 0)
     {
         speed = abs(speed);
-        myMotors.SetSpeed(MOTOR1_PWM, speed);
-        myMotors.SetSpeed(MOTOR2_PWM, speed);
-        myMotors.SetSpeed(MOTOR3_PWM, speed);
-        myMotors.SetSpeed(MOTOR4_PWM, speed);
+        myMotors.SetAllSpeeds(speed);
         myMotors.MoveLeft();
-        Serial.print("Left  ");
+        Serial.print("Left");
     }
     else
     {
-        myMotors.SetSpeed(MOTOR1_PWM, speed);
-        myMotors.SetSpeed(MOTOR2_PWM, speed);
-        myMotors.SetSpeed(MOTOR3_PWM, speed);
-        myMotors.SetSpeed(MOTOR4_PWM, speed);
+        myMotors.SetAllSpeeds(speed);
         myMotors.StopMotors();
         Serial.println("Stop");
     }
