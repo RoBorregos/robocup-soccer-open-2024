@@ -2,7 +2,7 @@
 // The robot needs to follow a straight line in any direction always facing target angle (0 degrees)
 
 #include <Arduino.h>
-#include <Motors.h>
+#include <Pico/motors.h>
 #include <typeinfo>
 
 #define PIN_SERIAL1_TX (0u)
@@ -109,7 +109,7 @@ void loop()
     //
     Serial.println(speed_w);
     //myMotors.moveMotorsImu(target_angle,speed_traslational, speed_w);
-    myMotors.moveMotorsImu(frame_angle, speed_traslational, speed_w);
+    myMotors.MoveMotorsImu(frame_angle, speed_traslational, speed_w);
   
     //myMotors.moveMotors(0, speed_traslational);
     //myMotors.moveForward();

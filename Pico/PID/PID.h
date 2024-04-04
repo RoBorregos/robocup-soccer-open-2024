@@ -1,27 +1,18 @@
 #ifndef PID_h
 #define PID_h
-#pragma once
 
-#include <Arduino.h>
-
-class PID{
+class PID {
     public:
-        PID(float kp);
-        double computeP(double inp);
-        void setConstants(float kp);
-        void setSetpoint(float setpoint);
-        void setOutputLimits(float min, float max);
-
+        PID(double kp, double ki, double kd, double max_error);
+        double Calculate(double setpoint, double input);
 
     private:
-        float _kp;
-        float _setpoint;
-        float _error;
-        float _lastError;
-        float _output;
-        float _min;
-        float _max;
-
+        double kp_;
+        double ki_;
+        double kd_;
+        double max_error_;
+        double last_error_;
+        unsigned long last_time_;
 };
 
 #endif

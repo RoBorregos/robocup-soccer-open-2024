@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <Motors.h>
+#include <motors.h>
 #include <typeinfo>
 
 #define PIN_SERIAL1_TX (0u)
@@ -23,6 +23,7 @@ uint8_t motor2PWM = 15;
 
 const uint8_t receive_bno = 's';
 const uint8_t receive_cam = 'c';
+
 float angle = 0;
 float cam_angle = 0;
 
