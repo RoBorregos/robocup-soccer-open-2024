@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "Motors.h"
-#include "Imu.h"
+#include "imu.h"
 
 Imu::Imu() {}
 

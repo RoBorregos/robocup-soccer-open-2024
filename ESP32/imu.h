@@ -1,5 +1,5 @@
-#ifndef Imu_h
-#define Imu_h
+#ifndef imu_h
+#define imu_h
 #pragma once
 
 #include "ICM_20948.h"
