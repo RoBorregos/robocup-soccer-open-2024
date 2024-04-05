@@ -1,5 +1,4 @@
 /*Main code for the goalkeeper robot*/
-// Work in progress. Still defining objectives and requirements
 //  The robot moves in its own axis to follow the ball and moves right or left to keep the ball in the center of the camera using PID controller for the camera tracking and Bang Bang for the traslation
 #include <Arduino.h>
 #include "constants.h"
@@ -14,7 +13,6 @@
 SerialCommunication serialComm(Serial1);
 
 PID pid_w(1.05, 3.2, 0.2, 30);
-// tune this
 PID pid_t_ball(3, 0, 0, 255);
 PID pid_t_goal(3, 0, 0, 255);
 
@@ -26,32 +24,14 @@ float goal_angle = 0;
 float goal_distance = 0;
 
 // Data used for the control
-float diff_angle = 0;
-float target_goal_angle = 0;
 bool ball_found = false;
 
 // PID
-double kp = 1.05;
-double ki = 3.2;
-double kd = 0.2;
 double target_angle = 0; // frame
-double traslation_angle = 0;
-double last_error = 0;
-double all_error = 0;
-double max_error = 30;
 
 // Bang Bang / histéresis / On-off
 float ball_threshold = 9;
 float goal_threshold = 13.5;
-
-// Sampling Time
-double last_time = 0;
-double current_time = 0;
-double delta_time = 0;
-
-// Traslation
-int speed_traslational = 0;
-int moving_angle = 0;
 
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
@@ -79,23 +59,11 @@ void loop()
     goal_distance = serialComm.Receive(RECEIVE_GOAL_DISTANCE);
 
     // Separate ball angle 180 and -180
-    if (ball_angle == 0)
-    {
-    }
-    else if (ball_angle == 10)
-    {
-        ball_angle = 0;
-    }
-    else if (ball_angle < 180)
-    {
-        ball_angle = -ball_angle;
-    }
-    else if (ball_angle > 180)
-    {
-        ball_angle = 360 - ball_angle;
-    }
+    ball_angle = (ball_angle == 10 || ball_angle == 0) ? 0 : (ball_angle < 180) ? -ball_angle
+                                                         : (ball_angle > 180)   ? 360 - ball_angle
+                                                                                : ball_angle;
 
-    // PID & Motor Control
+    // PID for angular speed
     double speed_w = pid_w.Calculate(target_angle, bno_angle);
 
     Serial.print("BNO:");
@@ -108,40 +76,30 @@ void loop()
     Serial.print(goal_angle);
     Serial.print(" ");
 
-    if (ball_angle == 0)
-    {
-        ball_found = false;
-    }else{
-      ball_found = true; 
-    }
+    // Ball found
+    ball_found = (ball_angle != 0);
 
+    // PID logic for translational speed depending on ball or field detection
     if (ball_found)
     {
-        // Ball
+        // Ball detected
         double speed_t = pid_t_ball.Calculate(180 - ball_angle, ball_angle);
         myMotors.MoveMotorsImu(ball_angle, speed_t, speed_w);
-        Serial.println("ball found ");
-        Serial.println(speed_t);
-
     }
     else
     {
-        // Goal
+        // Goal detected
         double speed_t = pid_t_goal.Calculate(180, goal_angle);
-        if (goal_angle < (185 - goal_threshold) && ball_found == false)
+        if (!ball_found)
         {
-            myMotors.MoveMotorsImu(270, 180, speed_w * .75);
-            Serial.println("LEFT GOAL");
-        }
-        else if (goal_angle > (185 + goal_threshold) && ball_found == false)
-        {
-            myMotors.MoveMotorsImu(90, 180, speed_w * .75);
-            Serial.println("RIGHT GOAL");
-        }
-        else
-        {
-            myMotors.MoveMotorsImu(0, 0, speed_w);
-            Serial.println("STOP");
+            int direction = (goal_angle < (185 - goal_threshold)) ? 270 : (goal_angle > (185 + goal_threshold)) ? 90
+                                                                                                                : 0;
+            String message = (goal_angle < (185 - goal_threshold)) ? "LEFT GOAL" : (goal_angle > (185 + goal_threshold)) ? "RIGHT GOAL"
+                                                                                                                         : "STOP";
+            double speed = (goal_angle < (185 - goal_threshold) || goal_angle > (185 + goal_threshold)) ? speed_w * .75 : speed_w;
+
+            myMotors.MoveMotorsImu(direction, 180, speed);
+            Serial.println(message);
         }
     }
 
