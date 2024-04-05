@@ -23,12 +23,13 @@ const uint8_t MOTOR2_IN2 = 11;
 const uint8_t MOTOR2_PWM = 21;
 
 // Serial pins
-const uint8_t PIN_SERIAL1_TX = 0;
-const uint8_t PIN_SERIAL1_RX = 1;
+
 
 // Receive signals
 const uint8_t RECEIVE_BNO = 's';
-const uint8_t RECEIVE_CAM = 'c';
-const uint8_t RECEIVE_DISTANCE = 'd';
+const uint8_t RECEIVE_BALL_ANGLE= 'c';
+const uint8_t RECEIVE_BALL_DISTANCE = 'd';
+const uint8_t RECEIVE_GOAL_ANGLE = 'g';
+const uint8_t RECEIVE_GOAL_DISTANCE = 'k';
 
 #endif  

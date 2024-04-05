@@ -12,4 +12,4 @@ class SerialCommunication {
         HardwareSerial& serial_;
 };
 
-#endif  /
+#endif
