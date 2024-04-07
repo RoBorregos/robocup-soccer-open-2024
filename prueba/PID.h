@@ -12,7 +12,7 @@ class PID {
         double kd_;
         double max_error_;
         double last_error_;
-        unsigned long last_time_;
+        double last_time_;
 };
 
 #endif

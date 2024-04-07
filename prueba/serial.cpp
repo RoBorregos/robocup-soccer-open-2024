@@ -8,6 +8,8 @@ float SerialCommunication::Receive(uint8_t signal) {
         continue;
     }
     delay(10);
+    float temp; 
+    uint8_t tempArray[4];
     union u_tag {
         byte b[4];
         float value;

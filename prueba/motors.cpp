@@ -2,11 +2,12 @@
 #include "Arduino.h"
 #include "constants.h"
 
-Motors::Motors(uint8_t speed1, uint8_t in1_1, uint8_t in2_1, uint8_t speed2, uint8_t in1_2, uint8_t in2_2, uint8_t speed3, uint8_t in1_3, uint8_t in2_3, uint8_t speed4, uint8_t in1_4, uint8_t in2_4)
-    : motor1(MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2),
-      motor2(MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2),
-      motor3(MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2),
-      motor4(MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2){};
+Motors::Motors(uint8_t speed1, uint8_t in1_1, uint8_t in2_1, uint8_t speed2, uint8_t in1_2, uint8_t in2_2, uint8_t speed3, uint8_t in1_3, uint8_t in2_3, uint8_t speed4, uint8_t in1_4, uint8_t in2_4) 
+: motor1(speed1, in1_1, in2_1),
+  motor2(speed2, in1_2, in2_2),
+  motor3(speed3, in1_3, in2_3),
+  motor4(speed4, in1_4, in2_4)
+{};
 
 void Motors::InitializeMotors()
 {
@@ -173,6 +174,8 @@ void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
     int speedB = abs(int(m2));
     int speedC = abs(int(m3));
     int speedD = abs(int(m4));
+
+
 
     analogWrite(motor1.GetSpeed(), speedA);
     analogWrite(motor2.GetSpeed(), speedB);
