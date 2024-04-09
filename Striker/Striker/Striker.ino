@@ -8,6 +8,24 @@
 #include "Motors.h"
 #include <typeinfo>
 
+/*
+Robot logic for striker to score goal
+
+1. Implement logic to find ball
+2. If robot finds ball then ball_found = true
+3. It is necessary to implement a sampling time to know when the robot saw the ball recently, so he knows he has te ball
+4. If ball_found = true then robot moves to the ball implementing goal keeper logic
+5. If ball_distance < 25 and ball_found = true then i have the ball and it is close to the robot
+6. But if in the next sampling time i dont see ball, but i have seen it before close to me < 25 of distance then i have the ball
+7. If i see the ball again in the next sampling time then the process repeats
+8. If i dont see the ball in the next sampling time then i have to score the goal
+9. Once robot has_ball = true then robot moves to the goal in the angle from the center of the goal
+10. Move forward until goal_distance < 40
+11. Use kicker to strike goal
+12. Move back to the center of the field
+13. Repeat the process
+*/
+
 #define PIN_SERIAL1_TX (0u)
 #define PIN_SERIAL1_RX (1u)
 
@@ -26,31 +44,12 @@ float goal_angle = 0;
 float goal_distance = 0;
 float ball_angle_180 = 0;
 
-double last_time = 0;
-
 // Data used for the control
-float diff_angle = 0;
-float target_goal_angle = 0;
 bool ball_found = false;
 double ponderated_angle = 0;
 
 // PID
-double kp = 1.05;
-double ki = 3.2;
-double kd = 0.2;
-double target_angle = 0; // frame
-double traslation_angle = 0;
-double last_error = 0;
-double all_error = 0;
-double max_error = 30;
-
-// Bang Bang / histéresis / On-off
-float ball_threshold = 9;
-float goal_threshold = 13.5;
-
-// Traslation
-int speed_traslational = 0;
-int moving_angle = 0;
+double target_angle = 0; 
 
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
