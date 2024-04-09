@@ -32,7 +32,7 @@ bool goal_found = false;
 double ponderated_angle = 0;
 double target_angle = 0;
 double last_time_ball_seen = 0;
-double time_threshold = 1000;
+double time_threshold = 50;
 
 void setup()
 {
@@ -77,6 +77,7 @@ void loop()
     {
         ball_found = true;
         last_time_ball_seen = millis();
+        Serial.println("Ball found");
     }
 
 //--------------------------------------- Goal found logic ---------------------------------------//
@@ -88,13 +89,15 @@ void loop()
     else
     {
         goal_found = true;
+        //Serial.println("GOAL found");
     }
 
 //--------------------------------------- Has ball logic ----------------------------------------//
 
-    if (ball_found && ball_distance < 20 && millis() - last_time_ball_seen < time_threshold)
+    if (ball_found && ball_distance < 20 && millis() - last_time_ball_seen < time_threshold && ball_angle_180 > -20 && ball_angle_180 < 20)
     {
         has_ball = true;
+        Serial.println("HAS BAALLL");
     }
     else
     {
@@ -103,15 +106,15 @@ void loop()
 
 //--------------------------------------- Scoring goal logic -------------------------------------//
 
-    if(has_ball && goal_found && goal_distance > 40)
+    if(has_ball && goal_found && goal_distance > 30)
     {
         // move towards goal
-        myMotors.MoveMotorsImu(goal_angle, abs(speed_t_ball), speed_w);
+        myMotors.MoveMotorsImu(0, abs(speed_t_ball), speed_w);
     }//peruana
-    else if(has_ball && goal_found && goal_distance < 40)
+    else if(has_ball && goal_found && goal_distance < 30)
     {
         // shoot
-        myMotors.MoveMotorsImu(0, abs(speed_t_ball), speed_w);
+        myMotors.MoveMotorsImu(360 - goal_angle, abs(speed_t_ball), speed_w);
     }
     else if (has_ball && !goal_found)
     {
@@ -134,9 +137,5 @@ void loop()
             ponderated_angle = ball_angle > 180 ? ball_angle - differential : ball_angle + differential;
             myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         }
-    }
-    else if (goal_angle != 0)
-    {
-        // logica delatero
     }
 }
