@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include "Arduino.h"
 #include "constants.h"
 #include "PID.h"
 #include "serial.h"
@@ -9,9 +9,9 @@
 #define PIN_SERIAL1_RX (1u)
 
 SerialCommunication serialComm(Serial1);
-
+//60
 PID pid_w(0.3, 0.0016, 35, 200);
-PID pid_t_ball(60, 1, 0, 320);
+PID pid_t_ball(50, 1, 0, 320);
 PID pid_t_goal(20, 1, 0, 255);
 
 Motors myMotors(
@@ -33,6 +33,7 @@ double ponderated_angle = 0;
 double target_angle = 0;
 double last_time_ball_seen = 0;
 double time_threshold = 50;
+double score_angle = 0; 
 
 void setup()
 {
@@ -94,7 +95,7 @@ void loop()
 
 //--------------------------------------- Has ball logic ----------------------------------------//
 
-    if (ball_found && ball_distance < 20 && millis() - last_time_ball_seen < time_threshold && ball_angle_180 > -20 && ball_angle_180 < 20)
+    if (ball_found && ball_distance < 20 && millis() - last_time_ball_seen < time_threshold && ball_angle_180 > -30 && ball_angle_180 < 30)
     {
         has_ball = true;
         Serial.println("HAS BAALLL");
@@ -109,7 +110,7 @@ void loop()
     if(has_ball && goal_found && goal_distance > 30)
     {
         // move towards goal
-        myMotors.MoveMotorsImu(0, abs(speed_t_ball), speed_w);
+        myMotors.MoveMotorsImu(360 - goal_angle, abs(speed_t_ball), speed_w);
     }//peruana
     else if(has_ball && goal_found && goal_distance < 30)
     {
@@ -119,17 +120,25 @@ void loop()
     else if (has_ball && !goal_found)
     {
         // logica de no tener porteria
+        myMotors.MoveMotorsImu(360 - goal_found, abs(speed_t_ball), speed_w);
+    }
+    else if (!has_ball && !goal_found)
+    {
+        // logica de no tener balon
+        myMotors.MoveMotorsImu(360 - goal_angle, abs(speed_t_ball), speed_w);
     }
 
 //--------------------------------------- Follow ball logic --------------------------------------------//
 
     if (ball_found)
     {
-        if (ball_angle_180 > -15 && ball_angle_180 < 15)
+        score_angle = abs(goal_angle - ball_angle);
+        if (ball_angle_180 > -15 && ball_angle_180 < 15 && !goal_found)
         {
             myMotors.MoveMotorsImu(0, abs(speed_t_ball), speed_w);
         }
-        else
+        
+        else if(score_angle > 15)
         {
             ball_angle = 360 - ball_angle;
             double differential = ball_angle * 0.15;
@@ -139,3 +148,5 @@ void loop()
         }
     }
 }
+
+
