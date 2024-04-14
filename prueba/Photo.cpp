@@ -1,60 +1,85 @@
-
-
-//0x48
-//0x49
-//0x4A
-#include <Adafruit_ADS1X15.h>
 #include "Photo.h"
 
-Photo::Photo() {
+Photo::Photo() : ads_left(), ads_right(), ads_back() {
 }
 
-void Photo::InitPhoto() {
-  for (int i = 0; i < 3; i++) {
-    _ads_left[i].begin(0x48);
-    _ads_left[i].setGain(GAIN_FOUR);
-  }
 
-  for (int i = 0; i < 3; i++) {
-    _ads_right[i].begin(0x49);
-    _ads_right[i].setGain(GAIN_FOUR);
+bool Photo::InitializeADS() {
+  ads_left.setGain(GAIN_FOUR);
+  ads_right.setGain(GAIN_FOUR);
+  ads_back.setGain(GAIN_FOUR);
+  if(!ads_left.begin(0x48) || !ads_right.begin(0x49) || !ads_back.begin(0x4A)) {
+    return false;
   }
-
-  for (int i = 0; i < 3; i++) {
-    _ads_back[i].begin(0x4A);
-    _ads_back[i].setGain(GAIN_FOUR);
-  }
+  return true;
 }
 
-void Photo::PrintSensorValues(Adafruit_ADS1115 sensor) {
-  int16_t adc0 = sensor.readADC_SingleEnded(0);
-  int16_t adc1 = sensor.readADC_SingleEnded(1);
-  int16_t adc2 = sensor.readADC_SingleEnded(2);
-  int16_t adc3 = sensor.readADC_SingleEnded(3);
+double Photo::GetAverageRightValues() {
+  int16_t adc5 = ads_right.readADC_SingleEnded(0);
+  int16_t adc6 = ads_right.readADC_SingleEnded(1);
+  int16_t adc7 = ads_right.readADC_SingleEnded(2);
+  int16_t adc8 = ads_right.readADC_SingleEnded(3);
 
-  Serial.print("Channel 0: "); Serial.println(adc0);
-  Serial.print("Channel 1: "); Serial.println(adc1);
-  Serial.print("Channel 2: "); Serial.println(adc2);
-  Serial.print("Channel 3: "); Serial.println(adc3);
+  double average = (adc5 + adc6 + adc7 + adc8) / 4.0;
+
+  return average;
 }
 
-int Photo::ReadSensors(Adafruit_ADS1115 ads_left, Adafruit_ADS1115 ads_right, Adafruit_ADS1115 ads_back) {
+double Photo::GetAverageLeftValues() {
   int16_t adc0 = ads_left.readADC_SingleEnded(0);
-  int16_t adc1 = ads_right.readADC_SingleEnded(0);
-  int16_t adc2 = ads_back.readADC_SingleEnded(0);
+  int16_t adc1 = ads_left.readADC_SingleEnded(1);
+  int16_t adc2 = ads_left.readADC_SingleEnded(2);
+  int16_t adc3 = ads_left.readADC_SingleEnded(3);
 
-  return adc0 + adc1 + adc2;
+  double average = (adc0 + adc1 + adc2 + adc3) / 4.0;
+
+  return average;
 }
 
-int Photo::ReadIndividualSensor(Adafruit_ADS1115 sensor, int index) {
-  return sensor.readADC_SingleEnded(index);
+double Photo::GetAverageBackValues() {
+  int16_t adc9 = ads_back.readADC_SingleEnded(0);
+  int16_t adc10 = ads_back.readADC_SingleEnded(1);
+  int16_t adc11 = ads_back.readADC_SingleEnded(2);
+  int16_t adc12 = ads_back.readADC_SingleEnded(3);
+
+  double average = (adc9 + adc10 + adc11 + adc12) / 4.0;
+
+  return average;
 }
 
+int16_t Photo::GetADSLeftIndividual(int channel) {
+  return ads_left.readADC_SingleEnded(channel);
+}
 
+int16_t Photo::GetADSRightIndividual(int channel) {
+  return ads_right.readADC_SingleEnded(channel);
+}
 
+int16_t Photo::GetADSBackIndividual(int channel) {
+  return ads_back.readADC_SingleEnded(channel);
+}
 
+boolean Photo::isOnLeftLine() {
+  double left = GetAverageLeftValues();
+  return left < line_threshold;
+}
 
+boolean Photo::isOnRightLine() {
+  double right = GetAverageRightValues();
+  return right < line_threshold;
+}
 
+boolean Photo::isOnBackLine() {
+  double back = GetAverageBackValues();
+  return back < line_threshold;
+}
 
-
-
+void Photo::moveComplementary(boolean left, boolean right, boolean back) {
+  if (left) {
+    Serial.println("Left");
+  } else if (right) {
+    Serial.println("Right");
+  } else if (back) {
+    Serial.println("Back");
+  } 
+}

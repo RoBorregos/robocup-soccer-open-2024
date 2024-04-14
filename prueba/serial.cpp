@@ -7,7 +7,6 @@ float SerialCommunication::Receive(uint8_t signal) {
     while (!serial_.available()) {
         continue;
     }
-    delay(10);
     float temp; 
     uint8_t tempArray[4];
     union u_tag {
