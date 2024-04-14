@@ -14,7 +14,6 @@
 SerialCommunication serialComm(Serial1);
 
 PID pid_w(0.3, 0.0016, 35, 200);
-// tune this
 PID pid_t_ball(60, 1, 0, 320);
 PID pid_t_goal(20, 1, 0, 255);
 
@@ -43,10 +42,6 @@ double traslation_angle = 0;
 double last_error = 0;
 double all_error = 0;
 double max_error = 30;
-
-// Bang Bang / histéresis / On-off
-float ball_threshold = 9;
-float goal_threshold = 13.5;
 
 // Traslation
 int speed_traslational = 0;
@@ -77,12 +72,12 @@ void loop()
     ball_distance = serialComm.Receive(RECEIVE_BALL_DISTANCE);
     goal_angle = serialComm.Receive(RECEIVE_GOAL_ANGLE);
     goal_distance = serialComm.Receive(RECEIVE_GOAL_DISTANCE);
+    angle_line = serialComm.Receive(RECEIVE_LINE_ANGLE);
 
     // PID & Motor Control
     double speed_w = pid_w.Calculate(target_angle, bno_angle);
     double speed_t_goal = pid_t_goal.Calculate(180, goal_angle);
     double speed_t_ball = pid_t_ball.Calculate(0, ball_distance);
-    Serial.println(ball_distance);
 
     // Separate ball angle 180 and -180
     if (ball_angle < 180)

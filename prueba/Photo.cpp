@@ -3,7 +3,6 @@
 Photo::Photo() : ads_left(), ads_right(), ads_back() {
 }
 
-
 bool Photo::InitializeADS() {
   ads_left.setGain(GAIN_FOUR);
   ads_right.setGain(GAIN_FOUR);

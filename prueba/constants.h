@@ -31,5 +31,6 @@ const uint8_t RECEIVE_BALL_ANGLE= 'c';
 const uint8_t RECEIVE_BALL_DISTANCE = 'd';
 const uint8_t RECEIVE_GOAL_ANGLE = 'g';
 const uint8_t RECEIVE_GOAL_DISTANCE = 'k';
+const uint8_t RECEIVE_LINE_ANGLE = 'r';
 
 #endif  
