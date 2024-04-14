@@ -17,35 +17,15 @@ PID pid_w(0.3, 0.0016, 35, 200);
 PID pid_t_ball(60, 1, 0, 320);
 PID pid_t_goal(20, 1, 0, 255);
 
-// Receive Data from ESP32
 float bno_angle = 0;
 float ball_angle = 0;
 float ball_distance = 0;
 float goal_angle = 0;
 float goal_distance = 0;
 float ball_angle_180 = 0;
-
-double last_time = 0;
-
-// Data used for the control
-float diff_angle = 0;
-float target_goal_angle = 0;
 bool ball_found = false;
 double ponderated_angle = 0;
-
-// PID
-double kp = 1.05;
-double ki = 3.2;
-double kd = 0.2;
-double target_angle = 0; // frame
-double traslation_angle = 0;
-double last_error = 0;
-double all_error = 0;
-double max_error = 30;
-
-// Traslation
-int speed_traslational = 0;
-int moving_angle = 0;
+double target_angle = 0; 
 
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
@@ -66,7 +46,8 @@ void setup()
 void loop()
 {
 
-    // Receive Data
+//--------------------Receive data from sensors--------------------------//
+
     bno_angle = serialComm.Receive(RECEIVE_BNO);
     ball_angle = serialComm.Receive(RECEIVE_BALL_ANGLE);
     ball_distance = serialComm.Receive(RECEIVE_BALL_DISTANCE);
@@ -74,12 +55,14 @@ void loop()
     goal_distance = serialComm.Receive(RECEIVE_GOAL_DISTANCE);
     angle_line = serialComm.Receive(RECEIVE_LINE_ANGLE);
 
-    // PID & Motor Control
+//--------------------PID controller for the robot--------------------------//
+
     double speed_w = pid_w.Calculate(target_angle, bno_angle);
     double speed_t_goal = pid_t_goal.Calculate(180, goal_angle);
     double speed_t_ball = pid_t_ball.Calculate(0, ball_distance);
 
-    // Separate ball angle 180 and -180
+//--------------------Separate coordinate plane--------------------------//
+
     if (ball_angle < 180)
     {
         ball_angle_180 = -ball_angle;
@@ -89,6 +72,7 @@ void loop()
         ball_angle_180 = 360 - ball_angle;
     }
 
+//--------------------Logic for ball found-------------------------------------//
 
     if (ball_angle == 0)
     {
@@ -98,6 +82,9 @@ void loop()
     {
         ball_found = true;
     }
+
+//--------------------Implementation if ball found----------------------------------//
+
     if (ball_found)
     {
         // Ball
@@ -114,9 +101,11 @@ void loop()
             myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         }
     }
+
+//-------------------------Implementation to center robot in goal-------------------------------------//
+
     else if (goal_angle != 0)
     {
-        // Goal
         if (goal_angle < (185 - goal_threshold) && ball_found == false)
         {
             myMotors.MoveMotorsImu(270, abs(speed_t_goal), speed_w);
