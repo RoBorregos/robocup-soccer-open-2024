@@ -1,9 +1,8 @@
 #include <Arduino.h>
-#include <Motors.h>
+#include "motors.h"
 #include <typeinfo>
-#include <serial.h>
-#include <PID.h>
-#include <constants.h>
+#include "PID.h"
+#include "constants.h"
 #include <iostream>
 #include "Bno.h"
 #include <Wire.h>
@@ -14,7 +13,6 @@
 
 //----------------Object Declaration----------------------//
 
-SerialCommunication serialComm(Serial1);
 Adafruit_ADS1115 ads_left;
 Adafruit_ADS1115 ads_right;
 Adafruit_ADS1115 ads_back;
@@ -34,15 +32,17 @@ float ball_distance = 0;
 float move_line_angle = 0;
 float goal_angle = 0;
 float ball_angle_180 = 0;
+float goal_threshold = 13.5;
 double last_time = 0;
 double current_time = 0;
 bool ball_found = false;
 double ponderated_angle = 0;
 double target_angle = 0;
+double average = 0; 
 int last_ads_value = 0;
 int current_ads_value = 0;
-double last_time = 0;
-double current_time = 0;
+
+
 
 //----------------Estructure for photo sensors----------------------//
 
@@ -170,7 +170,7 @@ void loop()
         if (current_ads_value > last_ads_values[i] + 410)
         {
             move_line_angle += angle_values[i];
-            avg++; /*
+            average++; /*
              if(i >= 0 && i <= 3){
                fright++;
              }
@@ -183,16 +183,16 @@ void loop()
     /*
         if(fright > 0 && fleft > 0){
             move_line_angle = 180;
-        }   else if (avg > 0){
-            move_line_angle = (move_line_angle / avg) + 180;
+        }   else if (average > 0){
+            move_line_angle = (move_line_angle / average) + 180;
         }else {
             move_line_angle = -1;
         }*/
 
     //-----------------------BNO values read----------------------------------//
 
-    myBNO.getBNOData();
-    bno_angle = myBNO.getYaw();
+    myBNO.GetBNOData();
+    bno_angle = myBNO.GetYaw();
 
     //-----------------------Read data from camera----------------------------------//
 
@@ -277,7 +277,6 @@ void loop()
             else
             {
                 myMotors.MoveMotorsImu(0, 0, speed_w);
-                // Serial.println("STOP");
             }
         }
     }
@@ -292,7 +291,6 @@ void loop()
             {
                 millis() - last_time;
                 myMotors.MoveMotorsImu(move_line_angle, 255, speed_w);
-                // bno_angle = serialComm.Receive(RECEIVE_BNO);
                 speed_w = pid_w.Calculate(0, bno_angle);
             }
             myMotors.MoveMotorsImu(0, 0, speed_w);
@@ -304,7 +302,6 @@ void loop()
             {
                 millis() - last_time;
                 myMotors.MoveMotorsImu(move_line_angle, 180, speed_w);
-                // bno_angle = serialComm.Receive(RECEIVE_BNO);
                 speed_w = pid_w.Calculate(0, bno_angle);
             }
         }
