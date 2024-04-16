@@ -72,7 +72,7 @@ void loop()
         ball_angle_180 = 360 - ball_angle;
     }
 
-//--------------------Logic for ball found-------------------------------------//
+//---------------------------Logic for ball found-------------------------------//
 
     if (ball_angle == 0)
     {
@@ -83,8 +83,8 @@ void loop()
         ball_found = true;
     }
 
-//--------------------Implementation if ball found----------------------------------//
-
+//--------------------Implementation if ball found-----------------------------------//
+    if(angle_line == -1){
     if (ball_found)
     {
         // Ball
@@ -121,5 +121,9 @@ void loop()
             myMotors.MoveMotorsImu(0, 0, speed_w);
             Serial.println("STOP");
         }
+    }
+    }
+    else{
+        myMotors.MoveMotorsImu(angle_line, 150, speed_w);
     }
 }

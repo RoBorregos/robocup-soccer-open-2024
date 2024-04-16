@@ -1,8 +1,11 @@
+//---------------------------------------------------------------------------------------
+
+#include <iostream>
 #include "Bno.h"
 #include <Wire.h>
 #include <Adafruit_ADS1X15.h>
 
-Adafruit_ADS1115 ads_left; // Array to hold instances of ADS1115
+Adafruit_ADS1115 ads_left; 
 Adafruit_ADS1115 ads_right;
 Adafruit_ADS1115 ads_back;
 
@@ -48,10 +51,10 @@ int last_ads_values[] = {0,0,0,0,0,0,0,0,0,0,0,0};
 BNO055 myBNO;
 
 float angle = 0;
-float ballAngle = 0;
-float ballDistance = 0;
-float goalAngle = 0;
-float goalDistance = 0;
+int ballAngle = 0;
+int ballDistance = 0;
+int goalAngle = 0;
+int goalDistance = 0;
 int moveAngle = 0;
 int avg = 0;
 int fleft = 0;
@@ -60,8 +63,8 @@ int fright = 0;
 
 void setup()
 {
-    Serial.begin(9600);
-    Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
+    Serial.begin(230400);
+    Serial2.begin(230400, SERIAL_8N1, RXD2, TXD2);
     myBNO.InitializeBNO();
     ads_left.begin(0x48); // Initialize all instances of ADS1115
     ads_left.setGain(GAIN_FOUR); // Set the gain
@@ -77,8 +80,8 @@ void loop()
     fright = 0;
     moveAngle = 0;
     avg=0;
-    myBNO.GetBNOData();
-    angle = myBNO.GetYaw();
+    myBNO.getBNOData();
+    angle = myBNO.getYaw();
     send();
     if (Serial.available())
     {
@@ -91,8 +94,7 @@ void loop()
     goalAngle = Serial.parseInt();
     send();
 
-    goalDistance = Serial.parseInt();
-    send();
+    
       
         /*String camString = Serial.readStringUntil('\n');
         send();
@@ -141,24 +143,24 @@ void loop()
 
     if (current_ads_value > last_ads_values[i] + 410){
         moveAngle += angle_values[i];
-        avg++;
+        avg++;/*
         if(i >= 0 && i <= 3){
           fright++;
         }
         if(i >= 8 && i <= 11){
           fleft++;
-        }
+        }*/
     }
     last_ads_values[i] = current_ads_value;
 }
-
+/*
     if(fright > 0 && fleft > 0){
         moveAngle = 180;
     }   else if (avg > 0){
         moveAngle = (moveAngle / avg) + 180;
     }else {
         moveAngle = -1;
-    }
+    }*/
     send();
 }
 
@@ -268,5 +270,7 @@ void send()
         Serial2.flush();
     }
   }
+
 }
+
 
