@@ -1,14 +1,12 @@
 #include "Arduino.h"
 #include "constants.h"
 #include "PID.h"
-#include "serial.h"
 #include "Motors.h"
 #include <typeinfo>
 
 #define PIN_SERIAL1_TX (0u)
 #define PIN_SERIAL1_RX (1u)
 
-SerialCommunication serialComm(Serial1);
 //60
 PID pid_w(0.3, 0.0016, 35, 200);
 PID pid_t_ball(50, 1, 0, 320);
@@ -20,11 +18,7 @@ Motors myMotors(
     MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2,
     MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2);
 
-float bno_angle = 0;
-float ball_angle = 0;
-float ball_distance = 0;
-float goal_angle = 0;
-float goal_distance = 0;
+
 float ball_angle_180 = 0;
 bool ball_found = false;
 bool has_ball = false;
@@ -42,16 +36,38 @@ void setup()
     while (!Serial && millis() < 10000UL)
         ;
     Serial.println("Started");
-    Serial1.begin(9600);
+    Serial1.begin(115200);
 }
 
 void loop()
 {
-    bno_angle = serialComm.Receive(RECEIVE_BNO);
-    ball_angle = serialComm.Receive(RECEIVE_BALL_ANGLE);
-    ball_distance = serialComm.Receive(RECEIVE_BALL_DISTANCE);
-    goal_angle = serialComm.Receive(RECEIVE_GOAL_ANGLE);
-    goal_distance = serialComm.Receive(RECEIVE_GOAL_DISTANCE);
+    if (Serial1.available() > 0) {
+    String data = Serial1.readStringUntil('\n');
+    double values[5]; 
+    int index = 0;
+    char* ptr = strtok(const_cast<char*>(data.c_str()), ",");
+    while (ptr != NULL && index < 5) { 
+      values[index++] = atoi(ptr);
+      ptr = strtok(NULL, ",");
+    }
+
+    double bno_angle = values[0];
+    double ball_distance = values[1];
+    double ball_angle = values[2];
+    double goal_angle = values[3];
+    double goal_distance = values[4];
+
+    Serial.print("Angle: ");
+    Serial.println(bno_angle);
+    Serial.print("Ball Distance ");
+    Serial.println(ball_distance);
+    Serial.print("Ball Angle: ");
+    Serial.println(ball_angle);
+    Serial.print("Goal Angle: ");
+    Serial.println(goal_angle);
+    Serial.print("Goal Distance: "); 
+    Serial.println(goal_distance);
+
 
     double speed_w = pid_w.Calculate(target_angle, bno_angle);
     double speed_t_goal = pid_t_goal.Calculate(180, goal_angle);
@@ -146,6 +162,7 @@ void loop()
             ponderated_angle = ball_angle > 180 ? ball_angle - differential : ball_angle + differential;
             myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         }
+    }
     }
 }
 

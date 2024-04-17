@@ -3,9 +3,9 @@
 #include <Wire.h>
 #include <Adafruit_ADS1X15.h>
 
-/*Adafruit_ADS1115 ads_left; // Array to hold instances of ADS1115
+Adafruit_ADS1115 ads_left; // Array to hold instances of ADS1115
 Adafruit_ADS1115 ads_right;
-Adafruit_ADS1115 ads_back;*/
+Adafruit_ADS1115 ads_back;
 
 int last_ads_value = 0;
 int current_ads_value = 0;
@@ -17,7 +17,7 @@ float goal_distance = 0;
 double last_time = 0;
 double current_time = 0;
 
-/*struct PhotoValues
+struct PhotoValues
 {
     int adc285;
     int adc276;
@@ -31,16 +31,10 @@ double current_time = 0;
     int adc186;
     int adc175;
     int adc164;
-};*/
-
-/*const int numReadings = 84;
-const int numPhoto = 12;
-int avg = 0;
+};
 
 int angle_values[] = {285, 276, 265, 254, 105, 96, 85, 74, 195, 186, 175, 164};
-int accum_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-double readings[numPhoto][numReadings];
-int ma_index = 0; */
+int last_ads_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 #define RXD2 16
 #define TXD2 17
@@ -48,37 +42,31 @@ int ma_index = 0; */
 BNO055 myBNO;
 
 float angle = 0;
-int moveLineAngle = -1;
+int moveAngle = 0;
+int avg = 0;
 int fleft = 0;
 int fright = 0;
-
 
 void setup()
 {
     Serial.begin(115200);
     Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
     myBNO.InitializeBNO();
-    /*ads_left.begin(0x48);        
+    ads_left.begin(0x48);        
     ads_left.setGain(GAIN_FOUR); 
     ads_right.begin(0x49);       
     ads_right.setGain(GAIN_FOUR); 
     ads_back.begin(0x4A);        
-    ads_back.setGain(GAIN_FOUR);*/  
-    /*for(int j = 0; j < numPhoto; j++){
-      for (int i = 0; i < numReadings; i++) {
-        readings[j][i] = 0;
-      }
-    }*/
+    ads_back.setGain(GAIN_FOUR);  
 }
 
 void loop()
 {
-    /*fleft = 0;
+    fleft = 0;
     fright = 0;
-    moveLineAngle = -1;
-    avg = 0;*/
-    myBNO.GetBNOData();
-    angle = myBNO.GetYaw();
+    moveAngle = 0;
+    avg = 0;
+    angle = myBNO.GetAngle();
     if (Serial.available())
     {
         String camString = Serial.readStringUntil('\n');
@@ -88,7 +76,7 @@ void loop()
         goal_distance = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
     }
     // LEFT
-    /*PhotoValues photo_values = {
+    PhotoValues photo_values = {
         .adc285 = ads_left.readADC_SingleEnded(0),
         .adc276 = ads_left.readADC_SingleEnded(1),
         .adc265 = ads_left.readADC_SingleEnded(2),
@@ -102,8 +90,8 @@ void loop()
         .adc195 = ads_back.readADC_SingleEnded(0),
         .adc186 = ads_back.readADC_SingleEnded(1),
         .adc175 = ads_back.readADC_SingleEnded(2),
-        .adc164 = ads_back.readADC_SingleEnded(3)};*/
-    /*for (int i = 0; i < numPhoto; i++)
+        .adc164 = ads_back.readADC_SingleEnded(3)};
+    for (int i = 0; i < 12; i++)
     {
         switch (i)
         {
@@ -144,37 +132,34 @@ void loop()
             current_ads_value = photo_values.adc164;
             break;
         }
-        accum_values[i] -= readings[i][ma_index];
-        accum_values[i] += current_ads_value;
-        readings[i][ma_index] = current_ads_value;
-        //ma_index = (ma_index + 1) % numReadings;
-        float average = accum_values[i]/numReadings;
-        Serial.print("SENSOR: ");
-        Serial.println(i);
-        Serial.print("Valor Actual: ");
-        Serial.println(current_ads_value);
-        Serial.println(average);
-        if (current_ads_value > average + 600  && average > 22000 )
+
+        if (current_ads_value > last_ads_values[i] + 410)
         {
-            moveLineAngle += angle_values[i];
-            avg++;
-            Serial.print("CHANGE: ");
+            moveAngle += angle_values[i];
+            avg++; /*
+             if(i >= 0 && i <= 3){
+               fright++;
+             }
+             if(i >= 8 && i <= 11){
+               fleft++;
+             }*/
         }
-        delayMicroseconds(10);
+        last_ads_values[i] = current_ads_value;
     }
-    ma_index = (ma_index + 1) % numReadings;
-    
-    if (avg > 0){
-        moveLineAngle = (moveLineAngle / avg) + 180;
-    }else {
-        moveLineAngle = -1;
-    }*/
+    /*
+        if(fright > 0 && fleft > 0){
+            moveAngle = 180;
+        }   else if (avg > 0){
+            moveAngle = (moveAngle / avg) + 180;
+        }else {
+            moveAngle = -1;
+        }*/
     String angleString = String(angle);
     String ballDistance = String(ball_distance);
     String ballAngle = String(ball_angle);
     String goalAngle = String(goal_angle);
     String goalDistance = String(goal_distance);
-    //String moveAngle = String(moveLineAngle);
+    String moveAngle = String(moveAngle);
     Serial2.print(angleString);
     Serial2.print(",");
     Serial2.print(ballDistance);
@@ -188,4 +173,3 @@ void loop()
     /*Serial2.print(moveAngle);
     Serial2.println();*/
 }
-

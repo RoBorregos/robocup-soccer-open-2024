@@ -117,7 +117,10 @@ def main():
                 #uart.write("{:.2f} {:.2f}\n".format(distance, angle))
         print(" Distance ball: ", distance_ball, "cm\n", "Angle ball: ", angle_ball, " degrees\n", "Distance Goal: ", distance_goal, "cm\n", "Angle Goal: ", angle_goal, " degrees\n")
         #uart.write("{:.2f} {:.2f} {:.2f} {:.2f}\n".format(distance_ball, angle_ball, angle_goal, distance_goal))
-        uart.write("{} {} {} {}\n".format(int(distance_ball), int(angle_ball), int(angle_goal), int(distance_goal)));
+
+        #uart.write("{} {} {} {}\n".format(int(distance_ball), int(angle_ball), int(angle_goal), int(distance_goal)));
+        uart.write(f"{distance_ball} {angle_ball} {angle_goal} {distance_goal}\n")
+
         pyb.delay(50)
 
 if __name__ == "__main__":
