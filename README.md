@@ -1,12 +1,13 @@
 
 # Robocup Soccer Open 2024
 
-Code for Robocup Soccer Open 2024 participating with Roborregos Team
+Code for Robocup Soccer Open 2024 participating with Roborregos
 
 
 ## Author
 
 - [@JocelynVelarde](https://github.com/JocelynVelarde)
+- [@Yair-Reyes](https://github.com/Yair-Reyes)
 
 
 ## Features
