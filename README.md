@@ -11,9 +11,11 @@ Code for Robocup Soccer Open 2024 participating with Roborregos Team
 
 ## Features
 
-- Implementation of personalized Arduino libraries for easy usage
--
-
+- Contains 3 main scripts for distributed implementation
+- Vision folder used for image processing of multi blob tracking, line detection and regressions
+- ESP32 folder contains all data reception from UART camera data
+- Raspberry Pi Pico folder contains all data reception via Serial1 and Serial2, implements logic and algorithm design thinking
+- Implementation of personalized libraries for each component for increased abstraction and robust code
 
 ## Roadmap
 
@@ -25,7 +27,6 @@ Code for Robocup Soccer Open 2024 participating with Roborregos Team
 ## Documentation
 
 [Documentation](https://linktodocumentation)
-
 
 ## Usage/Examples
 
