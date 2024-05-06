@@ -26,11 +26,6 @@ Code for Robocup Soccer Open 2024 participating with Roborregos
 - Translational PID: Guides the robot towards the ball and goalpost.
 - Kinematic Equations: Enable omnidirectional movement using 4 wheels.
 
-## Roadmap
-
-- 
-
-
 ## Structure
 ```bash
 ROBOCUP-SOCCER-OPEN-2024 
@@ -69,6 +64,22 @@ Make sure to install the OpenMV IDE to upload the Vision files to the camera and
 [Poster for competition](https://drive.google.com/file/d/1UDHHcAP6nueFe7EwNo9wCtxwj0QSR5_y/view?usp=sharing)
 
 ## Install dependencies
+
+Make sure to install the corresponding boards in your Arduino environment following the instructions. 
+
+1. Open Preferences using the menu bar:
+    - Windows/Linux: File > Preferences
+    - macOS: Arduino IDE > Preferences
+2. Find the Additional boards manager URLs setting toward the bottom.
+3. Click the button to the right of the text field to open the Additional Boards Manager URLs window.
+4. Paste or remove URLs in the window. There should be one URL for each line.
+5. Click OK to close the Additional Boards Manager URLs window.
+
+Board packages can be found here: 
+- [RP2040](https://github.com/UNIT-Electronics/Uelectronics-RP2040-Arduino-Package)
+- [ESP32](https://github.com/UNIT-Electronics/Uelectronics-ESP32-Arduino-Package)
+
+To install python dependencies paste the following command in your cmd environment
 
 ```Python
 pip install -r requirements.txt
