@@ -4,6 +4,7 @@
 PID::PID(double kp, double ki, double kd, double max_error)
     : kp_(kp), ki_(ki), kd_(kd), max_error_(max_error), last_error_(0), last_time_(millis()) {}
 
+// Note that the sampling time for our PID controller is 20ms
 double PID::Calculate(double setpoint, double input)
 {
     double current_time = millis();

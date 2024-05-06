@@ -2,6 +2,8 @@
 
 SerialCommunication::SerialCommunication(HardwareSerial& serial) : serial_(serial) {}
 
+// Serial comunication to receive data from any microcontroller, at the moment it is not being used, it is 
+// implemented on past versions of the codebase
 float SerialCommunication::Receive(uint8_t signal) {
     serial_.write(signal);
     while (!serial_.available()) {
