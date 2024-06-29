@@ -55,7 +55,7 @@ void loop()
     if (Serial1.available())
     {
         String camString = Serial1.readStringUntil('\n');
-        ball_distance = camString.toFloat();  
+        ball_distance = camString.toFloat();
         ball_angle = camString.substring(camString.indexOf(' ') + 1).toFloat();
         goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
         distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
@@ -126,7 +126,6 @@ void loop()
         //--------------------Implementation if ball found-----------------------------------//
         //&& distance_pixels > 90 && distance_pixels != 0
         Serial.println(ball_found);
-        // esto es para que siempre tome como preferencia la pelota pero solo cuando esta a una distancia cortaa
 
         //-------------------------Implemenatation to center robot in goal-------------------------------------//
 
@@ -142,7 +141,6 @@ void loop()
             }
             else
             {
-                Serial.println("PELOTA ANGLE");
                 ball_angle = 360 - ball_angle;
                 double differential = ball_angle * 0.12;
                 ponderated_angle = ball_angle - differential;

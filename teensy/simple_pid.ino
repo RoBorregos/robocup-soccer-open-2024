@@ -7,7 +7,7 @@
 #include "Motors.h"
 #include <typeinfo>
 
-floa angle = 0; 
+floa angle = 0;
 
 BNO055 myBNO;
 Motors myMotors(
@@ -18,16 +18,18 @@ Motors myMotors(
 
 PID pid_w(0.8, 0, 5, 200);
 
-void setup(){
- Serial1.begin(115200);
+void setup()
+{
+    Serial1.begin(115200);
     Serial.begin(9500);
-   
+
     myMotors.InitializeMotors();
     myBNO.InitializeBNO();
 }
 
-void loop(){
-     myBNO.GetBNOData();
+void loop()
+{
+    myBNO.GetBNOData();
     angle = myBNO.GetYaw();
     double speed_w = pid_w.Calculate(0, angle);
     myMotors.MoveMotorsImu(0, 180, speed_w);
