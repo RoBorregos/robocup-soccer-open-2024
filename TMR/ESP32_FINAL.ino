@@ -89,8 +89,8 @@ void setup()
 
 void loop()
 {
-    myBNO.getBNOData();
-    angle = myBNO.getYaw();
+    myBNO.GetBNOData();
+    angle = myBNO.GetYaw();
     if (Serial.available())
     {
         String camString = Serial.readStringUntil('\n');

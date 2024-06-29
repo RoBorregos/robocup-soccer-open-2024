@@ -55,7 +55,7 @@ void loop()
     if (Serial1.available())
     {
         String camString = Serial1.readStringUntil('\n');
-        ball_distance = camString.toFloat();
+        ball_distance = camString.toFloat();  
         ball_angle = camString.substring(camString.indexOf(' ') + 1).toFloat();
         goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
         distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
