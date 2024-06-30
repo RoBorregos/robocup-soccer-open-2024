@@ -54,7 +54,7 @@ void loop()
   delay(2000);
 
   // Spin motor in reverse
-  digitalWrite(motorIn1, LOW);
+  /*digitalWrite(motorIn1, LOW);
   digitalWrite(motorIn2, HIGH);
   digitalWrite(motor2In1, LOW);
   digitalWrite(motor2In2, HIGH);
@@ -62,7 +62,7 @@ void loop()
   digitalWrite(motor3In2, HIGH);
   digitalWrite(motor4In1, LOW);
   digitalWrite(motor4In2, HIGH);
-  delay(2000);
+  delay(2000);*/
 
   // Stop motor
   digitalWrite(motorIn1, LOW);

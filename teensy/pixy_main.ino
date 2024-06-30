@@ -1,9 +1,8 @@
 #include <iostream>
 #include <Wire.h>
-#include "prueba/Bno.h"
+#include "Bno.h"
 #include <Pixy2SPI_SS.h>
 #include <Arduino.h>
-#include "constantsMPU.h"
 #include "PID.h"
 #include "Motors.h"
 #include <typeinfo>
@@ -26,14 +25,14 @@ double target_angle = 0;
 int goal_threshold = 9;
 
 Pixy2SPI_SS pixy;
-Bno myBNO;
+BNO055 myBNO;
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
     MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
     MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2,
     MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2);
 
-PID pid_w(0.8, 0, 5, 200);
+PID pid_w(0.8, 0, 10, 200);
 PID pid_t_ball(60, 1, 0, 320);
 PID pid_t_goal(20, 1, 0, 255);
 
@@ -44,14 +43,18 @@ void setup()
     pixy.init();
     myMotors.InitializeMotors();
     myBNO.InitializeBNO();
+    analogReadResolution(12);
+    Serial.print("INIT");
 }
 
 void loop()
 {
+  int photoValue = analogRead(A0);
+    int photoValue1 = analogRead(A1);
 
     // ----------------- Gather data from OpenMV camera via UART ----------------- //
-    myBNO.getBNOData();
-    angle = myBNO.getYaw();
+    myBNO.GetBNOData();
+    bno_angle = myBNO.GetYaw();
     if (Serial1.available())
     {
         String camString = Serial1.readStringUntil('\n');
@@ -60,13 +63,15 @@ void loop()
         goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
         distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
         distance_pixels_protect = camString.substring(camString.indexOf(' ', camString.lastIndexOf(' ') + 1)).toFloat();
+    }else {
+        Serial.println("NO DATA AVAILABLE ON SERIAL1");
     }
-    String angleString = String(angle);
+    //String angleString = String(angle);
     String ballDistance = String(ball_distance);
     String ballAngle = String(ball_angle);
     String goalAngle = String(goal_angle);
     String distancePixels = String(distance_pixels);
-    Serial.print(angleString);
+    //Serial.print(angleString);
     Serial.print(",");
     Serial.print(ballDistance);
     Serial.print(",");
@@ -97,11 +102,18 @@ void loop()
 
     //--------------------PID controller for the robot--------------------------//
     double speed_w = pid_w.Calculate(target_angle, bno_angle);
-    double speed_t_goal = pid_t_goal.Calculate(180, goal_angle);
-    double speed_t_ball = pid_t_ball.Calculate(0, ball_distance);
+    double speed_t_goal = 170; 
+    double speed_t_ball = 170; 
+    //double speed_t_goal = pid_t_goal.Calculate(180, goal_angle);
+    //double speed_t_ball = pid_t_ball.Calculate(0, ball_distance);
 
     if (speed_w != 0)
     {
+      if (photoValue > 1000 || photoValue1 > 1000) {
+      myMotors.MoveMotorsImu(90, 250, speed_w);
+      delay(200);
+      Serial.println("ATRÁS");
+      }else{
         //--------------------Separate coordinate plane--------------------------//
 
         if (ball_angle < 180)
@@ -163,6 +175,6 @@ void loop()
                 myMotors.MoveMotorsImu(ball_angle, 0, speed_w);
             }
         }
+      }
     }
-}
 }

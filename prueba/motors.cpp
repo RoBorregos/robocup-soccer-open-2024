@@ -182,7 +182,7 @@ void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
     analogWrite(motor3.GetSpeed(), speedC);
     analogWrite(motor4.GetSpeed(), speedD);
 
-    if (m1 <= 0)
+    if (m1 >= 0)
     {
         motor1.MoveForward();
     }
@@ -190,7 +190,7 @@ void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
     {
         motor1.MoveBackward();
     }
-    if (m2 <= 0)
+    if (m2 >= 0)
     {
         motor2.MoveForward();
     }
@@ -198,7 +198,7 @@ void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
     {
         motor2.MoveBackward();
     }
-    if (m3 <= 0)
+    if (m3 >= 0)
     {
         motor3.MoveForward();
     }
@@ -206,7 +206,7 @@ void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
     {
         motor3.MoveBackward();
     }
-    if (m4 <= 0)
+    if (m4 >= 0)
     {
         motor4.MoveForward();
     }

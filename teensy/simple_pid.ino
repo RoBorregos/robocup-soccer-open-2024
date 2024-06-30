@@ -7,7 +7,7 @@
 #include "Motors.h"
 #include <typeinfo>
 
-floa angle = 0;
+float angle = 0;
 
 BNO055 myBNO;
 Motors myMotors(
@@ -32,5 +32,7 @@ void loop()
     myBNO.GetBNOData();
     angle = myBNO.GetYaw();
     double speed_w = pid_w.Calculate(0, angle);
-    myMotors.MoveMotorsImu(0, 180, speed_w);
+    if(speed_w != 0){
+    myMotors.MoveMotorsImu(0, 0, speed_w);
+    }
 }
