@@ -198,7 +198,11 @@ void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
     {
         motor2.MoveBackward();
     }
+<<<<<<< Updated upstream
     if (m3 <= 0)
+=======
+    if (m3<= 0)
+>>>>>>> Stashed changes
     {
         motor3.MoveForward();
     }
