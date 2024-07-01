@@ -32,7 +32,11 @@ Motors myMotors(
     MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2,
     MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2);
 
+<<<<<<< HEAD
 PID pid_w(0.6, 0, 0, 200);
+=======
+PID pid_w(0.8, 0, 10, 200);
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
 PID pid_t_ball(60, 1, 0, 320);
 PID pid_t_goal(20, 1, 0, 255);
 
@@ -72,7 +76,11 @@ void loop()
     String goalAngle = String(goal_angle);
     String distancePixels = String(distance_pixels);
     //Serial.print(angleString);
+<<<<<<< HEAD
    /* Serial.print(",");
+=======
+    Serial.print(",");
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
     Serial.print(ballDistance);
     Serial.print(",");
     Serial.print(ballAngle);
@@ -80,7 +88,11 @@ void loop()
     Serial.print(goalAngle);
     Serial.print(",");
     Serial.print(distancePixels);
+<<<<<<< HEAD
     Serial.println();*/
+=======
+    Serial.println();
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
 
     // ----------------- Gather data from Pixy2 camera via SPI ----------------- //
 
@@ -89,6 +101,7 @@ void loop()
 
     if (pixy.ccc.numBlocks)
     {
+<<<<<<< HEAD
         //Serial.print("Detected ");
         //Serial.println(pixy.ccc.numBlocks);
         for (i = 0; i < pixy.ccc.numBlocks; i++)
@@ -96,14 +109,28 @@ void loop()
            // Serial.print("  block ");
            // Serial.print(i);
             //Serial.print(": ");
+=======
+        Serial.print("Detected ");
+        Serial.println(pixy.ccc.numBlocks);
+        for (i = 0; i < pixy.ccc.numBlocks; i++)
+        {
+            Serial.print("  block ");
+            Serial.print(i);
+            Serial.print(": ");
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
             pixy.ccc.blocks[i].print();
         }
     }
 
     //--------------------PID controller for the robot--------------------------//
     double speed_w = pid_w.Calculate(target_angle, bno_angle);
+<<<<<<< HEAD
     double speed_t_goal = 150; 
     double speed_t_ball = 150; 
+=======
+    double speed_t_goal = 170; 
+    double speed_t_ball = 170; 
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
     //double speed_t_goal = pid_t_goal.Calculate(180, goal_angle);
     //double speed_t_ball = pid_t_ball.Calculate(0, ball_distance);
 
@@ -112,7 +139,11 @@ void loop()
       if (photoValue > 1000 || photoValue1 > 1000) {
       myMotors.MoveMotorsImu(90, 250, speed_w);
       delay(200);
+<<<<<<< HEAD
       //Serial.println("ATRÁS");
+=======
+      Serial.println("ATRÁS");
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
       }else{
         //--------------------Separate coordinate plane--------------------------//
 
@@ -137,7 +168,11 @@ void loop()
         }
         //--------------------Implementation if ball found-----------------------------------//
         //&& distance_pixels > 90 && distance_pixels != 0
+<<<<<<< HEAD
         //Serial.println(ball_found);
+=======
+        Serial.println(ball_found);
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
 
         //-------------------------Implemenatation to center robot in goal-------------------------------------//
 
@@ -145,6 +180,7 @@ void loop()
         {
 
             // Ball
+<<<<<<< HEAD
             //Serial.println("BALL FOUND");
             //if (ball_angle_180 > -15 && ball_angle_180 < 15)
             //{
@@ -154,15 +190,30 @@ void loop()
                 Serial.println(ball_angle);
             //}
             /*else
+=======
+            Serial.println("BALL FOUND");
+            if (ball_angle_180 > -15 && ball_angle_180 < 15)
+            {
+
+                myMotors.MoveMotorsImu(0, abs(speed_t_ball), speed_w);
+            }
+            else
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
             {
                 ball_angle = 360 - ball_angle;
                 double differential = ball_angle * 0.12;
                 ponderated_angle = ball_angle - differential;
                 ponderated_angle = ball_angle > 180 ? ball_angle - differential : ball_angle + differential;
                 myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
+<<<<<<< HEAD
             }*/
         }
         /*else if (goal_angle > 0)
+=======
+            }
+        }
+        else if (goal_angle > 0)
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
         {
             if (goal_angle < (185 - goal_threshold) && ball_found == false)
             {
@@ -176,7 +227,11 @@ void loop()
             {
                 myMotors.MoveMotorsImu(ball_angle, 0, speed_w);
             }
+<<<<<<< HEAD
         }*/
+=======
+        }
+>>>>>>> 24e1f33f362a29a96b5bfa41ae82f17c7a4e90d6
       }
     }
 }
