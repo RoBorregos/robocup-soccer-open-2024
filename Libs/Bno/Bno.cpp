@@ -11,6 +11,7 @@ BNO055::BNO055()
     difference_angle_ = 0;
 }
 
+// Start retrieving data from the BNO055 sensor, disable the external crystal in case errors occur
 void BNO055::InitializeBNO()
 {
 
@@ -26,6 +27,7 @@ void BNO055::InitializeBNO()
     Serial.println("BNO055 initialized.");
 }
 
+// Retrieve the yaw angle (x) from the BNO055 sensor using quaternion data from the euler vector
 void BNO055::GetBNOData()
 {
     imu::Vector<3> euler = bno_.getVector(Adafruit_BNO055::VECTOR_EULER);

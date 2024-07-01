@@ -38,9 +38,6 @@ const int MOTOR1_IN1 = 5;  //
 const int MOTOR1_IN2 = 4;  // 
 const int MOTOR1_PWM = 3;  //
 
-// Serial pins
-
-
 // Receive signals
 const uint8_t RECEIVE_BNO = 's';
 const uint8_t RECEIVE_BALL_ANGLE= 'c';
