@@ -10,6 +10,10 @@ pixy.ccc.blocks[i].m_x The x location of the center of the detected object (0 to
 pixy.ccc.blocks[i].m_y The y location of the center of the detected object (0 to 208)
 */
 
+/*
+So i have my pixy as my main cam which 
+*/
+
 float bno_angle = 0;
 float distance_pixels = 0;
 float distance_pixels_protect = 0;
