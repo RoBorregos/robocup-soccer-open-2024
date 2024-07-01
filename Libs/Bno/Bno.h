@@ -1,5 +1,5 @@
-#ifndef bno_h
-#define bno_h
+#ifndef Bno_h
+#define Bno_h
 
 #include "Adafruit_BNO055.h"
 #include "utility/imumaths.h"
