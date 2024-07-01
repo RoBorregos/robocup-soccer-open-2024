@@ -40,7 +40,7 @@ void setup()
 {
     Serial1.begin(115200);
     Serial.begin(9500);
-    pixy.init();
+    //pixy.init();
     myMotors.InitializeMotors();
     myBNO.InitializeBNO();
     analogReadResolution(12);
@@ -63,14 +63,7 @@ void loop()
         goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
         distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
         distance_pixels_protect = camString.substring(camString.indexOf(' ', camString.lastIndexOf(' ') + 1)).toFloat();
-    }else {
-        Serial.println("NO DATA AVAILABLE ON SERIAL1");
     }
-    //String angleString = String(angle);
-    String ballDistance = String(ball_distance);
-    String ballAngle = String(ball_angle);
-    String goalAngle = String(goal_angle);
-    String distancePixels = String(distance_pixels);
     //Serial.print(angleString);
    /* Serial.print(",");
     Serial.print(ballDistance);
@@ -84,7 +77,7 @@ void loop()
 
     // ----------------- Gather data from Pixy2 camera via SPI ----------------- //
 
-    int i;
+    /*int i;
     pixy.ccc.getBlocks();
 
     if (pixy.ccc.numBlocks)
@@ -98,21 +91,23 @@ void loop()
             //Serial.print(": ");
             pixy.ccc.blocks[i].print();
         }
-    }
+    }*/
 
     //--------------------PID controller for the robot--------------------------//
     double speed_w = pid_w.Calculate(target_angle, bno_angle);
-    double speed_t_goal = 170; 
-    double speed_t_ball = 170; 
+    double speed_t_goal = 150; 
+    double speed_t_ball = 150; 
     //double speed_t_goal = pid_t_goal.Calculate(180, goal_angle);
     //double speed_t_ball = pid_t_ball.Calculate(0, ball_distance);
 
     if (speed_w != 0)
     {
+      Serial.println(photoValue);
+      Serial.println(photoValue1);
       if (photoValue > 1000 || photoValue1 > 1000) {
       myMotors.MoveMotorsImu(90, 250, speed_w);
       delay(200);
-      //Serial.println("ATRÁS");
+      
       }else{
         //--------------------Separate coordinate plane--------------------------//
 
@@ -148,7 +143,7 @@ void loop()
             //Serial.println("BALL FOUND");
             //if (ball_angle_180 > -15 && ball_angle_180 < 15)
             //{
-
+                ball_angle = 360 - ball_angle; 
                 myMotors.MoveMotorsImu(ball_angle, abs(speed_t_ball), speed_w);
                 Serial.print("BALL ANGLE: ");
                 Serial.println(ball_angle);

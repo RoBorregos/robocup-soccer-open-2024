@@ -114,7 +114,6 @@ void Motors::MoveMotor4()
     motor4.MoveForward();
 };
 
-// Simple kinematic movement to an specific angle given a speed in pwm
 void Motors::MoveMotors(int degree, uint8_t speed)
 {
     float m1 = cos(((45 + degree) * PI / 180));
@@ -165,7 +164,6 @@ void Motors::MoveMotors(int degree, uint8_t speed)
     }
 };
 
-// Main kinematic movement to an specific angle given a speed in pwm and a speed for the rotation which is controlled by the BNO sensor and an omega PID controller
 void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
 {
     float m1 = cos(((45 + degree) * PI / 180)) * speed + speed_w;
