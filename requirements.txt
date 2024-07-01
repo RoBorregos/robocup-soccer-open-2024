@@ -1,1 +1,7 @@
 Pylint
+math
+time
+sensor
+pyb
+utime
+image
