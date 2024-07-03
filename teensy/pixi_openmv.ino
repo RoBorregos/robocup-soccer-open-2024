@@ -92,9 +92,13 @@ void loop()
       double magnitude_distance = sqrt(relative_cx * relative_cx + relative_cy * relative_cy);
       double total_distance = 1.2415 * magnitude_distance - 5.2805;
 
-
+      Serial.print("Total distance: ");
+      Serial.println(total_distance);
       double angle_radians = atan2(relative_cy, relative_cx);
       double angle_degrees = radiansToDegrees(angle_radians);
+
+      Serial.print("Angle: ");
+      Serial.println(angle_degrees);
 
       angle_degrees += 8;
       if (angle_degrees < 0)
