@@ -105,7 +105,7 @@ void loop()
       double angle_radians = atan2(relative_cy, relative_cx);
       double angle_degrees = radiansToDegrees(angle_radians);
  
-      angle_degrees += 96;
+      angle_degrees += 70;
       if (angle_degrees < 0)
       {
         angle_degrees += 360;
@@ -134,7 +134,7 @@ void loop()
 
   double speed_w = pid_w.Calculate(target_angle, bno_angle);
   double speed_t_goal = 120;
-  double speed_t_ball = 120;
+  double speed_t_ball = 150;
 
   
 
@@ -164,24 +164,29 @@ void loop()
             }*/
             if (ball_seen_pixy)
             {
-              myMotors.MoveMotorsImu(ball_angle, abs(speed_t_ball), speed_w);
-              Serial.print("BALL ANGLE: ");
-              Serial.println(ball_angle);
-                Serial.println("BALL FOUND");
-                /*if (ball_angle_180 > -15 && ball_angle_180 < 15)
+              //myMotors.MoveMotorsImu(ball_angle, abs(speed_t_ball), speed_w);
+              //Serial.print("BALL ANGLE: ");
+              //Serial.println(ball_angle);
+              ball_angle_180 = ball_angle_180*(-1);
+                Serial.print("BALL ANGLE: ");
+                Serial.println(ball_angle);
+                
+                if (ball_angle_180 > -20 && ball_angle_180 < 20)
                 {
-
+                    Serial.println("BALL IN RANGE");
                     myMotors.MoveMotorsImu(0, abs(speed_t_ball), speed_w);
                 }
                 else
                 {
                     Serial.println("PELOTA ANGLE");
-                    ball_angle = 360 - ball_angle;
-                    double differential = ball_angle * 0.12;
-                    ponderated_angle = ball_angle - differential;
-                    ponderated_angle = ball_angle > 180 ? ball_angle - differential : ball_angle + differential;
+                    //ball_angle = 360 - ball_angle;
+                    double differential = ball_angle_180 * 0.15;
+                    //ponderated_angle = ball_angle - differential;
+                    ponderated_angle = ball_angle + differential;
+                    Serial.print("PONDERATED: ");
+                    Serial.println(ponderated_angle);
                     myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
-                }*/
+                }
             }else if(!ball_seen_pixy){
                   Serial.println("NO BALL");
                   myMotors.StopMotors();
