@@ -166,10 +166,10 @@ void Motors::MoveMotors(int degree, uint8_t speed)
 
 void Motors::MoveMotorsImu(double degree, uint8_t speed, double speed_w)
 {
-    float m1 = cos(((45 + degree) * PI / 180)) * speed + speed_w;
-    float m2 = cos(((135 + degree) * PI / 180)) * speed + speed_w;
-    float m3 = cos(((225 + degree) * PI / 180)) * speed + speed_w;
-    float m4 = cos(((315 + degree) * PI / 180)) * speed + speed_w;
+    float m2 = cos(((45 + degree) * PI / 180)) * speed + speed_w;
+    float m3 = cos(((135 + degree) * PI / 180)) * speed + speed_w;
+    float m4 = cos(((225 + degree) * PI / 180)) * speed + speed_w;
+    float m1 = cos(((315 + degree) * PI / 180)) * speed + speed_w;
     int speedA = abs(int(m1));
     int speedB = abs(int(m2));
     int speedC = abs(int(m3));
