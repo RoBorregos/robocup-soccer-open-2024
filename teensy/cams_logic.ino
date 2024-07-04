@@ -51,42 +51,28 @@ void loop()
 {
 
   // ----------------- Gather data from OpenMV camera via UART ----------------- //
-  // my_bno.GetBNOData();
-  // angle = my_bno.GetYaw();
-  angle = 0;
+  my_bno.GetBNOData();
+  angle = my_bno.GetYaw();
   if (Serial1.available())
   {
     String camString = Serial1.readStringUntil('\n');
     ball_distance = camString.toFloat();
     ball_angle = camString.substring(camString.indexOf(' ') + 1).toFloat();
-    goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
-    distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
-    distance_pixels_protect = camString.substring(camString.indexOf(' ', camString.lastIndexOf(' ') + 1)).toFloat();
   }
   String angleString = String(angle);
   String ballDistance = String(ball_distance);
   String ballAngle = String(ball_angle);
-  String goalAngle = String(goal_angle);
-  String distancePixels = String(distance_pixels);
-  Serial.print(angleString);
-  Serial.print(",");
-  Serial.print(ballDistance);
-  Serial.print(",");
-  Serial.print(ballAngle);
-  Serial.print(",");
-  Serial.print(goalAngle);
-  Serial.print(",");
-  Serial.print(distancePixels);
-  Serial.println();
 
   // ----------------- Gather data from Pixy2 camera via SPI ----------------- //
 
   int i;
   pixy.ccc.getBlocks();
+  int pixy_blocks = pixy.ccc.numBlocks;
+  bool ball_seen_pixy = false;
+  bool ball_seen_openmv = (ball_distance != 0 && ball_angle != 0);
 
   if (pixy.ccc.numBlocks)
   {
-    Serial.println(pixy.ccc.numBlocks);
     for (i = 0; i < pixy.ccc.numBlocks; i++)
     {
       double cx = pixy.ccc.blocks[i].m_x;
@@ -110,14 +96,31 @@ void loop()
         angle_degrees -= 360;
       }
 
-      Serial.print("Block ");
-      Serial.print(i);
-      Serial.print(": Distance = ");
-      Serial.print(total_distance);
-      Serial.print(" cm, Angle = ");
-      Serial.print(angle_degrees);
-      Serial.println(" degrees");
+      // A certain signature means the ball, update values for both cams, because the ball is the same in both views just different POVs
+      if(pixy.ccc.blocks[i].m_signature == 1)
+      {
+        ball_seen_pixy = true;
+        ball_distance = total_distance; 
+        ball_angle = angle_degrees;
+      }
 
     }
+  }
+
+  if(ball_seen_pixy && ball_seen_openmv)si
+  {
+    Serial.println("Both cameras see the ball");
+  }
+  else if(ball_seen_pixy && !ball_seen_openmv)
+  {
+    Serial.println("Only pixy sees the ball");
+  }
+  else if(!ball_seen_pixy && ball_seen_openmv)
+  {
+    Serial.println("Only openmv sees the ball");
+  }
+  else
+  {
+    Serial.println("No camera sees the ball, move to last known position");
   }
 }

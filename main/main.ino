@@ -11,11 +11,7 @@ pixy.ccc.blocks[i].m_y The y location of the center of the detected object (0 to
 */
 
 /*
-Pixy cam con la que veo de default puedo ver la distancia y el angulo de todas mis cosas, hay un rango en donde ya no vi mi pelota. Entonces se debe
-de tener tres condiciones de cuando no veo la pelota checar si la puedo ver en la openmv, de cuando la veo en las dos y de cuando solo la veo en la pixy. En
-base a eso puedo acercarme a la pelota en su ball angle y cuando ya la tenga enfrente (osea que la vea con la camara frontal openmv a cierta distancia y angulo)
- y si esta ahi prendo dribbler y avanzo hacia el angulo de la pelota de acuerdo a mi openmv en caso de no ver la pelota 
-en ningun lado, me dirigo al angulo donde la vi por ultima vez
+So i have my pixy as my main cam which 
 */
 
 float bno_angle = 0;
@@ -51,9 +47,9 @@ void loop()
 {
 
   // ----------------- Gather data from OpenMV camera via UART ----------------- //
-  // my_bno.GetBNOData();
-  // angle = my_bno.GetYaw();
-  angle = 0;
+   my_bno.GetBNOData();
+   angle = my_bno.GetYaw();
+   Serial.println(angle);
   if (Serial1.available())
   {
     String camString = Serial1.readStringUntil('\n');
