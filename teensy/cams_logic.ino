@@ -31,6 +31,7 @@ float angle = 0;
 const int FRAME_HEIGHT = 104;
 const int FRAME_WIDTH = 158;
 
+PID pid_w(0.6, 0.01, 6, 200);
 Pixy2SPI_SS pixy;
 BNO055 my_bno;
 
@@ -53,15 +54,18 @@ void loop()
   // ----------------- Gather data from OpenMV camera via UART ----------------- //
   my_bno.GetBNOData();
   angle = my_bno.GetYaw();
-  if (Serial1.available())
+  /*if (Serial1.available())
   {
     String camString = Serial1.readStringUntil('\n');
     ball_distance = camString.toFloat();
     ball_angle = camString.substring(camString.indexOf(' ') + 1).toFloat();
+    goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
+    distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
+    distance_pixels_protect = camString.substring(camString.indexOf(' ', camString.lastIndexOf(' ') + 1)).toFloat();
   }
   String angleString = String(angle);
   String ballDistance = String(ball_distance);
-  String ballAngle = String(ball_angle);
+  String ballAngle = String(ball_angle);*/
 
   // ----------------- Gather data from Pixy2 camera via SPI ----------------- //
 
@@ -69,7 +73,7 @@ void loop()
   pixy.ccc.getBlocks();
   int pixy_blocks = pixy.ccc.numBlocks;
   bool ball_seen_pixy = false;
-  bool ball_seen_openmv = (ball_distance != 0 && ball_angle != 0);
+  //bool ball_seen_openmv = (ball_distance != 0 && ball_angle != 0);
 
   if (pixy.ccc.numBlocks)
   {
@@ -107,7 +111,54 @@ void loop()
     }
   }
 
-  if(ball_seen_pixy && ball_seen_openmv)si
+  double speed_w = pid_w.Calculate(target_angle, bno_angle);
+  double speed_t_goal = 150;
+  double speed_t_ball = 150;
+
+  if (speed_w != 0)
+        {
+            //--------------------Separate coordinate plane--------------------------//
+
+            if (ball_angle < 180)
+            {
+                ball_angle_180 = -ball_angle;
+            }
+            else if (ball_angle > 180)
+            {
+                ball_angle_180 = 360 - ball_angle;
+            }
+
+            //---------------------------Logic for ball found-------------------------------//
+
+            if (ball_angle == 0)
+            {
+                ball_found = false;
+            }
+            else
+            {
+                ball_found = true;
+            }
+            if (ball_found)
+            {
+                Serial.println("BALL FOUND");
+                if (ball_angle_180 > -15 && ball_angle_180 < 15)
+                {
+
+                    myMotors.MoveMotorsImu(0, abs(speed_t_ball), speed_w);
+                }
+                else
+                {
+                    Serial.println("PELOTA ANGLE");
+                    ball_angle = 360 - ball_angle;
+                    double differential = ball_angle * 0.12;
+                    ponderated_angle = ball_angle - differential;
+                    ponderated_angle = ball_angle > 180 ? ball_angle - differential : ball_angle + differential;
+                    myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
+                }
+            }
+        }
+
+  /*if(ball_seen_pixy && ball_seen_openmv)
   {
     Serial.println("Both cameras see the ball");
   }
@@ -122,5 +173,5 @@ void loop()
   else
   {
     Serial.println("No camera sees the ball, move to last known position");
-  }
+  }*/
 }

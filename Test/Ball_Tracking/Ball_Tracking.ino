@@ -94,7 +94,7 @@ float receive (uint8_t signal){
     delay(10);
     float temp;
     uint8_t tempArray[4];
-    union u_tag
+    union u_tag 
     {
         byte b[4];
         float angle;

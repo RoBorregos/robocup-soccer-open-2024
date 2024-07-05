@@ -22,23 +22,21 @@ const uint8_t MOTOR4_PWM = 10;*/
 const uint8_t MOTOR1_IN2 = 11;
 const uint8_t MOTOR1_PWM = 21;*/
 
-const int MOTOR3_IN1 = 35; 
-const int MOTOR3_IN2 = 34;
-const int MOTOR3_PWM = 33; 
+const int MOTOR3_IN1 = 34; 
+const int MOTOR3_IN2 = 33;
+const int MOTOR3_PWM = 4; 
 
-const int MOTOR2_IN1 = 21;  // 
-const int MOTOR2_IN2 =22;  // 
-const int MOTOR2_PWM = 23;  // 
+const int MOTOR4_IN1 = 30;  // 
+const int MOTOR4_IN2 = 31;  // 
+const int MOTOR4_PWM = 3;  // 
 
-const int MOTOR4_IN1 = 31;  // 
-const int MOTOR4_IN2 = 32;  // 
-const int MOTOR4_PWM = 29;  // 
+const int MOTOR2_IN1 = 36;  // 
+const int MOTOR2_IN2 = 35;  // 
+const int MOTOR2_PWM = 5;  // 
 
-const int MOTOR1_IN1 = 5;  // 
-const int MOTOR1_IN2 = 4;  // 
-const int MOTOR1_PWM = 3;  //
-
-// Serial pins
+const int MOTOR1_IN1 = 29;  // 
+const int MOTOR1_IN2 = 28;  // 
+const int MOTOR1_PWM = 2;  //
 
 
 // Receive signals
