@@ -176,11 +176,16 @@ void loop()
       ball_angle_180 = ball_angle_180 * (-1);
 
       //------------------Both camera detection cases ------------------//
-      if (ball_seen_pixy && ball_seen_openmv)
+      if (ball_seen_pixy && ball_seen_openmv) 
       {
+        if(distance_pixels < 85){
+          myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
+          Serial.println("Both cameras see the ball and shoots");
+        }else{
         myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
         Serial.println("Both cameras see the ball");
         esc.writeMicroseconds(mid_speed);
+        }
       }
 
       /*if (ball_seen_pixy && distance_pixels < 85)
@@ -217,9 +222,14 @@ void loop()
       }*/
       else if (ball_seen_pixy && !ball_seen_openmv)
       {
+        if(distance_pixels < 85){
+          myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
+          Serial.println("Only pixy sees the ball and shoots");
+        }else{
         myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
         Serial.println("Only pixy sees the ball");
         esc.writeMicroseconds(mid_speed);
+        }
       }
       else if (!ball_seen_pixy && ball_seen_openmv)
       {
@@ -228,7 +238,7 @@ void loop()
         myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         Serial.println("Only OpenMV sees the ball");
       }
-      else if (goal_angle > 0)
+      /*else if (goal_angle > 0)
       {
         if (goal_angle < (185 - goal_threshold) && ball_found == false)
         {
@@ -242,7 +252,7 @@ void loop()
         {
           myMotors.MoveMotorsImu(ball_angle, 0, speed_w);
         }
-      }
+      }*/
       else
       {
         Serial.println("No camera sees the ball");
