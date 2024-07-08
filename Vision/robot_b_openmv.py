@@ -9,9 +9,9 @@ import pyb
 from pyb import UART
 
 uart = UART(3, 115200, timeout_char=0)
-thresholds_blob1 =  (55, 100, 12, 77, 43, 2)     #(100, 72, 4, 127, 0, 94)   #(22, 81, 50, 75, -25, 74) (22, 81, 50, 70, -10, 24)
+thresholds_blob1 =  (74, 100, -10, 64, 21, 127)    #(100, 72, 4, 127, 0, 94)   #(22, 81, 50, 75, -25, 74) (22, 81, 50, 70, -10, 24)
 thresholds_blob2 = (53, 89, 7, 60, 16, 89)        #(80, 89, -18, 6, 19, 127)
-thresholds_azul = (19, 48, 6, 25, -43, -20)
+thresholds_azul = (39, 59, -1, 16, -46, -24)
 thresholds_line = (86, 100, -128, 127, -128, 127)
 
 FRAME_HEIGHT = 160
@@ -46,8 +46,8 @@ def initialize_sensor():
     sensor.set_hmirror(True)
     sensor.skip_frames(time=2000)
     sensor.set_brightness(-4)
-    sensor.set_contrast(1)
-    sensor.set_saturation(7)
+    sensor.set_contrast(2)
+    sensor.set_saturation(5)
     sensor.set_auto_gain(False)
     sensor.set_auto_whitebal(False)
 
@@ -57,7 +57,7 @@ def locate_blob(img):
     Locates the blobs in the image for each threshold set and returns a list of blob objects for each set.
     """
     img.draw_circle(FRAME_HEIGHT+3, FRAME_WIDTH-6, FRAME_ROBOT, color=0x0000, fill=True)
-    img.draw_circle(FRAME_HEIGHT+3, FRAME_WIDTH-5, FRAME_CIRCLE, color=0x0000, fill=False, thickness=100)
+    img.draw_circle(FRAME_HEIGHT+3, FRAME_WIDTH-5, FRAME_CIRCLE, color=0x0000, fill=False, thickness=110)
     blobs1 = img.find_blobs([thresholds_blob1], area_threshold=1, merge=True)
     blobs2 = img.find_blobs([thresholds_blob2], area_threshold=1000, merge=True)
     blobAzul = img.find_blobs([thresholds_azul], area_threshold=1000, merge=True)
@@ -114,7 +114,7 @@ def calculate_distance_goal(blob):
     magnitude_distance = math.sqrt(relative_cx**2 + relative_cy**2)
     #print(magnitude_distance)
     # Exponential regression model calculated using real data points with pixel comparison
-    total_distance = 11.83 * math.exp((0.0245) * magnitude_distance)
+    total_distance = 1.2375*magnitude_distance-18.162
     return total_distance
 
 
@@ -181,8 +181,8 @@ def main():
         #print(" Distance ball: ", distance_ball, "cm\n", "Angle ball: ", angle_ball, " degrees\n", "Distance Goal: ", final_goal_distance, "cm\n", "Angle Goal: ", angle_goal, " degrees\n", "Pre Distance Goal: ", distance_goal)
         #print("Distance Goal: ", final_goal_distance, "cm\n", "Angle Goal: ", angle_goal, " degrees\n")
         #uart.write("{} {} {} {}\n".format(int(distance_ball), int(angle_ball), int(angle_goal)));
-        uart.write("{:.2f} {:.2f} {:.2f} {:.2f}\n". format(distance_ball, angle_ball, angle_goal, distance_goal))
-        print(angle_goal)
+        uart.write("{:.2f} {:.2f} {:.2f} {:.2f}\n". format(distance_ball, angle_ball, angle_goal, distance_pixels))
+        print(distance_pixels)
         #print(distance_pixels)
         #uart.write(f"{distance_ball},{angle_ball},{angle_goal},{distance_goal}\n")
         pyb.delay(50)
