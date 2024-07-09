@@ -8,6 +8,10 @@
 #include <typeinfo>
 
 float angle = 0; 
+double ball_distance = 0;
+double ball_angle = 0;
+double goal_angle = 0;
+double distance_pixels = 0;
 
 BNO055 myBNO;
 Motors myMotors(
@@ -16,7 +20,7 @@ Motors myMotors(
     MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2,
     MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2);
 
-PID pid_w(.8, 0, 10, 200);
+PID pid_w(0.6, 0.01, 6, 200);
 
 void setup(){
  //Serial1.begin(115200);
@@ -28,26 +32,37 @@ void setup(){
 }
 
 void loop(){
-    int photoValue = analogRead(A0);
-    int photoValue1 = analogRead(A1);
-    Serial.print(photoValue); 
-    Serial.print(" - "); 
-    Serial.println(photoValue1);
+    //A2 A7 
+    int photoValue = analogRead(A2);
+    int photoValue1 = analogRead(A7);
+    int photoValue2 = analogRead(A3);
+    const int analogPin1 = analogRead(A8);
+   const int analogPin2 = analogRead(A9);
+    Serial.print("PHOTO 3: ");
+    Serial.println(analogPin1); 
+    Serial.print("PHOTO 4: "); 
+    Serial.println(analogPin2);
     myBNO.GetBNOData();
     angle = myBNO.GetYaw();
+    //Serial.println(angle);
     double speed_w = pid_w.Calculate(0, angle);
     if(speed_w!=0){
-
-
-      if (photoValue > 1000 || photoValue1 > 1000) {
-      myMotors.MoveMotorsImu(90, 250, speed_w);
-      delay(200);
-      Serial.println("ATRÁS");
-
-      
+      if (photoValue > 2400 || photoValue1 > 2200) {
+      myMotors.MoveMotorsImu(90, 200, speed_w);
+      delay(300);
+      Serial.println("Derecha");
+    }else if (photoValue2 > 2500 ) {
+      myMotors.MoveMotorsImu(270, 200, speed_w);
+      delay(300);
+      Serial.println("IZQUIERDA");
+    } 
+    else if (analogPin1 > 2400 || analogPin1 > 2000 ) {
+      myMotors.MoveMotorsImu(180, 200, speed_w);
+      delay(300);
+      Serial.println("ATRAS");
     } else {
-      myMotors.MoveMotorsImu(270, 140, speed_w);
-      Serial.println("ADELANTE");
+      myMotors.MoveMotorsImu(0, 0, 0);
+      //Serial.println("stop");
     }
   }
 }
