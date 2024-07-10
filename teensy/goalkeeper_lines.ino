@@ -219,33 +219,15 @@ void loop()
           Serial.println("DETECTA ATRAS, MOVER ADELANTE");
         }
       }
-    }
-    Serial.print("ANGLE: ");
-    Serial.println(goal_angle);
 
-    //---------------------- Nothing detected return to goal avoiding lines -----------//
-    if ((photo_value > 2500 || photo_value1 > 2400) && (!goal_seen))
-    {
-      myMotors.MoveMotorsImu(90, 200, speed_w);
-      delay(300);
-      Serial.println("DERECHA");
+      Serial.print("ANGLE: ");
+      Serial.println(goal_angle);
+
+      else
+      {
+        myMotors.MoveMotorsImu(goal_angle, 120, speed_w);
+        Serial.println("NO DETECTA NADA, MOVER ATRAS");
+      }
     }
-    else if (photo_value2 > 2500 && (!goal_seen))
-    {
-      myMotors.MoveMotorsImu(270, 200, speed_w);
-      delay(300);
-      Serial.println("IZQUIERDA");
-    }
-    else if ((photo_value3 > 2300 || photo_value4 > 1500) && (!goal_seen))
-    {
-      myMotors.MoveMotorsImu(180, 240, speed_w);
-      delay(400);
-      Serial.println("ATRAS");
-    }
-   /* else
-    {
-      myMotors.MoveMotorsImu(goal_angle, 120, speed_w);
-      Serial.println("NO DETECTA NADA, MOVER ATRAS");
-    }*/
   }
 }
