@@ -8,6 +8,14 @@
 #include <Servo.h>
 
 /*
+ver atras
+ver adelante
+ver a los lados
+no vea nada buscar la linea
+centrarse cuando no se ve la pelota
+*/
+
+/*
 Pixy camera resolution: 316 x 208
 pixy.ccc.blocks[i].m_x The x location of the center of the detected object (0 to 316)
 pixy.ccc.blocks[i].m_y The y location of the center of the detected object (0 to 208)
@@ -43,6 +51,7 @@ const int min_speed = 1000;
 const int mid_speed = 1500;
 const int max_speed = 2000;
 const int esc_pin = 6;
+bool goal_seen = false;
 int photo_value = analogRead(A2);
 int photo_value1 = analogRead(A7);
 int photo_value2 = analogRead(A3);
@@ -55,12 +64,13 @@ Servo esc;
 
 PID pid_w(0.6, 0.01, 6, 200);
 Motors myMotors(
-  MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
-  MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
-  MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2,
-  MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2);
+    MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
+    MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
+    MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2,
+    MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2);
 
-void setup() {
+void setup()
+{
   esc.attach(esc_pin);
   Serial1.begin(115200);
   Serial.begin(9600);
@@ -72,23 +82,35 @@ void setup() {
   start_millis = millis();
 }
 
-double radiansToDegrees(double radians) {
+double radiansToDegrees(double radians)
+{
   return radians * (180.0 / M_PI);
 }
 
-void loop() {
+void loop()
+{
 
   // ----------------- Gather data from OpenMV camera via UART ----------------- //
   my_bno.GetBNOData();
   bno_angle = my_bno.GetYaw();
-  if (Serial1.available()) {
+  if (Serial1.available())
+  {
     String camString = Serial1.readStringUntil('\n');
     ball_distance = camString.toFloat();
     ball_angle = camString.substring(camString.indexOf(' ') + 1).toFloat();
     goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
     distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
     ball_seen_openmv = (ball_distance != 0 || ball_angle != 0);
-    Serial.println(goal_angle);
+    // Serial.println(goal_angle);
+  }
+
+  if (goal_angle > 0)
+  {
+    goal_seen = true;
+  }
+  else
+  {
+    goal_seen = false;
   }
 
   // ----------------- Gather data from Pixy2 camera via SPI ----------------- //
@@ -98,8 +120,10 @@ void loop() {
   int pixy_blocks = pixy.ccc.numBlocks;
   bool ball_seen_pixy = false;
 
-  if (pixy.ccc.numBlocks) {
-    for (i = 0; i < pixy.ccc.numBlocks; i++) {
+  if (pixy.ccc.numBlocks)
+  {
+    for (i = 0; i < pixy.ccc.numBlocks; i++)
+    {
       double cx = pixy.ccc.blocks[i].m_x;
       double cy = pixy.ccc.blocks[i].m_y;
       double relative_cx = cx - 158;
@@ -108,16 +132,21 @@ void loop() {
       angle_degrees = radiansToDegrees(angle_radians);
 
       angle_degrees += 95;
-      if (angle_degrees < 0) {
+      if (angle_degrees < 0)
+      {
         angle_degrees += 360;
       }
-      if (angle_degrees >= 360) {
+      if (angle_degrees >= 360)
+      {
         angle_degrees -= 360;
       }
 
-      if (pixy.ccc.blocks[i].m_signature == 1) {
+      if (pixy.ccc.blocks[i].m_signature == 1)
+      {
         ball_seen_pixy = true;
-      } else {
+      }
+      else
+      {
         ball_seen_pixy = false;
       }
     }
@@ -134,97 +163,89 @@ void loop() {
   photo_value2 = analogRead(A3);
   photo_value3 = analogRead(A8);
   photo_value4 = analogRead(A9);
-
+  const int photo_value5 = analogRead(A15);
+  const int photo_value6 = analogRead(A17);
+  const int photo_value7 = analogRead(A6);
 
   if (speed_w != 0)
   {
-      /*Serial.print("PHOTO VALUE 1: ");
-      Serial.println(photo_value);
-      Serial.print("PHOTO VALUE 2: ");
-      Serial.println(photo_value1);
-      Serial.print("PHOTO VALUE 3: ");
-      Serial.println(photo_value2);
-      Serial.print("PHOTO VALUE 4: ");
-      Serial.println(photo_value3);
-      Serial.print("PHOTO VALUE 5: ");
-      Serial.println(photo_value4);*/
+    //------------------ Angle normalization ------------------//
 
-    //----------------------- Photoresistors detection ---------------------------//
-    if (photo_value > 2500 || photo_value1 > 2400) {
+    if (ball_angle < 180)
+    {
+      ball_angle_180 = -ball_angle;
+    }
+    else if (ball_angle > 180)
+    {
+      ball_angle_180 = 360 - ball_angle;
+    }
+    ball_angle_180 = ball_angle_180 * (-1);
+
+    //----------------------------- Follow ball ------------------------//
+
+    if (ball_seen_pixy)
+    {
+      Serial.println("PIXY CAM");
+      myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
+    }
+    else if (ball_seen_openmv)
+    {
+      Serial.println("OPENMV CAM");
+      myMotors.MoveMotorsImu(ball_angle, speed_t_ball, speed_w);
+    }
+    //----------------------------- Center robot in goal --------------//
+
+    else if (goal_angle > 0)
+    {
+      if (goal_angle < (185 - goal_threshold) && ball_found == false)
+      {
+        Serial.println("CENTRAR");
+        myMotors.MoveMotorsImu(90, abs(speed_t_goal), speed_w);
+      }
+      else if (goal_angle > (185 + goal_threshold) && ball_found == false)
+      {
+        Serial.println("CENTRAR");
+        myMotors.MoveMotorsImu(270, abs(speed_t_goal), speed_w);
+      }
+
+      //------------------------- Move depending on the photo transistors detected ------------------//
+
+      else
+      {
+        if (photo_value5 > 3600 || photo_value6 > 2200 || photo_value7 > 2700)
+        {
+          myMotors.MoveMotorsImu(0, 150, speed_w);
+          delay(300);
+          Serial.println("DETECTA ATRAS, MOVER ADELANTE");
+        }
+      }
+    }
+    Serial.print("ANGLE: ");
+    Serial.println(goal_angle);
+
+    //---------------------- Nothing detected return to goal avoiding lines -----------//
+    /*if ((photo_value > 2500 || photo_value1 > 2400) && (!goal_seen))
+    {
       myMotors.MoveMotorsImu(90, 200, speed_w);
       delay(300);
-      Serial.println("Derecha");
-
-    } else if (photo_value2 > 2500) {
+      Serial.println("DERECHA");
+    }
+    else if (photo_value2 > 2500 && (!goal_seen))
+    {
       myMotors.MoveMotorsImu(270, 200, speed_w);
       delay(300);
       Serial.println("IZQUIERDA");
-    } else if (photo_value3 > 2300 || photo_value4 > 1500) {
+    }
+    else if ((photo_value3 > 2300 || photo_value4 > 1500) && (!goal_seen))
+    {
       myMotors.MoveMotorsImu(180, 240, speed_w);
       delay(400);
       Serial.println("ATRAS");
-    } else {
-      //------------------ Angle normalization ------------------//
-      if (ball_angle < 180) {
-        ball_angle_180 = -ball_angle;
-      } else if (ball_angle > 180) {
-        ball_angle_180 = 360 - ball_angle;
-      }
-      ball_angle_180 = ball_angle_180 * (-1);
-
-      //------------------ Camera detection cases ------------------//
-      if (ball_seen_pixy && ball_seen_openmv) {
-        last_ball_angle = ball_angle;
-        if (distance_pixels < 85) {
-          myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
-          esc.writeMicroseconds(mid_speed);
-          Serial.println("Both cameras see the ball and shoots");
-        } else {
-          myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
-          Serial.println("Both cameras see the ball");
-        }
-      } else if (ball_seen_pixy && !ball_seen_openmv) {
-        last_ball_angle = ball_angle;
-        if (distance_pixels < 85) {
-          myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
-          esc.writeMicroseconds(mid_speed);
-          Serial.println("Only pixy sees the ball and shoots");
-        } else {
-          myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
-          Serial.println("Only pixy sees the ball");
-        }
-      } else if (!ball_seen_pixy && ball_seen_openmv) {
-        last_ball_angle = ball_angle;
-        double differential = ball_angle_180 * 0.15;
-        ponderated_angle = ball_angle + differential;
-        myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
-        Serial.println("Only OpenMV sees the ball");
-      }
-      //---------------------- Center robot in goal ----------------------//
-      /*else if (goal_angle > 0)
-      {
-        if (goal_angle < (185 - goal_threshold) && ball_found == false)
-        {
-          myMotors.MoveMotorsImu(90, abs(speed_t_goal), speed_w);
-        }
-        else if (goal_angle > (185 + goal_threshold) && ball_found == false)
-        {
-          myMotors.MoveMotorsImu(270, abs(speed_t_goal), speed_w);
-        }
-        else
-        {
-          myMotors.MoveMotorsImu(ball_angle, 0, speed_w);
-        }
-      }*/
-      //-------------------- Move to last known position --------------------//
-      else {
-        myMotors.StopMotors();
-        /*current_millis = millis();
-        if (current_millis - start_millis >= period) {
-          myMotors.MoveMotorsImu(last_ball_angle, speed_t_ball, speed_w);
-          start_millis = current_millis;*/
-        //}
-      }
-    }
+    }*/
+   }else
+    {
+      myMotors.MoveMotorsImu(goal_angle, 120, speed_w);
+      Serial.println("NO DETECTA NADA, MOVER ATRAS");
+    
   }
 }

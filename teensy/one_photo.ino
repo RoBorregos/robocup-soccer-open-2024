@@ -38,10 +38,15 @@ void loop(){
     int photoValue2 = analogRead(A3);
     const int analogPin1 = analogRead(A8);
    const int analogPin2 = analogRead(A9);
-    Serial.print("PHOTO 3: ");
-    Serial.println(analogPin1); 
-    Serial.print("PHOTO 4: "); 
-    Serial.println(analogPin2);
+   const int photo_value5 = analogRead(A15);
+    const int photo_value6 = analogRead(A17);
+     const int photo_value7 = analogRead(A6);
+    Serial.print("PHOTO 5: ");
+    Serial.println(photo_value5); 
+    Serial.print("PHOTO 6: "); 
+    Serial.println(photo_value6);
+    Serial.print("PHOTO 7: ");
+    Serial.println(photo_value7);
     myBNO.GetBNOData();
     angle = myBNO.GetYaw();
     //Serial.println(angle);
@@ -60,7 +65,14 @@ void loop(){
       myMotors.MoveMotorsImu(180, 200, speed_w);
       delay(300);
       Serial.println("ATRAS");
-    } else {
+    }
+    else if(photo_value5 > 3600 || photo_value6 > 2200 || photo_value7 > 2700){
+      myMotors.MoveMotorsImu(0, 200, speed_w);
+      delay(300);
+      Serial.println("ADELANTE");
+    
+    }
+    else {
       myMotors.MoveMotorsImu(0, 0, 0);
       //Serial.println("stop");
     }
