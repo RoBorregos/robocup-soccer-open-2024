@@ -69,8 +69,7 @@ Motors myMotors(
     MOTOR3_PWM, MOTOR3_IN1, MOTOR3_IN2,
     MOTOR4_PWM, MOTOR4_IN1, MOTOR4_IN2);
 
-void setup()
-{
+void setup() {
   esc.attach(esc_pin);
   Serial1.begin(115200);
   Serial.begin(9600);
@@ -82,34 +81,26 @@ void setup()
   start_millis = millis();
 }
 
-double radiansToDegrees(double radians)
-{
+double radiansToDegrees(double radians) {
   return radians * (180.0 / M_PI);
 }
 
-void loop()
-{
-
+void loop() {
   // ----------------- Gather data from OpenMV camera via UART ----------------- //
   my_bno.GetBNOData();
   bno_angle = my_bno.GetYaw();
-  if (Serial1.available())
-  {
+  if (Serial1.available()) {
     String camString = Serial1.readStringUntil('\n');
     ball_distance = camString.toFloat();
     ball_angle = camString.substring(camString.indexOf(' ') + 1).toFloat();
     goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
     distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
     ball_seen_openmv = (ball_distance != 0 || ball_angle != 0);
-    // Serial.println(goal_angle);
   }
 
-  if (goal_angle > 0)
-  {
+  if (goal_angle > 0) {
     goal_seen = true;
-  }
-  else
-  {
+  } else {
     goal_seen = false;
   }
 
@@ -120,10 +111,8 @@ void loop()
   int pixy_blocks = pixy.ccc.numBlocks;
   bool ball_seen_pixy = false;
 
-  if (pixy.ccc.numBlocks)
-  {
-    for (i = 0; i < pixy.ccc.numBlocks; i++)
-    {
+  if (pixy.ccc.numBlocks) {
+    for (i = 0; i < pixy.ccc.numBlocks; i++) {
       double cx = pixy.ccc.blocks[i].m_x;
       double cy = pixy.ccc.blocks[i].m_y;
       double relative_cx = cx - 158;
@@ -132,22 +121,15 @@ void loop()
       angle_degrees = radiansToDegrees(angle_radians);
 
       angle_degrees += 95;
-      if (angle_degrees < 0)
-      {
+      if (angle_degrees < 0) {
         angle_degrees += 360;
       }
-      if (angle_degrees >= 360)
-      {
+      if (angle_degrees >= 360) {
         angle_degrees -= 360;
       }
 
-      if (pixy.ccc.blocks[i].m_signature == 1)
-      {
+      if (pixy.ccc.blocks[i].m_signature == 1) {
         ball_seen_pixy = true;
-      }
-      else
-      {
-        ball_seen_pixy = false;
       }
     }
   }
@@ -167,67 +149,50 @@ void loop()
   const int photo_value6 = analogRead(A17);
   const int photo_value7 = analogRead(A6);
 
-  if (speed_w != 0)
-  {
-    //------------------ Angle normalization ------------------//
+  //------------------ Angle normalization ------------------//
+  if (ball_angle < 180) {
+    ball_angle_180 = -ball_angle;
+  } else if (ball_angle > 180) {
+    ball_angle_180 = 360 - ball_angle;
+  }
+  ball_angle_180 = ball_angle_180 * (-1);
 
-    if (ball_angle < 180)
-    {
-      ball_angle_180 = -ball_angle;
-    }
-    else if (ball_angle > 180)
-    {
-      ball_angle_180 = 360 - ball_angle;
-    }
-    ball_angle_180 = ball_angle_180 * (-1);
-
-    //----------------------------- Follow ball ------------------------//
-
-    if (ball_seen_pixy)
-    {
-      Serial.println("PIXY CAM");
-      myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
-    }
-    else if (ball_seen_openmv)
-    {
-      Serial.println("OPENMV CAM");
-      myMotors.MoveMotorsImu(ball_angle, speed_t_ball, speed_w);
-    }
-    //----------------------------- Center robot in goal --------------//
-
-    else if (goal_angle > 0)
-    {
-      if (goal_angle < (185 - goal_threshold) && ball_found == false)
-      {
-        Serial.println("CENTRAR");
+  // ----------------------------- Follow ball ------------------------//
+  if (ball_seen_pixy) {
+    Serial.println("PIXY CAM");
+    myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
+    Serial.println(angle_degrees);
+  } else if (ball_seen_openmv) {
+    Serial.println("OPENMV CAM");
+    myMotors.MoveMotorsImu(ball_angle, speed_t_ball, speed_w);
+    Serial.println(ball_angle);
+  } else {
+    // ----------------------------- Center robot in goal --------------//
+    if (goal_angle > 0) {
+      if (goal_angle < (185 - goal_threshold) && ball_found == false) {
+        Serial.println("CENTER");
         myMotors.MoveMotorsImu(90, abs(speed_t_goal), speed_w);
-      }
-      else if (goal_angle > (185 + goal_threshold) && ball_found == false)
-      {
-        Serial.println("CENTRAR");
+      } else if (goal_angle > (185 + goal_threshold) && ball_found == false) {
+        Serial.println("CENTER");
         myMotors.MoveMotorsImu(270, abs(speed_t_goal), speed_w);
-      }
+      }else {
+      myMotors.MoveMotorsImu(goal_angle, 120, speed_w);
+      Serial.println("NO DETECTA NADA, MOVER ATRAS");
+    }
 
       //------------------------- Move depending on the photo transistors detected ------------------//
+      Serial.print("PHOTO5: ");
+      Serial.println(photo_value5);
+      Serial.print("PHOTO6: ");
+      Serial.println(photo_value6);
+      Serial.print("PHOTO7: ");
+      Serial.println(photo_value7);
 
-      else
-      {
-        if (photo_value5 > 3600 || photo_value6 > 2200 || photo_value7 > 2700)
-        {
-          myMotors.MoveMotorsImu(0, 150, speed_w);
-          delay(300);
-          Serial.println("DETECTA ATRAS, MOVER ADELANTE");
-        }
+      if (photo_value5 > 3600 || photo_value6 > 2200 || photo_value7 > 2700) {
+        myMotors.MoveMotorsImu(0, 150, speed_w);
+        delay(300);
+        Serial.println("DETECTA ATRAS, MOVER ADELANTE");
       }
-
-      Serial.print("ANGLE: ");
-      Serial.println(goal_angle);
-
-      else
-      {
-        myMotors.MoveMotorsImu(goal_angle, 120, speed_w);
-        Serial.println("NO DETECTA NADA, MOVER ATRAS");
-      }
-    }
+    } 
   }
 }
