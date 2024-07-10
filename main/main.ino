@@ -158,7 +158,26 @@ void loop() {
   ball_angle_180 = ball_angle_180 * (-1);
 
   // ----------------------------- Follow ball ------------------------//
-  if (ball_seen_pixy) {
+  if (photo_value5 > 3600 || photo_value6 > 2200 || photo_value7 > 2700) {
+        myMotors.MoveMotorsImu(0, 150, speed_w);
+        delay(300);
+        Serial.println("DETECTA ATRAS, MOVER ADELANTE");
+      }
+       else if (photo_value > 2500 || photo_value1 > 2400) {
+      myMotors.MoveMotorsImu(90, 200, speed_w);
+      delay(300);
+      Serial.println("Derecha");
+
+    } else if (photo_value2 > 2500) {
+      myMotors.MoveMotorsImu(270, 200, speed_w);
+      delay(300);
+      Serial.println("IZQUIERDA");
+    } else if (photo_value3 > 2300 || photo_value4 > 1500) {
+      myMotors.MoveMotorsImu(180, 250, speed_w);
+      delay(400);
+      Serial.println("ATRAS");
+    } 
+  else if (ball_seen_pixy) {
     Serial.println("PIXY CAM");
     myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
     Serial.println(angle_degrees);
@@ -193,6 +212,20 @@ void loop() {
         delay(300);
         Serial.println("DETECTA ATRAS, MOVER ADELANTE");
       }
+       else if (photo_value > 2500 || photo_value1 > 2400) {
+      myMotors.MoveMotorsImu(90, 200, speed_w);
+      delay(300);
+      Serial.println("Derecha");
+
+    } else if (photo_value2 > 2500) {
+      myMotors.MoveMotorsImu(270, 200, speed_w);
+      delay(300);
+      Serial.println("IZQUIERDA");
+    } else if (photo_value3 > 2300 || photo_value4 > 1500) {
+      myMotors.MoveMotorsImu(180, 250, speed_w);
+      delay(400);
+      Serial.println("ATRAS");
+    } 
     } 
   }
 }
