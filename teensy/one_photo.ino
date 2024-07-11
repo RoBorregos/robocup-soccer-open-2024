@@ -41,6 +41,9 @@ void loop(){
    const int photo_value5 = analogRead(A15);
     const int photo_value6 = analogRead(A17);
      const int photo_value7 = analogRead(A6);
+     Serial.print("PHOTO 1: ");
+     Serial.println(photoValue1);
+
     Serial.print("PHOTO 5: ");
     Serial.println(photo_value5); 
     Serial.print("PHOTO 6: "); 
