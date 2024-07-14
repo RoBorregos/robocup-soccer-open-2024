@@ -174,22 +174,39 @@ void loop()
   }
   ball_angle_180 = ball_angle_180 * (-1);
 
+  Serial.print("PHOTO VALUE 0: ");
+  Serial.println(photoValue);
+  Serial.print("PHOTO VALUE 1: ");
+  Serial.println(photoValue1);
+  Serial.print("PHOTO VALUE 2: ");
+  Serial.println(photoValue2);
+  Serial.print("PHOTO VALUE 3: ");
+  Serial.println(analogPin1);
+  Serial.print("PHOTO VALUE 4: ");
+  Serial.println(analogPin2);
+  Serial.print("PHOTO VALUE 5: ");
+  Serial.println(photo_value5);
+  Serial.print("PHOTO VALUE 6: ");
+  Serial.println(photo_value6);
+  Serial.print("PHOTO VALUE 7: ");
+  Serial.println(photo_value7);
+
   // ----------------------------- Follow ball and avoid lines ------------------------//
-if (photoValue > 3500 || photoValue1 > 2200) {
+if (photoValue > 3500 || photoValue1 > 2100) {
       myMotors.MoveMotorsImu(0, 200, speed_w);
       delay(300);
       Serial.println("Adelante");
-    }else if (photoValue3 > 2800 || photoValue5 > 3500) {
+    }else if (photoValue2 > 2200) {
       myMotors.MoveMotorsImu(270, 200, speed_w);
       delay(300);
       Serial.println("DERECHA");
     } 
-    else if (analogPin1 > 1300 || analogPin2 > 2500 ) {
+    else if (analogPin1 > 1300 || analogPin2 > 2100 ) {
       myMotors.MoveMotorsImu(180, 200, speed_w);
       delay(300);
       Serial.println("ATRAS");
     }
-    else if(photo_value5 > 3700 || photo_value6 > 3700 || photo_value7 > 3700){
+    else if(photo_value5 > 3500 || photo_value6 > 3100 || photo_value7 > 3600){
       myMotors.MoveMotorsImu(90, 200, speed_w);
       delay(300);
       Serial.println("Izquierda");
@@ -247,21 +264,21 @@ if (photoValue > 3500 || photoValue1 > 2200) {
       }
 
       //------------------------- Move depending on the photo transistors detected ------------------//
-      if (photoValue > 3500 || photoValue1 > 2200) {
+      if (photoValue > 3500 || photoValue1 > 2100) {
       myMotors.MoveMotorsImu(0, 200, speed_w);
       delay(300);
       Serial.println("Adelante");
-    }else if (photoValue2 > 2800 || photo_value5 > 3500) {
+    }else if (photoValue2 > 2200) {
       myMotors.MoveMotorsImu(270, 200, speed_w);
       delay(300);
       Serial.println("DERECHA");
     } 
-    else if (analogPin1 > 1300 || analogPin2 > 2500 ) {
+    else if (analogPin1 > 1300 || analogPin2 > 2100) {
       myMotors.MoveMotorsImu(180, 200, speed_w);
       delay(300);
       Serial.println("ATRAS");
     }
-    else if(photo_value5 > 3700 || photo_value6 > 3700 || photo_value7 > 3700){
+    else if(photo_value5 > 3500 || photo_value6 > 3100 || photo_value7 > 3600){
       myMotors.MoveMotorsImu(90, 200, speed_w);
       delay(300);
       Serial.println("Izquierda");
