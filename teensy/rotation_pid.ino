@@ -10,6 +10,7 @@
 float angle = 0;
 double adjust_angle = 0; 
 double translation_angle = 0; 
+int rotation_angle = 0;
 
 BNO055 myBNO;
 Motors myMotors(
@@ -31,15 +32,28 @@ void setup()
 
 void loop()
 {
+    double time=millis();
     myBNO.GetBNOData();
     angle = myBNO.GetYaw();
     translation_angle = 0;
-    adjust_angle = translation_angle - 90;
-    double speed_w = pid_w.Calculate(0, angle);
+    //adjust_angle = translation_angle - 90;
+    //double speed_w = pid_w.Calculate(0, angle);
+    double speed_w = pid_w.Calculate(rotation_angle, angle);
     if(speed_w != 0){
-    myMotors.MoveMotorsImu(0, 0, speed_w);
-    Serial.print(speed_w);
+     if(time <= 5000){
+    rotation_angle = 0;   
+     myMotors.MoveMotorsImu(rotation_angle, 120, speed_w);
+     Serial.print(speed_w);
      Serial.print("angle");
-     Serial.println(angle);
+     Serial.println(angle);     
+     }else{
+      rotation_angle = -90;     
+     Serial.print(speed_w);
+     Serial.print("ANGLE");
+     Serial.println(angle);   
+     int translation_angle = 180;
+     adjust_angle =   translation_angle - rotation_angle;  
+      myMotors.MoveMotorsImu(adjust_angle, 120, speed_w);
+     }
     }
 }
