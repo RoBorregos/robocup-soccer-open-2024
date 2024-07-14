@@ -43,15 +43,16 @@ const int min_speed = 1000;
 const int mid_speed = 1500;
 const int max_speed = 2000;
 const int esc_pin = 6;
+double speed_photos = 0;
 bool goal_seen = false;
-int photoValue;
-int photoValue1;
-int photoValue2;
- int analogPin1;
- int analogPin2;
- int photo_value5;
- int photo_value6;
- int photo_value7;
+int photo_value_right1;
+int photo_value_right2;
+int photo_value_left;
+int photo_value_back1;
+int photo_value_back2;
+int photo_value_front1;
+int photo_value_front2;
+int photo_value_front3;
 
 Pixy2SPI_SS pixy;
 BNO055 my_bno;
@@ -80,6 +81,10 @@ void setup()
 double radiansToDegrees(double radians)
 {
   return radians * (180.0 / M_PI);
+}
+
+void timeLoop (long int startMillis, long int interval){ 
+    while(millis() - startMillis < interval){} 
 }
 
 void loop()
@@ -146,33 +151,16 @@ void loop()
   double speed_w = pid_w.Calculate(target_angle, bno_angle);
   double speed_t_goal = 150;
   double speed_t_ball = 150;
+  speed_photos = 200;
 
-  photoValue = analogRead(A2);
-  photoValue1 = analogRead(A7);
-  photoValue2 = analogRead(A3);
-  analogPin1 = analogRead(A8);
-  analogPin2 = analogRead(A9);
-  photo_value5 = analogRead(A15);
-  photo_value6 = analogRead(A17);
-  photo_value7 = analogRead(A6);
-
-  Serial.print("PHOTO VALUE 0: ");
-  Serial.println(photoValue);
-  Serial.print("PHOTO VALUE 1: ");
-  Serial.println(photoValue1);
-  Serial.print("PHOTO VALUE 2: ");
-  Serial.println(photoValue2);
-  Serial.print("PHOTO VALUE 3: ");
-  Serial.println(analogPin1);
-  Serial.print("PHOTO VALUE 4: ");
-  Serial.println(analogPin2);
-  Serial.print("PHOTO VALUE 5: ");
-  Serial.println(photo_value5);
-  Serial.print("PHOTO VALUE 6: ");
-  Serial.println(photo_value6);
-  Serial.print("PHOTO VALUE 7: ");
-  Serial.println(photo_value7);
-
+  photo_value_right1 = analogRead(A2);
+  photo_value_right2 = analogRead(A7);
+  photo_value_left = analogRead(A3);
+  photo_value_back1 = analogRead(A8);
+  photo_value_back2 = analogRead(A9);
+  photo_value_front1 = analogRead(A15);
+  photo_value_front2 = analogRead(A17);
+  photo_value_front3 = analogRead(A6);
 
   //------------------ Angle normalization ------------------//
   if (ball_angle < 180)
@@ -186,28 +174,28 @@ void loop()
   ball_angle_180 = ball_angle_180 * (-1);
 
   // ----------------------------- Follow ball and avoid lines ------------------------//
-  if (photo_value5 > 3500 || photo_value6 > 2300 || photo_value7 > 3000)
+  if (photo_value_front1 > 3500 || photo_value_front2 > 2300 || photo_value_front3 > 3000)
   {
-    myMotors.MoveMotorsImu(0, 200, speed_w);
-    delay(300);
+    myMotors.MoveMotorsImu(0, speed_photos, speed_w);
+    timeLoop(millis(), 300);
     Serial.println("Adelante");
   }
-  else if (photoValue > 2300 || photoValue1 > 2300)
+  else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
   {
-    myMotors.MoveMotorsImu(90, 200, speed_w);
-    delay(300);
+    myMotors.MoveMotorsImu(90, speed_photos, speed_w);
+    timeLoop(millis(), 300);
     Serial.println("DERECHA");
   }
-  else if (analogPin1 > 2300 || analogPin2 > 1700)
+  else if (photo_value_back1 > 2300 || photo_value_back2 > 1700)
   {
-    myMotors.MoveMotorsImu(180, 200, speed_w);
-    delay(300);
+    myMotors.MoveMotorsImu(180, speed_photos, speed_w);
+    timeLoop(millis(), 300);
     Serial.println("ATRAS");
   }
-  else if (photoValue2 > 2500)
+  else if (photo_value_left > 2500)
   {
-    myMotors.MoveMotorsImu(270, 200, speed_w);
-    delay(300);
+    myMotors.MoveMotorsImu(270, speed_photos, speed_w);
+    timeLoop(millis(), 300);
     Serial.println("Izquierda");
   }
   else if (ball_seen_pixy)
@@ -245,28 +233,28 @@ void loop()
       }
 
       //------------------------- Move depending on the photo transistors detected ------------------//
-      if (photo_value5 > 3500 || photo_value6 > 2300 || photo_value7 > 3000)
+      if (photo_value_front1 > 3500 || photo_value_front2 > 2300 || photo_value_front3 > 3000)
       {
-        myMotors.MoveMotorsImu(0, 200, speed_w);
-        delay(300);
+        myMotors.MoveMotorsImu(0, speed_photos, speed_w);
+        timeLoop(millis(), 300);
         Serial.println("Adelante");
       }
-      else if (photoValue > 2300 || photoValue1 > 2300)
+      else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
       {
-        myMotors.MoveMotorsImu(90, 200, speed_w);
-        delay(300);
+        myMotors.MoveMotorsImu(90, speed_photos, speed_w);
+        timeLoop(millis(), 300);
         Serial.println("DERECHA");
       }
-      else if (analogPin1 > 2300 || analogPin2 > 1700)
+      else if (photo_value_back1 > 2300 || photo_value_back2 > 1700)
       {
-        myMotors.MoveMotorsImu(180, 200, speed_w);
-        delay(300);
+        myMotors.MoveMotorsImu(180, speed_photos, speed_w);
+        timeLoop(millis(), 300);
         Serial.println("ATRAS");
       }
-      else if (photoValue2 > 2500)
+      else if (photo_value_left > 2500)
       {
-        myMotors.MoveMotorsImu(270, 200, speed_w);
-        delay(300);
+        myMotors.MoveMotorsImu(270, speed_photos, speed_w);
+        timeLoop(millis(), 300);
         Serial.println("Izquierda");
       }
     }
