@@ -12,7 +12,7 @@ Pixy camera resolution: 316 x 208
 pixy.ccc.blocks[i].m_x The x location of the center of the detected object (0 to 316)
 pixy.ccc.blocks[i].m_y The y location of the center of the detected object (0 to 208)
 */
-
+int shoot_angle = 0;
 double goal_angle_opposite = 0;
 unsigned long start_millis;
 unsigned long current_millis;
@@ -20,11 +20,17 @@ float bno_angle = 0;
 bool ball_seen_openmv = false;
 double target_angle = 0;
 float ball_angle_180 = 0;
+float goal_angle_180 = 0; 
 float distance_pixels = 0;
 float distance_pixels_protect = 0;
 float ball_angle = 0;
 float ball_distance = 0;
 float goal_angle = 0;
+
+double adjust_angle = 0; 
+double translation_angle = 0; 
+int rotation_angle = 0;
+
 bool ball_found = false;
 double ponderated_angle = 0;
 double angle_degrees = 0;
@@ -153,7 +159,7 @@ void loop()
 
   //----------------------- Calculate PIDS-----------------------------//
 
-  double speed_w = pid_w.Calculate(target_angle, bno_angle);
+  double speed_w = pid_w.Calculate(rotation_angle, bno_angle);
   double speed_t_goal = 150;
   double speed_t_ball = 150;
   speed_photos = 200;
@@ -209,18 +215,40 @@ void loop()
       }
       ball_angle_180 = ball_angle_180 * (-1);
 
+      if (goal_angle < 180)
+      {
+        goal_angle_180 = -goal_angle;
+        shoot_angle = 45;
+      }
+      else if (goal_angle > 180)
+      {
+        goal_angle_180 = 360 - goal_angle;
+        shoot_angle = -45;
+      }
+      goal_angle_180 = goal_angle_180 * (-1);
+
+      Serial.print("goal angle: ");
+      Serial.println(goal_angle_180);
+esc.writeMicroseconds(mid_speed);
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv)
       {
         counterball = 0;
         last_ball_angle = ball_angle;
-        if (distance_pixels < 85)
+        if (goal_angle != 0)
         {
+    
+          //rotation_angle = shoot_angle;
           myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
+           digitalWrite(kicker, HIGH);
+           delay(20);
+          digitalWrite(kicker, LOW);
           Serial.println("Both cameras see the ball and shoots");
         }
         else
         {
+  
+          rotation_angle = 0;
           counterball = 0;
           myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
           Serial.println("Both cameras see the ball");
@@ -230,20 +258,25 @@ void loop()
       {
         counterball = 0;
         last_ball_angle = ball_angle;
-        if (distance_pixels < 85)
+        if (goal_angle != 0)
         {
-          myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
-          esc.writeMicroseconds(mid_speed);
+          //rotation_angle = shoot_angle;
+          myMotors.MoveMotorsImu(rotation_angle, speed_t_ball, speed_w);
+           digitalWrite(kicker, HIGH);
+           delay(20);
+          digitalWrite(kicker, LOW);
           Serial.println("Only pixy sees the ball and shoots");
         }
         else
         {
+          //rotation_angle = shoot_angle;
           myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
           Serial.println("Only pixy sees the ball");
         }
       }
       else if (!ball_seen_pixy && ball_seen_openmv)
       {
+        rotation_angle = 0;
         counterball = 0;
         last_ball_angle = ball_angle;
         double differential = ball_angle_180 * 0.15;
@@ -252,8 +285,10 @@ void loop()
         Serial.println("Only OpenMV sees the ball");
       }
       //-------------------- Move to last known position --------------------//
-
-      else if (counterball <= 1)
+else{
+  myMotors.StopMotors();
+}
+     /* else if (counterball <= 1)
       {
         Serial.print("COUNTERBALL1: ");
         Serial.println(counterball);
@@ -297,10 +332,11 @@ void loop()
       }
       else
       {
+        rotation_angle = 0;
         myMotors.MoveMotorsImu(0, 0, 0);
         timeLoop(millis(), 150);
         counterball++;
-      }
+      }*/
     }
   }
 }
