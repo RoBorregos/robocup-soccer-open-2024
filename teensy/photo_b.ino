@@ -12,6 +12,15 @@ double ball_distance = 0;
 double ball_angle = 0;
 double goal_angle = 0;
 double distance_pixels = 0;
+int photo_value_right1;
+int photo_value_right2;
+int photo_value_left;
+int photo_value_back1;
+int photo_value_back2;
+int photo_value_front1;
+int photo_value_front2;
+int photo_value_front3;
+int speed_photos = 0; 
 
 BNO055 myBNO;
 Motors myMotors(
@@ -38,49 +47,67 @@ void timeLoop (long int startMillis, long int interval){ // the delay function
 }
 
 void loop(){
-    //A2 A7 
-    int photoValue = analogRead(A2);
-    int photoValue1 = analogRead(A7);
-    int photoValue2 = analogRead(A3);
-    const int analogPin1 = analogRead(A8);
-   const int analogPin2 = analogRead(A9);
-   const int photo_value5 = analogRead(A15);
-    const int photo_value6 = analogRead(A17);
-     const int photo_value7 = analogRead(A6);
-     Serial.print("PHOTO 1: ");
-     Serial.println(photoValue1);
-
-    Serial.print("PHOTO 5: ");
-    Serial.println(photo_value5); 
-    Serial.print("PHOTO 6: "); 
-    Serial.println(photo_value6);
-    Serial.print("PHOTO 7: ");
-    Serial.println(photo_value7);
-    myBNO.GetBNOData();
+   myBNO.GetBNOData();
     angle = myBNO.GetYaw();
-    //Serial.println(angle);
+    //A2 A7 
     double speed_w = pid_w.Calculate(0, angle);
-    if(speed_w!=0){
-      if (photoValue > 2400 || photoValue1 > 2200) {
-      myMotors.MoveMotorsImu(90, 200, speed_w);
-      timeLoop(millis(), 300);
-      Serial.println("Derecha");
-    }else if (photoValue2 > 2500 ) {
-      myMotors.MoveMotorsImu(270, 200, speed_w);
-      timeLoop(millis(), 300);
-      Serial.println("IZQUIERDA");
-    } 
-    else if (analogPin1 > 2400 || analogPin1 > 2000 ) {
-      myMotors.MoveMotorsImu(180, 200, speed_w);
-      timeLoop(millis(), 300);
-      Serial.println("ATRAS");
-    }
-    else if(photo_value5 > 3600 || photo_value6 > 2200 || photo_value7 > 2700){
-      myMotors.MoveMotorsImu(0, 200, speed_w);
-      timeLoop(millis(), 300);
-      Serial.println("ADELANTE");
-    
-    }
+    speed_photos = 200;
+  photo_value_right1 = analogRead(A2);
+  photo_value_right2 = analogRead(A7);
+  photo_value_left = analogRead(A3);
+  photo_value_front1 = analogRead(A12);
+  photo_value_front2 = analogRead(A13);
+  photo_value_front3 = analogRead(A14);
+  photo_value_back1 = analogRead(A8);
+  photo_value_back2 = analogRead(A9);
+
+
+     Serial.print("PHOTO A2: ");
+      Serial.println(photo_value_right1);//90°
+     Serial.print("PHOTO A7: ");
+     Serial.println(photo_value_right2);//96°
+    Serial.print("PHOTO A3: ");
+    Serial.println(photo_value_left);//256°
+    Serial.print("PHOTO A12: ");
+    Serial.println(photo_value_front1);//180°
+    Serial.print("PHOTO A13: ");
+    Serial.println(photo_value_front2);//173°
+     Serial.print("PHOTO A14: ");
+    Serial.println(photo_value_front3);//166°
+
+
+    /* Serial.print("PHOTO A8: ");
+    Serial.println(photo_value_back1);
+     Serial.print("PHOTO A9: ");
+    Serial.println(photo_value_back2);*/
+
+  if (speed_w != 0)
+  {
+    //----------------------- Photoresistors detection ---------------------------//
+    if (photo_value_front1 > 3500 || photo_value_front2 > 2300 || photo_value_front3 > 3000)
+  {
+    myMotors.MoveMotorsImu(0, speed_photos, speed_w);
+    timeLoop(millis(), 300);
+    Serial.println("Adelante");
+  }
+  else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
+  {
+    myMotors.MoveMotorsImu(90, speed_photos, speed_w);
+    timeLoop(millis(), 300);
+    Serial.println("DERECHA");
+  }
+  else if (photo_value_back1 > 2300 || photo_value_back2 > 1700)
+  {
+    myMotors.MoveMotorsImu(180, speed_photos, speed_w);
+    timeLoop(millis(), 300);
+    Serial.println("ATRAS");
+  }
+  else if (photo_value_left > 2500)
+  {
+    myMotors.MoveMotorsImu(270, speed_photos, speed_w);
+    timeLoop(millis(), 300);
+    Serial.println("Izquierda");
+  }
     else {
       myMotors.MoveMotorsImu(0, 0, 0);
       //Serial.println("stop");

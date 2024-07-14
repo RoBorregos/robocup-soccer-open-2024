@@ -65,7 +65,7 @@ Pixy2SPI_SS pixy;
 BNO055 my_bno;
 Servo esc;
 
-PID pid_w(0.6, 0.00735, 45, 200);
+PID pid_w(0.6, 0.009, 45, 200);
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
     MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
