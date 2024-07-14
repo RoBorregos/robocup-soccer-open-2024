@@ -83,8 +83,11 @@ double radiansToDegrees(double radians)
   return radians * (180.0 / M_PI);
 }
 
-void timeLoop (long int startMillis, long int interval){ 
-    while(millis() - startMillis < interval){} 
+void timeLoop(long int startMillis, long int interval)
+{
+  while (millis() - startMillis < interval)
+  {
+  }
 }
 
 void loop()
@@ -207,8 +210,19 @@ void loop()
   else if (ball_seen_openmv)
   {
     Serial.println("OPENMV CAM");
-    myMotors.MoveMotorsImu(ball_angle, speed_t_ball, speed_w);
-    Serial.println(ball_angle);
+    if (ball_angle_180 < (0 - 10))
+    {
+      Serial.print("CENTER 2: ");
+      Serial.println(ball_angle_180);
+      myMotors.MoveMotorsImu(270, 200, speed_w);
+    }
+    else if (ball_angle_180 > (0 + 10))
+    {
+      Serial.print("CENTER2: ");
+      Serial.println(ball_angle_180);
+      myMotors.MoveMotorsImu(90, 200, speed_w);
+      Serial.println(ball_angle);
+    }
   }
   else
   {
