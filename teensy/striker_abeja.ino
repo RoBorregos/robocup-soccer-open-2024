@@ -43,13 +43,27 @@ const int min_speed = 1000;
 const int mid_speed = 1500;
 const int max_speed = 2000;
 const int esc_pin = 6;
-const int kicker_pin = 32;
+const int kicker = 32;
+
+int counterball = 0;
+
+  int photoValue = analogRead(A2);
+    int photoValue1 = analogRead(A7);
+    int photoValue2 = analogRead(A3); //no
+     int photoValue3 = analogRead(A12);
+     int photoValue4 = analogRead(A13);
+     int photoValue5 = analogRead(A14);
+     int analogPin1 = analogRead(A8);
+    int analogPin2 = analogRead(A9);
+    int photo_value5 = analogRead(A15);
+     int photo_value6 = analogRead(A17);
+      int photo_value7 = analogRead(A6);
 
 Pixy2SPI_SS pixy;
 BNO055 my_bno;
-Servo dribbler;
+Servo esc;
 
-PID pid_w(0.6, 0.01, 6, 200);
+PID pid_w(0.6, 0.00735, 45, 200);
 Motors myMotors(
   MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
   MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
@@ -65,13 +79,19 @@ void setup() {
   my_bno.InitializeBNO();
     pinMode(kicker, OUTPUT);
   analogReadResolution(12);
-  dribbler.writeMicroseconds(min_speed);
   Serial.println("Arming ESC...");
   start_millis = millis();
 }
 
 double radiansToDegrees(double radians) {
   return radians * (180.0 / M_PI);
+}
+
+void timeLoop(long int startMillis, long int interval)
+{
+  while (millis() - startMillis < interval)
+  {
+  }
 }
 
 void loop() {
@@ -126,18 +146,17 @@ void loop() {
   double speed_w = pid_w.Calculate(target_angle, bno_angle);
   double speed_t_goal = 150;
   double speed_t_ball = 150;
-
-    int photoValue = analogRead(A2);
-    int photoValue1 = analogRead(A7);
-    int photoValue2 = analogRead(A3); //no
-    const int photoValue3 = analogRead(A12);
-    const int photoValue4 = analogRead(A13);
-    const int photoValue5 = analogRead(A14);
-    const int analogPin1 = analogRead(A8);
-   const int analogPin2 = analogRead(A9);
-   const int photo_value5 = analogRead(A15);
-    const int photo_value6 = analogRead(A17);
-     const int photo_value7 = analogRead(A6);
+     photoValue = analogRead(A2);
+     photoValue1 = analogRead(A7);
+     photoValue2 = analogRead(A3); //no
+      photoValue3 = analogRead(A12);
+      photoValue4 = analogRead(A13);
+      photoValue5 = analogRead(A14);
+      analogPin1 = analogRead(A8);
+     analogPin2 = analogRead(A9);
+     photo_value5 = analogRead(A15);
+    photo_value6 = analogRead(A17);
+       photo_value7 = analogRead(A6);
 
 
   if (speed_w != 0)
@@ -154,21 +173,21 @@ void loop() {
       Serial.println(photo_value4);*/
 
     //----------------------- Photoresistors detection ---------------------------//
-    if (photoValue > 3500 || photoValue1 > 2200) {
+    if (photoValue > 3500 || photoValue1 > 2100) {
       myMotors.MoveMotorsImu(0, 200, speed_w);
       delay(300);
       Serial.println("Adelante");
-    }else if (photoValue3 > 2800 || photoValue5 > 3500) {
+    }else if (photoValue2 > 2200) {
       myMotors.MoveMotorsImu(270, 200, speed_w);
       delay(300);
       Serial.println("DERECHA");
     } 
-    else if (analogPin1 > 1300 || analogPin2 > 2500 ) {
+    else if (analogPin1 > 1300 || analogPin2 > 2100) {
       myMotors.MoveMotorsImu(180, 200, speed_w);
       delay(300);
       Serial.println("ATRAS");
     }
-    else if(photo_value5 > 3700 || photo_value6 > 3700 || photo_value7 > 3700){
+    else if(photo_value5 > 3500 || photo_value6 > 3100 || photo_value7 > 3600){
       myMotors.MoveMotorsImu(90, 200, speed_w);
       delay(300);
       Serial.println("Izquierda");
@@ -184,6 +203,7 @@ void loop() {
 
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv) {
+        counterball=0;
         last_ball_angle = ball_angle;
         if (distance_pixels < 85) {
           myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
@@ -192,11 +212,12 @@ void loop() {
             delay(20);
             digitalWrite(kicker, LOW);
         } else {
+          counterball=0;
           myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
           Serial.println("Both cameras see the ball");
-          dribbler.writeMicroseconds(mid_speed);
         }
       } else if (ball_seen_pixy && !ball_seen_openmv) {
+        counterball=0;
         last_ball_angle = ball_angle;
         if (distance_pixels < 85) {
           myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
@@ -210,6 +231,7 @@ void loop() {
           Serial.println("Only pixy sees the ball");
         }
       } else if (!ball_seen_pixy && ball_seen_openmv) {
+        counterball=0;
         last_ball_angle = ball_angle;
         double differential = ball_angle_180 * 0.15;
         ponderated_angle = ball_angle + differential;
@@ -233,13 +255,45 @@ void loop() {
         }
       }*/
       //-------------------- Move to last known position --------------------//
-      else {
-        myMotors.StopMotors();
-        /*current_millis = millis();
-        if (current_millis - start_millis >= period) {
-          myMotors.MoveMotorsImu(last_ball_angle, speed_t_ball, speed_w);
-          start_millis = current_millis;*/
-        //}
+      
+
+      else if (counterball <=1) {
+        Serial.print("COUNTERBALL1: ");
+        Serial.println(counterball);
+        if(last_ball_angle > 180){
+        myMotors.MoveMotorsImu(90, 200, speed_w);
+        timeLoop(millis(), 200);
+      }else if(last_ball_angle < 180){
+        myMotors.MoveMotorsImu(270, 200, speed_w);
+        timeLoop(millis(), 200);
+      }
+        
+        counterball++;
+      }
+      else if(counterball == 3 ){
+        Serial.print("COUNTERBALL2: ");
+        Serial.println(counterball);
+        myMotors.MoveMotorsImu(180, speed_t_ball, speed_w);
+        timeLoop(millis(), 170);
+        counterball++;
+      }
+      else if(counterball == 5 ){
+        
+           Serial.print("COUNTERBALL3: ");
+        Serial.println(counterball);
+         if(last_ball_angle > 180){
+        myMotors.MoveMotorsImu(90, 200, speed_w);
+        timeLoop(millis(), 200);
+      }else if(last_ball_angle < 180){
+        myMotors.MoveMotorsImu(270, 200, speed_w);
+        timeLoop(millis(), 200);
+      }
+        counterball++;
+      }
+      else{
+        myMotors.MoveMotorsImu(0,0,0);
+        timeLoop(millis(), 150);
+        counterball++;
       }
     }
   }
