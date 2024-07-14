@@ -31,6 +31,12 @@ void setup(){
     Serial.print("INIT");
 }
 
+void timeLoop (long int startMillis, long int interval){ // the delay function
+
+    // this loops until 2 milliseconds has passed since the function began
+    while(millis() - startMillis < interval){} 
+}
+
 void loop(){
     //A2 A7 
     int photoValue = analogRead(A2);
@@ -57,21 +63,21 @@ void loop(){
     if(speed_w!=0){
       if (photoValue > 2400 || photoValue1 > 2200) {
       myMotors.MoveMotorsImu(90, 200, speed_w);
-      delay(300);
+      timeLoop(millis(), 300);
       Serial.println("Derecha");
     }else if (photoValue2 > 2500 ) {
       myMotors.MoveMotorsImu(270, 200, speed_w);
-      delay(300);
+      timeLoop(millis(), 300);
       Serial.println("IZQUIERDA");
     } 
     else if (analogPin1 > 2400 || analogPin1 > 2000 ) {
       myMotors.MoveMotorsImu(180, 200, speed_w);
-      delay(300);
+      timeLoop(millis(), 300);
       Serial.println("ATRAS");
     }
     else if(photo_value5 > 3600 || photo_value6 > 2200 || photo_value7 > 2700){
       myMotors.MoveMotorsImu(0, 200, speed_w);
-      delay(300);
+      timeLoop(millis(), 300);
       Serial.println("ADELANTE");
     
     }
