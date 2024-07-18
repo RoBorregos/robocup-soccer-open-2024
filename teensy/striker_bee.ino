@@ -231,12 +231,15 @@ Serial.println(photo_value_front2);
 
       Serial.print("goal angle: ");
       Serial.println(goal_angle_180);
-dribbler.writeMicroseconds(mid_speed);
+
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv)
       {
         counterball = 0;
         last_ball_angle = ball_angle;
+        double differential = ball_angle_180 * 0.15;
+        ponderated_angle = ball_angle + differential;
+        myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         if (goal_angle != 0)
         {
     

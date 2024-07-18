@@ -163,6 +163,7 @@ void loop()
   double speed_t_goal = 150;
   double speed_t_ball = 150;
   speed_photos = 200;
+   esc.writeMicroseconds(mid_speed);
   photo_value_front1 = analogRead(A2);
   photo_value_front2 = analogRead(A7);
   photo_value_right = analogRead(A3);
@@ -233,6 +234,9 @@ void loop()
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv)
       {
+         double differential = ball_angle_180 * 0.15;
+        ponderated_angle = ball_angle + differential;
+        myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         counterball = 0;
         last_ball_angle = ball_angle;
         if (goal_angle != 0)
@@ -258,6 +262,9 @@ void loop()
       {
         counterball = 0;
         last_ball_angle = ball_angle;
+        double differential = ball_angle_180 * 0.15;
+        ponderated_angle = ball_angle + differential;
+        myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         if (goal_angle != 0)
         {
           //rotation_angle = shoot_angle;

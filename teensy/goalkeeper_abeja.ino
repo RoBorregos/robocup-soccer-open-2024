@@ -81,7 +81,7 @@ void setup()
   dribbler.writeMicroseconds(min_speed);
   delay(delay_time);
   start_millis = millis();
-  dribbler.writeMicroseconds(min_speed);
+  
 }
 
 double radiansToDegrees(double radians)

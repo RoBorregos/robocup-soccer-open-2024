@@ -155,7 +155,7 @@ void loop()
   double speed_t_goal = 150;
   double speed_t_ball = 150;
   speed_photos = 200;
-
+ esc.writeMicroseconds(mid_speed);
   photo_value_right1 = analogRead(A2);
   photo_value_right2 = analogRead(A7);
   photo_value_left = analogRead(A3);
