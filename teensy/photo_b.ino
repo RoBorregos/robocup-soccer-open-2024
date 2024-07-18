@@ -91,7 +91,7 @@ void loop(){
     Serial.println("Adelante");
   }
   else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
-  {
+  { 
     myMotors.MoveMotorsImu(90, speed_photos, speed_w);
     timeLoop(millis(), 300);
     Serial.println("DERECHA");

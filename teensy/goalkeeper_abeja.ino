@@ -16,6 +16,7 @@ pixy.ccc.blocks[i].m_y The y location of the center of the detected object (0 to
 double goal_angle_opposite = 0;
 unsigned long start_millis;
 unsigned long current_millis;
+const int kicker = 32;
 float bno_angle = 0;
 bool ball_seen_openmv = false;
 double target_angle = 0;
@@ -32,7 +33,7 @@ float goal_distance = 0;
 double last_time = 0;
 double current_time = 0;
 double last_ball_angle = 0;
-int goal_threshold = 15;
+int goal_threshold = 10;
 const int FRAME_HEIGHT = 104;
 const int FRAME_WIDTH = 158;
 const int FRAME_ROBOT = 20;
@@ -72,11 +73,15 @@ void setup()
 {
   Serial1.begin(115200);
   Serial.begin(9600);
+  dribbler.attach(esc_pin);
   pixy.init();
   my_bno.InitializeBNO();
   analogReadResolution(12);
+  pinMode(kicker, OUTPUT);
+  dribbler.writeMicroseconds(min_speed);
   delay(delay_time);
   start_millis = millis();
+  dribbler.writeMicroseconds(min_speed);
 }
 
 double radiansToDegrees(double radians)
@@ -190,6 +195,7 @@ void loop()
   Serial.println(photo_value6);
   Serial.print("PHOTO VALUE 7: ");
   Serial.println(photo_value7);
+  dribbler.writeMicroseconds(mid_speed);
 
   // ----------------------------- Follow ball and avoid lines ------------------------//
 if (photoValue > 3500 || photoValue1 > 2100) {
@@ -243,12 +249,12 @@ if (photoValue > 3500 || photoValue1 > 2100) {
     if (goal_angle > 0)
     {
       Serial.println(goal_angle);
-      if (goal_angle < (185 - goal_threshold))
+      if (goal_angle < (180 - goal_threshold))
       {
         Serial.println("CENTER");
         myMotors.MoveMotorsImu(90, abs(speed_t_goal), speed_w);
       }
-      else if (goal_angle > (185 + goal_threshold))
+      else if (goal_angle > (180 + goal_threshold))
       {
         Serial.println("CENTER");
         myMotors.MoveMotorsImu(270, abs(speed_t_goal), speed_w);
