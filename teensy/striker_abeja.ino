@@ -184,19 +184,19 @@ void loop()
       delay(300);
       Serial.println("Adelante");
     }
-    else if (photo_value_right > 2200)
+    /*else if (photo_value_right > 2200)
     {
       myMotors.MoveMotorsImu(270, speed_photos, speed_w);
       delay(300);
       Serial.println("DERECHA");
-    }
+    }*/
     else if (photo_value_back1 > 1300 || photo_value_back2 > 2100)
     {
       myMotors.MoveMotorsImu(180, speed_photos, speed_w);
       delay(300);
       Serial.println("ATRAS");
     }
-    else if (photo_value_left1 > 3500 || photo_value_left2 > 3100 || photo_value_left3 > 3600)
+    else if (photo_value_left1 > 3500 || photo_value_left3 > 3600)
     {
       myMotors.MoveMotorsImu(90, speed_photos, speed_w);
       delay(300);
@@ -229,7 +229,7 @@ void loop()
 
       Serial.print("goal angle: ");
       Serial.println(goal_angle_180);
-esc.writeMicroseconds(mid_speed);
+
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv)
       {

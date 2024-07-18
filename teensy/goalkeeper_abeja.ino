@@ -198,23 +198,23 @@ void loop()
   dribbler.writeMicroseconds(mid_speed);
 
   // ----------------------------- Follow ball and avoid lines ------------------------//
-if (photoValue > 3500 || photoValue1 > 2100) {
+if (photoValue > 3500 || photoValue1 > 1900) {
       myMotors.MoveMotorsImu(0, 200, speed_w);
-      delay(300);
+      delay(150);
       Serial.println("Adelante");
-    }else if (photoValue2 > 2200) {
+    }/*else if (photoValue2 > 2200) {
       myMotors.MoveMotorsImu(270, 200, speed_w);
       delay(300);
       Serial.println("DERECHA");
-    } 
+    } */
     else if (analogPin1 > 1300 || analogPin2 > 2100 ) {
       myMotors.MoveMotorsImu(180, 200, speed_w);
-      delay(300);
+      delay(150);
       Serial.println("ATRAS");
     }
-    else if(photo_value5 > 3500 || photo_value6 > 3100 || photo_value7 > 3600){
+    else if(photo_value5 > 3500 || photo_value7 > 3600){
       myMotors.MoveMotorsImu(90, 200, speed_w);
-      delay(300);
+      delay(150);
       Serial.println("Izquierda");
     
     }
@@ -223,25 +223,34 @@ if (photoValue > 3500 || photoValue1 > 2100) {
     Serial.println("PIXY CAM");
     myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
     Serial.println(angle_degrees);
+       digitalWrite(kicker, HIGH);
+            delay(20);
+            digitalWrite(kicker, LOW);
   }
   else if (ball_seen_openmv)
   {
     Serial.println("OPENMV CAM");
+     last_ball_angle = ball_angle;
+        double differential = ball_angle_180 * 0.15;
+        ponderated_angle = ball_angle + differential;
+        myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
+        Serial.println("Only OpenMV sees the ball");
     //myMotors.MoveMotorsImu(ball_angle, speed_t_ball, speed_w);
-    if (ball_angle_180 < (0-10))
-      {
+   // if (ball_angle_180 < (0-5))
+      /*{
         Serial.print("CENTER 2: ");
         Serial.println(ball_angle_180);
         myMotors.MoveMotorsImu(270, abs(speed_t_goal), speed_w);
       }
-      else if (ball_angle_180 > (0 + 10))
+      else if (ball_angle_180 > (0 + 5))
       {
         Serial.print("CENTER2: ");
         Serial.println(ball_angle_180);
-        myMotors.MoveMotorsImu(90, abs(speed_t_goal), speed_w);
+        myMotors.MoveMotorsImu(90, abs(speed_t_goal), speed_w);*/
+        
     Serial.println(ball_angle);
   }
-  }
+  
   else
   {
     Serial.println(goal_angle);
@@ -270,23 +279,23 @@ if (photoValue > 3500 || photoValue1 > 2100) {
       }
 
       //------------------------- Move depending on the photo transistors detected ------------------//
-      if (photoValue > 3500 || photoValue1 > 2100) {
+      if (photoValue > 3500 || photoValue1 > 1900) {
       myMotors.MoveMotorsImu(0, 200, speed_w);
-      delay(300);
+      delay(150);
       Serial.println("Adelante");
-    }else if (photoValue2 > 2200) {
+    }/*else if (photoValue2 > 2200) {
       myMotors.MoveMotorsImu(270, 200, speed_w);
       delay(300);
       Serial.println("DERECHA");
-    } 
+    } */
     else if (analogPin1 > 1300 || analogPin2 > 2100) {
       myMotors.MoveMotorsImu(180, 200, speed_w);
-      delay(300);
+      delay(150);
       Serial.println("ATRAS");
     }
-    else if(photo_value5 > 3500 || photo_value6 > 3100 || photo_value7 > 3600){
+    else if(photo_value5 > 3500 || photo_value7 > 3800){
       myMotors.MoveMotorsImu(90, 200, speed_w);
-      delay(300);
+      delay(150);
       Serial.println("Izquierda");
     
     }

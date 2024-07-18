@@ -63,9 +63,9 @@ int photo_value_front3;
 
 Pixy2SPI_SS pixy;
 BNO055 my_bno;
-Servo esc;
+Servo dribbler;
 
-PID pid_w(0.6, 0.009, 45, 200);
+PID pid_w(0.6, 0.00735, 45, 200);
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
     MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
@@ -74,10 +74,10 @@ Motors myMotors(
 
 void setup()
 {
-  esc.attach(esc_pin);
+  dribbler.attach(esc_pin);
   Serial1.begin(115200);
   Serial.begin(9600);
-  esc.writeMicroseconds(min_speed);
+  dribbler.writeMicroseconds(min_speed);
   pixy.init();
   my_bno.InitializeBNO();
   pinMode(kicker, OUTPUT);
@@ -169,35 +169,39 @@ void loop()
   photo_value_back1 = analogRead(A8);
   photo_value_back2 = analogRead(A9);
 
-  photo_value_front1 = analogRead(A15);
-  photo_value_front2 = analogRead(A17);
-  photo_value_front3 = analogRead(A6);
+  photo_value_front1 = analogRead(A10);
+  photo_value_front2 = analogRead(A11);
+ dribbler.writeMicroseconds(mid_speed);
 
+Serial.print("FRONT: ");
+Serial.println(photo_value_front1);
+Serial.print("FRONT 2: ");
+Serial.println(photo_value_front2);
   if (speed_w != 0)
   {
     //----------------------- Photoresistors detection ---------------------------//
-    if (photo_value_front1 > 3500 || photo_value_front2 > 2300 || photo_value_front3 > 3000)
+    if (photo_value_front1 > 3600 || photo_value_front2 > 3600)
   {
     myMotors.MoveMotorsImu(0, speed_photos, speed_w);
-    timeLoop(millis(), 300);
+    timeLoop(millis(), 150);
     Serial.println("Adelante");
   }
   else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
   {
     myMotors.MoveMotorsImu(90, speed_photos, speed_w);
-    timeLoop(millis(), 300);
+    timeLoop(millis(), 150);
     Serial.println("DERECHA");
   }
   else if (photo_value_back1 > 2300 || photo_value_back2 > 1700)
   {
     myMotors.MoveMotorsImu(180, speed_photos, speed_w);
-    timeLoop(millis(), 300);
+    timeLoop(millis(), 150);
     Serial.println("ATRAS");
   }
   else if (photo_value_left > 2500)
   {
     myMotors.MoveMotorsImu(270, speed_photos, speed_w);
-    timeLoop(millis(), 300);
+    timeLoop(millis(), 150);
     Serial.println("Izquierda");
   }
     else
@@ -227,7 +231,7 @@ void loop()
 
       Serial.print("goal angle: ");
       Serial.println(goal_angle_180);
-esc.writeMicroseconds(mid_speed);
+dribbler.writeMicroseconds(mid_speed);
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv)
       {

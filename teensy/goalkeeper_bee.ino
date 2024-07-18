@@ -58,7 +58,7 @@ Pixy2SPI_SS pixy;
 BNO055 my_bno;
 Servo esc;
 
-PID pid_w(0.6, 0.01, 6, 200);
+PID pid_w(0.6, 0.00735, 45, 200);
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
     MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
@@ -161,9 +161,13 @@ void loop()
   photo_value_left = analogRead(A3);
   photo_value_back1 = analogRead(A8);
   photo_value_back2 = analogRead(A9);
-  photo_value_front1 = analogRead(A15);
-  photo_value_front2 = analogRead(A17);
-  photo_value_front3 = analogRead(A6);
+  photo_value_front1 = analogRead(A10);
+  photo_value_front2 = analogRead(A11);
+  Serial.print("uno: ");
+  Serial.println(photo_value_front1);
+  Serial.print("uno: ");
+  Serial.println(photo_value_front2);
+ // photo_value_front3 = analogRead(A6);
 
   //------------------ Angle normalization ------------------//
   if (ball_angle < 180)
@@ -177,22 +181,22 @@ void loop()
   ball_angle_180 = ball_angle_180 * (-1);
 
   // ----------------------------- Follow ball and avoid lines ------------------------//
-  if (photo_value_front1 > 3500 || photo_value_front2 > 2300 || photo_value_front3 > 3000)
+  if (photo_value_front1 > 3600 || photo_value_front2 > 3600)
   {
     myMotors.MoveMotorsImu(0, speed_photos, speed_w);
-    timeLoop(millis(), 300);
+    timeLoop(millis(), 150);
     Serial.println("Adelante");
   }
   else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
   {
     myMotors.MoveMotorsImu(90, speed_photos, speed_w);
-    timeLoop(millis(), 300);
+    timeLoop(millis(), 150);
     Serial.println("DERECHA");
   }
   else if (photo_value_back1 > 2300 || photo_value_back2 > 1700)
   {
     myMotors.MoveMotorsImu(180, speed_photos, speed_w);
-    timeLoop(millis(), 300);
+    timeLoop(millis(), 150);
     Serial.println("ATRAS");
   }
   else if (photo_value_left > 2500)
@@ -210,19 +214,11 @@ void loop()
   else if (ball_seen_openmv)
   {
     Serial.println("OPENMV CAM");
-    if (ball_angle_180 < (0 - 10))
-    {
-      Serial.print("CENTER 2: ");
-      Serial.println(ball_angle_180);
-      myMotors.MoveMotorsImu(270, 200, speed_w);
-    }
-    else if (ball_angle_180 > (0 + 10))
-    {
-      Serial.print("CENTER2: ");
-      Serial.println(ball_angle_180);
-      myMotors.MoveMotorsImu(90, 200, speed_w);
-      Serial.println(ball_angle);
-    }
+     last_ball_angle = ball_angle;
+        double differential = ball_angle_180 * 0.15;
+        ponderated_angle = ball_angle + differential;
+        myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
+        Serial.println("Only OpenMV sees the ball");
   }
   else
   {
@@ -247,22 +243,22 @@ void loop()
       }
 
       //------------------------- Move depending on the photo transistors detected ------------------//
-      if (photo_value_front1 > 3500 || photo_value_front2 > 2300 || photo_value_front3 > 3000)
+      if (photo_value_front1 > 3500 || photo_value_front2 > 3500)
       {
         myMotors.MoveMotorsImu(0, speed_photos, speed_w);
-        timeLoop(millis(), 300);
+        timeLoop(millis(), 150);
         Serial.println("Adelante");
       }
       else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
       {
         myMotors.MoveMotorsImu(90, speed_photos, speed_w);
-        timeLoop(millis(), 300);
+        timeLoop(millis(), 150);
         Serial.println("DERECHA");
       }
       else if (photo_value_back1 > 2300 || photo_value_back2 > 1700)
       {
         myMotors.MoveMotorsImu(180, speed_photos, speed_w);
-        timeLoop(millis(), 300);
+        timeLoop(millis(), 150);
         Serial.println("ATRAS");
       }
       else if (photo_value_left > 2500)
