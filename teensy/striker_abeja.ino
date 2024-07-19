@@ -86,7 +86,11 @@ void setup()
   pinMode(kicker, OUTPUT);
   analogReadResolution(12);
   Serial.println("Arming ESC...");
+    delay(delay_time);
   start_millis = millis();
+  if(){
+    myMotors.MoveMotorsImu(0, speed_photos, speed_w);
+  }
 }
 
 double radiansToDegrees(double radians)

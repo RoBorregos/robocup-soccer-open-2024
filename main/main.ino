@@ -20,15 +20,15 @@ float bno_angle = 0;
 bool ball_seen_openmv = false;
 double target_angle = 0;
 float ball_angle_180 = 0;
-float goal_angle_180 = 0; 
+float goal_angle_180 = 0;
 float distance_pixels = 0;
 float distance_pixels_protect = 0;
 float ball_angle = 0;
 float ball_distance = 0;
 float goal_angle = 0;
 
-double adjust_angle = 0; 
-double translation_angle = 0; 
+double adjust_angle = 0;
+double translation_angle = 0;
 int rotation_angle = 0;
 
 bool ball_found = false;
@@ -63,9 +63,11 @@ int photo_value_front3;
 
 Pixy2SPI_SS pixy;
 BNO055 my_bno;
-Servo dribbler;
+Servo esc;
 
-PID pid_w(0.6, 0.00735, 45, 200);
+// PID pid_w(0.6, 0.00735, 45, 200);
+
+PID pid_w(1, 0, 0, 200);
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
     MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
@@ -74,16 +76,22 @@ Motors myMotors(
 
 void setup()
 {
-  dribbler.attach(esc_pin);
   Serial1.begin(115200);
   Serial.begin(9600);
-  dribbler.writeMicroseconds(min_speed);
-  pixy.init();
+
   my_bno.InitializeBNO();
+
   pinMode(kicker, OUTPUT);
   analogReadResolution(12);
+  esc.attach(esc_pin);
+
+  esc.writeMicroseconds(min_speed);
+  pixy.init();
   Serial.println("Arming ESC...");
+
+  // delay(delay_time);
   start_millis = millis();
+  delay(delay_time);
 }
 
 double radiansToDegrees(double radians)
@@ -104,6 +112,7 @@ void loop()
   // ----------------- Gather data from OpenMV camera via UART ----------------- //
   my_bno.GetBNOData();
   bno_angle = my_bno.GetYaw();
+  Serial.println(bno_angle);
   if (Serial1.available())
   {
     String camString = Serial1.readStringUntil('\n');
@@ -112,7 +121,6 @@ void loop()
     goal_angle = camString.substring(camString.indexOf(' ', camString.indexOf(' ') + 1) + 1, camString.lastIndexOf(' ')).toFloat();
     distance_pixels = camString.substring(camString.lastIndexOf(' ') + 1).toFloat();
     ball_seen_openmv = (ball_distance != 0 || ball_angle != 0);
-    Serial.println(goal_angle);
   }
 
   // ----------------- Gather data from Pixy2 camera via SPI ----------------- //
@@ -160,23 +168,19 @@ void loop()
   double speed_t_goal = 150;
   double speed_t_ball = 150;
   speed_photos = 200;
-  photo_value_right1 = analogRead(A2);
+  esc.writeMicroseconds(mid_speed);
+    photo_value_right1 = analogRead(A2);
   photo_value_right2 = analogRead(A7);
   photo_value_left = analogRead(A3);
-  photo_value_front1 = analogRead(A12);
-  photo_value_front2 = analogRead(A13);
-  photo_value_front3 = analogRead(A14);
   photo_value_back1 = analogRead(A8);
   photo_value_back2 = analogRead(A9);
-
   photo_value_front1 = analogRead(A10);
   photo_value_front2 = analogRead(A11);
- dribbler.writeMicroseconds(mid_speed);
+  Serial.print("uno: ");
+  Serial.println(photo_value_front1);
+  Serial.print("uno: ");
+  Serial.println(photo_value_front2);
 
-Serial.print("FRONT: ");
-Serial.println(photo_value_front1);
-Serial.print("FRONT 2: ");
-Serial.println(photo_value_front2);
   if (speed_w != 0)
   {
     //----------------------- Photoresistors detection ---------------------------//
@@ -201,7 +205,7 @@ Serial.println(photo_value_front2);
   else if (photo_value_left > 2500)
   {
     myMotors.MoveMotorsImu(270, speed_photos, speed_w);
-    timeLoop(millis(), 150);
+    timeLoop(millis(), 300);
     Serial.println("Izquierda");
   }
     else
@@ -235,24 +239,24 @@ Serial.println(photo_value_front2);
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv)
       {
-        counterball = 0;
-        last_ball_angle = ball_angle;
         double differential = ball_angle_180 * 0.15;
         ponderated_angle = ball_angle + differential;
         myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
+        counterball = 0;
+        last_ball_angle = ball_angle;
         if (goal_angle != 0)
         {
-    
-          //rotation_angle = shoot_angle;
+
+          // rotation_angle = shoot_angle;
           myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
-           digitalWrite(kicker, HIGH);
-           delay(20);
+          digitalWrite(kicker, HIGH);
+          delay(20);
           digitalWrite(kicker, LOW);
           Serial.println("Both cameras see the ball and shoots");
         }
         else
         {
-  
+
           rotation_angle = 0;
           counterball = 0;
           myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
@@ -263,18 +267,21 @@ Serial.println(photo_value_front2);
       {
         counterball = 0;
         last_ball_angle = ball_angle;
+        double differential = ball_angle_180 * 0.15;
+        ponderated_angle = ball_angle + differential;
+        myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
         if (goal_angle != 0)
         {
-          //rotation_angle = shoot_angle;
+          // rotation_angle = shoot_angle;
           myMotors.MoveMotorsImu(rotation_angle, speed_t_ball, speed_w);
-           digitalWrite(kicker, HIGH);
-           delay(20);
+          digitalWrite(kicker, HIGH);
+          delay(20);
           digitalWrite(kicker, LOW);
           Serial.println("Only pixy sees the ball and shoots");
         }
         else
         {
-          //rotation_angle = shoot_angle;
+          // rotation_angle = shoot_angle;
           myMotors.MoveMotorsImu(angle_degrees, speed_t_ball, speed_w);
           Serial.println("Only pixy sees the ball");
         }
@@ -290,58 +297,59 @@ Serial.println(photo_value_front2);
         Serial.println("Only OpenMV sees the ball");
       }
       //-------------------- Move to last known position --------------------//
-else{
-  myMotors.StopMotors();
-}
-     /* else if (counterball <= 1)
-      {
-        Serial.print("COUNTERBALL1: ");
-        Serial.println(counterball);
-        if (last_ball_angle > 180)
-        {
-          myMotors.MoveMotorsImu(90, 200, speed_w);
-          timeLoop(millis(), 200);
-        }
-        else if (last_ball_angle < 180)
-        {
-          myMotors.MoveMotorsImu(270, 200, speed_w);
-          timeLoop(millis(), 200);
-        }
-
-        counterball++;
-      }
-      else if (counterball == 3)
-      {
-        Serial.print("COUNTERBALL2: ");
-        Serial.println(counterball);
-        myMotors.MoveMotorsImu(180, speed_t_ball, speed_w);
-        timeLoop(millis(), 170);
-        counterball++;
-      }
-      else if (counterball == 5)
-      {
-
-        Serial.print("COUNTERBALL3: ");
-        Serial.println(counterball);
-        if (last_ball_angle > 180)
-        {
-          myMotors.MoveMotorsImu(90, 200, speed_w);
-          timeLoop(millis(), 200);
-        }
-        else if (last_ball_angle < 180)
-        {
-          myMotors.MoveMotorsImu(270, 200, speed_w);
-          timeLoop(millis(), 200);
-        }
-        counterball++;
-      }
       else
       {
-        rotation_angle = 0;
-        myMotors.MoveMotorsImu(0, 0, 0);
-        timeLoop(millis(), 150);
-        counterball++;
-      }*/
+        myMotors.StopMotors();
+      }
+      /* else if (counterball <= 1)
+       {
+         Serial.print("COUNTERBALL1: ");
+         Serial.println(counterball);
+         if (last_ball_angle > 180)
+         {
+           myMotors.MoveMotorsImu(90, 200, speed_w);
+           timeLoop(millis(), 200);
+         }
+         else if (last_ball_angle < 180)
+         {
+           myMotors.MoveMotorsImu(270, 200, speed_w);
+           timeLoop(millis(), 200);
+         }
+
+         counterball++;
+       }
+       else if (counterball == 3)
+       {
+         Serial.print("COUNTERBALL2: ");
+         Serial.println(counterball);
+         myMotors.MoveMotorsImu(180, speed_t_ball, speed_w);
+         timeLoop(millis(), 170);
+         counterball++;
+       }
+       else if (counterball == 5)
+       {
+
+         Serial.print("COUNTERBALL3: ");
+         Serial.println(counterball);
+         if (last_ball_angle > 180)
+         {
+           myMotors.MoveMotorsImu(90, 200, speed_w);
+           timeLoop(millis(), 200);
+         }
+         else if (last_ball_angle < 180)
+         {
+           myMotors.MoveMotorsImu(270, 200, speed_w);
+           timeLoop(millis(), 200);
+         }
+         counterball++;
+       }
+       else
+       {
+         rotation_angle = 0;
+         myMotors.MoveMotorsImu(0, 0, 0);
+         timeLoop(millis(), 150);
+         counterball++;
+       }*/
     }
   }
 }
