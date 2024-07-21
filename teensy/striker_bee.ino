@@ -52,6 +52,7 @@ const int esc_pin = 6;
 const int kicker = 32;
 double speed_photos = 0;
 int counterball = 0;
+int on_pin;
 int photo_value_right1;
 int photo_value_right2;
 int photo_value_left;
@@ -65,9 +66,8 @@ Pixy2SPI_SS pixy;
 BNO055 my_bno;
 Servo esc;
 
-// PID pid_w(0.6, 0.00735, 45, 200);
+PID pid_w(0.6, 0.00735, 45, 200);
 
-PID pid_w(1, 0, 0, 200);
 Motors myMotors(
     MOTOR1_PWM, MOTOR1_IN1, MOTOR1_IN2,
     MOTOR2_PWM, MOTOR2_IN1, MOTOR2_IN2,
@@ -78,7 +78,7 @@ void setup()
 {
   Serial1.begin(115200);
   Serial.begin(9600);
-
+  pinMode(on_pin, INPUT);
   my_bno.InitializeBNO();
 
   pinMode(kicker, OUTPUT);
@@ -108,8 +108,8 @@ void timeLoop(long int startMillis, long int interval)
 
 void loop()
 {
-
-  // ----------------- Gather data from OpenMV camera via UART ----------------- //
+  if(on_pin == 7){
+     // ----------------- Gather data from OpenMV camera via UART ----------------- //
   my_bno.GetBNOData();
   bno_angle = my_bno.GetYaw();
   Serial.println(bno_angle);
@@ -234,7 +234,7 @@ void loop()
       goal_angle_180 = goal_angle_180 * (-1);
 
       Serial.print("goal angle: ");
-      Serial.println(goal_angle_180);
+      Serial.println(goal_angle);
 
       //------------------ Camera detection cases ------------------//
       if (ball_seen_pixy && ball_seen_openmv)
@@ -247,7 +247,7 @@ void loop()
         if (goal_angle != 0)
         {
 
-          // rotation_angle = shoot_angle;
+          // rotation_angle = shoot_angle
           myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
           digitalWrite(kicker, HIGH);
           delay(20);
@@ -273,7 +273,7 @@ void loop()
         if (goal_angle != 0)
         {
           // rotation_angle = shoot_angle;
-          myMotors.MoveMotorsImu(rotation_angle, speed_t_ball, speed_w);
+          myMotors.MoveMotorsImu(goal_angle, speed_t_ball, speed_w);
           digitalWrite(kicker, HIGH);
           delay(20);
           digitalWrite(kicker, LOW);
@@ -352,4 +352,9 @@ void loop()
        }*/
     }
   }
+  }else{
+    myMotors.StopMotors();
+  }
+
+ 
 }
