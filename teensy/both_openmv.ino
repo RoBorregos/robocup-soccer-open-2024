@@ -256,7 +256,9 @@ void loop()
         else if (ball_seen_openmv_second)
         {
             Serial.println("OPEN SECOND CAM");
-            myMotors.MoveMotorsImu(ball_angle_second, speed_t_ball, speed_w);
+            double differential = ball_angle_180 * 0.15;
+            ponderated_angle = ball_angle + differential;
+            myMotors.MoveMotorsImu(ponderated_angle, abs(speed_t_ball), speed_w);
             Serial.println(ball_angle_second);
             digitalWrite(kicker, HIGH);
             delay(20);
