@@ -55,9 +55,8 @@ void loop(){
   photo_value_right1 = analogRead(A2);
   photo_value_right2 = analogRead(A7);
   photo_value_left = analogRead(A3);
-  photo_value_front1 = analogRead(A12);
-  photo_value_front2 = analogRead(A13);
-  photo_value_front3 = analogRead(A14);
+  photo_value_front1 = analogRead(A10);
+  photo_value_front2 = analogRead(A11);
   photo_value_back1 = analogRead(A8);
   photo_value_back2 = analogRead(A9);
 
@@ -84,14 +83,14 @@ void loop(){
   if (speed_w != 0)
   {
     //----------------------- Photoresistors detection ---------------------------//
-    if (photo_value_front1 > 3500 || photo_value_front2 > 2300 || photo_value_front3 > 3000)
+    if (photo_value_front1 > 3600 || photo_value_front2 > 3600)
   {
     myMotors.MoveMotorsImu(0, speed_photos, speed_w);
     timeLoop(millis(), 300);
     Serial.println("Adelante");
   }
   else if (photo_value_right1 > 2300 || photo_value_right2 > 2300)
-  {
+  { 
     myMotors.MoveMotorsImu(90, speed_photos, speed_w);
     timeLoop(millis(), 300);
     Serial.println("DERECHA");
