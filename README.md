@@ -61,7 +61,8 @@ Make sure to install the OpenMV IDE to upload the Vision files to the camera and
 
 ## Documentation
 
-[Poster for competition](https://drive.google.com/file/d/1UDHHcAP6nueFe7EwNo9wCtxwj0QSR5_y/view?usp=sharing)
+[Poster for competition](https://www.canva.com/design/DAGKw1fwffE/BQmvRX_21usMGjCoFbtvow/edit?utm_content=DAGKw1fwffE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+[Research Paper](https://tecmx-my.sharepoint.com/:b:/g/personal/a01285780_tec_mx/Ee_Y1ZUDRdxNhH_VTpOIGakB7raYiRsHEinZ5swTUEu09Q?e=YYJ2cy)
 
 ## Install dependencies
 
